@@ -1,0 +1,45 @@
+html{
+    height:100%;
+}
+body{
+    height:calc(100% - 16px);
+}
+a:active,a:link,a:hover,a:visited{
+    color:blue;
+}
+div.chat{
+    height:100%;
+    max-width:600px;
+    margin:0 auto;
+}
+div.chat>div.message{
+    margin-bottom:8px;
+}
+div.chat>div.message>div.innerMessage{
+    padding-right:8px;
+    height:100%;
+    word-break:break-all;
+    text-align:justify;
+    overflow-y:scroll;
+}
+div.chat>div.message>div.innerMessage::-webkit-scrollbar{
+    width:12px;
+}
+div.chat>div.message>div.innerMessage::-webkit-scrollbar-track{
+    border-radius:6px;
+    background:#DDD;
+}
+div.chat>div.message>div.innerMessage::-webkit-scrollbar-thumb{
+    border-radius:6px;
+    background:#BBB;
+}
+div.chat>div.message>div.innerMessage a.user{
+    color:black;
+    text-decoration:none;
+}
+div.chat>div.message>div.innerMessage img{
+    max-width:100%;
+}
+div.chat>div.send>textarea{
+    width:calc(100% - 6px);
+}
