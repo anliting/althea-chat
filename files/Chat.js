@@ -1,21 +1,19 @@
 Promise.all([
     module.repository.althea.EventEmmiter,
     module.shareImport('Chat/ChatView.js'),
-    module.repository.althea.perMs,
 ]).then(modules=>{
     let
         EventEmmiter=   modules[0],
-        ChatView=       modules[1],
-        perMs=          modules[2]
+        ChatView=       modules[1]
     function Chat(site,target){
         EventEmmiter.call(this)
         this.site=site
         this.target=target
         this.messages=[]
         this.getMessages()
-        perMs(200,()=>{
+        setInterval(()=>{
             this.getMessages()
-        })
+        },200)
     }
     Object.setPrototypeOf(Chat.prototype,EventEmmiter.prototype)
     Object.defineProperty(Chat.prototype,'currentUser',{get(){
