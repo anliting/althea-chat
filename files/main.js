@@ -25,7 +25,7 @@ function loadChat(){
         new Chat(
             site,
             site.then(site=>
-                site.getUserById(module.arguments.userId)
+                site.getUser(module.arguments.userId)
             )
         )
     )
