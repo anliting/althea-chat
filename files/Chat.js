@@ -1,38 +1,27 @@
-Promise.all([
-    module.repository.althea.EventEmmiter,
-    module.shareImport('Chat/ChatView.js'),
-]).then(modules=>{
-    let
-        EventEmmiter=   modules[0],
-        ChatView=       modules[1]
+var
+    EventEmmiter=   module.repository.althea.EventEmmiter,
+    Ui=             module.shareImport('Chat/Ui.js')
+;(async()=>{
+    EventEmmiter=   await EventEmmiter
+    Ui=             await Ui
     function Chat(site,target){
         EventEmmiter.call(this)
-        this.site=site
-        this.target=target
-        this.messages=[]
+        this._site=site
+        this._target=target
+        this._messages=[]
         this.getMessages()
-        setInterval(()=>{
-            this.getMessages()
-        },200)
+        setInterval(this.getMessages.bind(this),200)
     }
     Object.setPrototypeOf(Chat.prototype,EventEmmiter.prototype)
     Object.defineProperty(Chat.prototype,'currentUser',{get(){
-        return this.site.then(site=>site.currentUser)
-    }})
-    Object.defineProperty(Chat.prototype,'readyToSendMessage',{get(){
-        if(this._readyToSendMessage)
-            return this._readyToSendMessage
-        return this._readyToSendMessage=Promise.all([
-            this.site,
-            this.target,
-        ])
+        return this._site.then(site=>site.currentUser)
     }})
     Object.defineProperty(Chat.prototype,'readyToGetMessages',{get(){
         if(this._readyToGetMessages)
             return this._readyToGetMessages
         return this._readyToGetMessages=Promise.all([
-            this.site,
-            this.target,
+            this._site,
+            this._target,
         ])
     }})
     Object.defineProperty(Chat.prototype,'readyToRenderMessages',{get(){
@@ -40,7 +29,7 @@ Promise.all([
             return this._readyToRenderMessages
         return this._readyToRenderMessages=Promise.all([
             this.currentUser.then(user=>user.load('nickname')),
-            this.target.then(user=>user.load('nickname')),
+            this._target.then(user=>user.load('nickname')),
         ])
     }})
     Chat.prototype.getMessages=function(){
@@ -58,31 +47,29 @@ Promise.all([
                 before:     0
             })
             function calcAfter(){
-                return chat.messages.length==0?
+                return chat._messages.length==0?
                     0
                 :
-                    chat.messages[chat.messages.length-1].id+1
+                    chat._messages[chat._messages.length-1].id+1
             }
         }).then(res=>{
             this.emit('append',res)
-            Array.prototype.push.apply(this.messages,res)
+            Array.prototype.push.apply(this._messages,res)
             delete this.getMessagesPromise
         })
     }
-    Chat.prototype.sendMessage=function(message){
-        this.readyToSendMessage.then(vals=>{
-            let
-                site=vals[0],
-                targetUser=vals[1]
-            site.send({
-                function:   'sendMessage',
-                target:     targetUser.id,
-                message,
-            })
+    Chat.prototype.sendMessage=async function(message){
+        let
+            site=       await this._site,
+            targetUser= await this._target
+        site.send({
+            function:   'sendMessage',
+            target:     targetUser.id,
+            message,
         })
     }
-    Object.defineProperty(Chat.prototype,'view',{get(){
-        return new ChatView(this.site,this)
+    Object.defineProperty(Chat.prototype,'ui',{get(){
+        return new Ui(this._site,this)
     }})
     return Chat
-})
+})()

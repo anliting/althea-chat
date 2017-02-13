@@ -1,32 +1,28 @@
 module.styleByPath('plugins/althea-chat/main.css').then(main=>
     document.head.appendChild(main)
 )
-module.importByPath('lib/general.js',{mode:1}).then(general=>{
+module.importByPath('lib/general.js',{mode:1}).then(async general=>{
     general(module)
     let
-        chat=loadChat(),
-        site=module.repository.althea.site
+        site=module.repository.althea.site,
+        target=site.then(site=>
+            site.getUser(module.arguments.userId)
+        ),
+        chat=loadChat(target)
     chat.then(chat=>{
-        let chatView=chat.view
-        document.body.appendChild(chatView.domElement)
-        chatView.focus()
-        chatView.beAppended()
+        let ui=chat.ui
+        document.body.appendChild(ui.node)
+        ui.focus()
+        ui.beAppended()
     })
-    Promise.all([
+    let vals=await Promise.all([
         site.then(site=>site.currentUser).then(u=>u.load('nickname')),
-        chat.then(chat=>chat.target).then(u=>u.load('nickname')),
-    ]).then(vals=>{
-        document.title=`${vals[0].nickname} ↔ ${vals[1].nickname}`
-    })
+        target.then(u=>u.load('nickname')),
+    ])
+    document.title=`${vals[0].nickname} ↔ ${vals[1].nickname}`
 })
-function loadChat(){
+async function loadChat(target){
     let site=module.repository.althea.site
-    return module.shareImport('Chat.js').then(Chat=>
-        new Chat(
-            site,
-            site.then(site=>
-                site.getUser(module.arguments.userId)
-            )
-        )
-    )
+    let Chat=await module.shareImport('Chat.js')
+    return new Chat(site,target)
 }
