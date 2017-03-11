@@ -34,7 +34,7 @@ module.importByPath('lib/general.js',{mode:1}).then(async general=>{
     })
     function updateTitle(){
         document.title=`${
-            notification==undefined?'':` ${'○●'[notification]} `
+            notification==undefined?'':` ${'◯⬤'[notification]} `
         }${vals[0].nickname} ↔ ${vals[1].nickname}`
     }
 })
