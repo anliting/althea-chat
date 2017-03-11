@@ -1,4 +1,4 @@
-var
+let
     EventEmmiter=   module.repository.althea.EventEmmiter,
     Ui=             module.shareImport('Chat/Ui.js')
 ;(async()=>{
