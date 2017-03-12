@@ -27,7 +27,7 @@ async function title(chat,target){
     ])
     let notification
     updateTitle()
-    setInterval(updateTitle,500)
+    setInterval(updateTitle,1000)
     chat.on('append',mes=>{
         if(mes.length&&document.hidden)
             notification=0
@@ -37,9 +37,8 @@ async function title(chat,target){
             notification=undefined
     })
     function updateTitle(){
-        document.title=`${
-            notification==undefined?'':` ${'◯⬤'[notification]} `
-        }↔ ${target.nickname}`
+        let notiPart=notification==undefined?'':`${'◯⬤'[notification]} `
+        document.title=`${notiPart}↔ ${target.nickname}`
         if(notification!=undefined)
             notification=1-notification
     }
