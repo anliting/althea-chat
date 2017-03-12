@@ -9,7 +9,7 @@ Promise.all([
         this._site=site
         this.chat=chat
         this._imageUploader=new ImageUploader(this._site)
-        this.node=createDiv(chat,this)
+        this.node=createDiv(this)
         this._imageUploader.on('upload',async imageIds=>{
             (await imageIds).map(id=>{
                 this.textarea.value+=
@@ -35,7 +35,8 @@ Promise.all([
         this.updateMessageDivHeight()
         this.syncInnerMessageDivScroll()
     }
-    function createDiv(chat,chatView){
+    function createDiv(chatView){
+        let chat=chatView.chat
         let div=document.createElement('div')
         div.className='chat'
         div.appendChild(chatView.messageDiv=createMessageDiv(chat,chatView))
