@@ -7,40 +7,48 @@ module.importByPath('lib/general.js',{mode:1}).then(async general=>{
             site.getUser(module.arguments.userId)
         ),
         chat=loadChat(target)
-    ;(async chat=>{
-        chat=await chat
-        target=await target
-        await target.load('nickname')
-        let notification
-        updateTitle()
-        setInterval(updateTitle,500)
-        chat.on('append',mes=>{
-            if(mes.length&&document.hidden)
-                notification=0
-        })
-        document.addEventListener('visibilitychange',e=>{
-            if(!document.hidden)
-                notification=undefined
-        })
-        function updateTitle(){
-            document.title=`${
-                notification==undefined?'':` ${'◯⬤'[notification]} `
-            }↔ ${target.nickname}`
-            if(notification!=undefined)
-                notification=1-notification
-        }
-    })(chat)
-    ;(async chat=>{
-        document.head.appendChild(await style)
-        chat=await chat
-        let ui=chat.ui
-        document.body.appendChild(ui.node)
-        ui.focus()
-        ui.beAppended()
-    })(chat)
+    title(chat,target)
+    body(chat)
 })
 async function loadChat(target){
     let site=module.repository.althea.site
     let Chat=await module.shareImport('Chat.js')
     return new Chat(site,target)
+}
+async function title(chat,target){
+    await Promise.all([
+        (async()=>{
+            chat=await chat
+        })(),
+        (async()=>{
+            target=await target
+            await target.load('nickname')
+        })(),
+    ])
+    let notification
+    updateTitle()
+    setInterval(updateTitle,500)
+    chat.on('append',mes=>{
+        if(mes.length&&document.hidden)
+            notification=0
+    })
+    document.addEventListener('visibilitychange',e=>{
+        if(!document.hidden)
+            notification=undefined
+    })
+    function updateTitle(){
+        document.title=`${
+            notification==undefined?'':` ${'◯⬤'[notification]} `
+        }↔ ${target.nickname}`
+        if(notification!=undefined)
+            notification=1-notification
+    }
+}
+async function body(chat){
+    chat=await chat
+    let ui=chat.ui,node=ui.node
+    document.head.appendChild(await style)
+    document.body.appendChild(node)
+    ui.focus()
+    ui.beAppended()
 }
