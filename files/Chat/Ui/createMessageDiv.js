@@ -1,15 +1,15 @@
-Promise.all([
-    module.shareImport('compile.js')
-]).then(modules=>{
-let
-    compile=modules[0]
-return createMessageDiv
-function createMessageDiv(chat,chatView){
-    let div=document.createElement('div')
-    div.className='message'
-    div.appendChild(createInnerMessageDiv())
-    return div
-    function createInnerMessageDiv(){
+(async()=>{
+    let
+        compile=await module.shareImport('createMessageDiv/compile.js')
+    return createMessageDiv
+    function createMessageDiv(chatView){
+        let div=document.createElement('div')
+        div.className='message'
+        div.appendChild(createInnerMessageDiv(chatView))
+        return div
+    }
+    function createInnerMessageDiv(chatView){
+        let chat=chatView._chat
         let div=document.createElement('div')
         div.className='innerMessage'
         chatView.atBottom=Math.abs(
@@ -21,31 +21,30 @@ function createMessageDiv(chat,chatView){
             )<=1
         })
         chatView.syncInnerMessageDivScroll=syncDivScroll
-        chat.on('append',messages=>{
-            chat.readyToRenderMessages.then(vals=>{
-                messages.forEach(message=>{
-                    div.appendChild(createSingleMessageDiv(
-                        vals[0],
-                        vals[1],
-                        message
-                    ))
-                })
-                syncDivScroll()
-            })
+        chat.on('append',async messages=>{
+            let[userA,userB]=await chat.readyToRenderMessages
+            messages.map(message=>
+                div.appendChild(createSingleMessageDiv(
+                    userA,
+                    userB,
+                    message
+                ))
+            )
+            syncDivScroll()
         })
         return div
         function createSingleMessageDiv(userA,userB,message){
             let div=document.createElement('div')
-            ;(message.fromUser==userA.id?userA:userB).finalA.then(a=>{
+            ;(async()=>{
+                let a=await(message.fromUser==userA.id?userA:userB).finalA
                 let span=createSpan(message)
                 div.appendChild(a)
                 div.appendChild(document.createTextNode(': '))
                 div.appendChild(span.span)
-                span.promise.then(()=>{
-                    syncDivScroll()
-                })
                 syncDivScroll()
-            })
+                await span.promise
+                syncDivScroll()
+            })()
             return div
             function createSpan(message){
                 let
@@ -72,5 +71,4 @@ function createMessageDiv(chat,chatView){
                 div.scrollTop=div.scrollHeight
         }
     }
-}
-})
+})()

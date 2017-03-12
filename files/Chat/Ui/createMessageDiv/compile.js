@@ -1,10 +1,11 @@
-Promise.all([
-    module.repository.althea.html,
-    module.repository.althea.url,
-]).then(modules=>{
-    let
-        html=modules[0],
-        url=modules[1]
+(async()=>{
+    let[
+        html,
+        url,
+    ]=await Promise.all([
+        module.repository.althea.html,
+        module.repository.althea.url,
+    ])
     function compile(s){
         let res=''
         while(
@@ -96,4 +97,4 @@ Promise.all([
         }
     }
     return compile
-})
+})()

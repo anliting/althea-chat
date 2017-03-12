@@ -1,13 +1,14 @@
-Promise.all([
-    module.shareImport('Ui/createMessageDiv.js'),
-    module.repository.althea.ImageUploader,
-]).then(modules=>{
-    let
-        createMessageDiv=   modules[0],
-        ImageUploader=      modules[1]
+(async()=>{
+    let[
+        createMessageDiv,
+        ImageUploader,
+    ]=await Promise.all([
+        module.shareImport('Ui/createMessageDiv.js'),
+        module.repository.althea.ImageUploader,
+    ])
     function ChatView(site,chat){
         this._site=site
-        this.chat=chat
+        this._chat=chat
         this._imageUploader=new ImageUploader(this._site)
         this.node=createDiv(this)
         this._imageUploader.on('upload',async imageIds=>{
@@ -36,10 +37,12 @@ Promise.all([
         this.syncInnerMessageDivScroll()
     }
     function createDiv(chatView){
-        let chat=chatView.chat
+        let chat=chatView._chat
         let div=document.createElement('div')
         div.className='chat'
-        div.appendChild(chatView.messageDiv=createMessageDiv(chat,chatView))
+        div.appendChild(chatView.messageDiv=
+            createMessageDiv(chatView)
+        )
         div.appendChild(chatView.sendDiv=createSendDiv(chat,chatView))
         return div
     }
@@ -67,12 +70,13 @@ Promise.all([
             textarea.addEventListener('input',e=>{
                 chatView.updateTextareaHeight()
             })
-            chat.currentUser.then(async user=>{
+            ;(async()=>{
+                let user=await chat.currentUser
                 await user.load('nickname')
                 textarea.placeholder=`${user.nickname}: `
-            })
+            })()
             return textarea
         }
     }
     return ChatView
-})
+})()
