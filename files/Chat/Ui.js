@@ -41,6 +41,21 @@
         this.updateMessageDivHeight()
         this.syncInnerMessageDivScroll()
     }
+    Ui.prototype.prepend=async function(messages){
+        let ui=this,chat=this._chat
+        let[userA,userB]=await chat.readyToRenderMessages
+        messages=messages.slice()
+        messages.reverse()
+        messages.map(message=>
+            this._innerMessageDiv.insertBefore(createSingleMessageDiv(
+                ui,
+                userA,
+                userB,
+                message
+            ),this._innerMessageDiv.firstChild)
+        )
+        this.syncInnerMessageDivScroll()
+    }
     Ui.prototype.append=async function(messages){
         let ui=this,chat=this._chat
         let[userA,userB]=await chat.readyToRenderMessages
@@ -55,7 +70,7 @@
         this.syncInnerMessageDivScroll()
     }
     Ui.prototype._queryOlder=function(){
-        console.log('queryOlder')
+        this.queryOlder()
     }
     function createDiv(ui){
         let chat=ui._chat
