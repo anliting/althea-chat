@@ -60,7 +60,8 @@
             return
         this._getMessagesPromise=this._getMessages()
         let res=await this._getMessagesPromise
-        this.emit('append',res)
+        if(this._ui)
+            this._ui.append(res)
         Array.prototype.push.apply(this._messages,res)
         delete this._getMessagesPromise
     }
@@ -75,11 +76,9 @@
         })
     }
     Object.defineProperty(Chat.prototype,'ui',{get(){
-        let ui=new Ui(this._site,this)
-        this.on('append',messages=>
-            ui.append(messages)
-        )
-        return ui
+        if(this._ui)
+            return this._ui
+        return this._ui=new Ui(this._site,this)
     }})
     return Chat
 })()
