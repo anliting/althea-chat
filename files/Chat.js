@@ -75,7 +75,11 @@
         })
     }
     Object.defineProperty(Chat.prototype,'ui',{get(){
-        return new Ui(this._site,this)
+        let ui=new Ui(this._site,this)
+        this.on('append',messages=>
+            ui.append(messages)
+        )
+        return ui
     }})
     return Chat
 })()

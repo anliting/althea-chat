@@ -2,11 +2,13 @@
     let[
         createMessageDiv,
         ImageUploader,
+        createSingleMessageDiv,
     ]=await Promise.all([
         module.shareImport('Ui/createMessageDiv.js'),
         module.repository.althea.ImageUploader,
+        module.shareImport('Ui/createSingleMessageDiv.js'),
     ])
-    function ChatView(site,chat){
+    function Ui(site,chat){
         this._site=site
         this._chat=chat
         this._imageUploader=new ImageUploader(this._site)
@@ -19,31 +21,44 @@
             this.updateTextareaHeight()
         })
     }
-    ChatView.prototype.beAppended=function(){
+    Ui.prototype.beAppended=function(){
         this.updateMessageDivHeight()
     }
-    ChatView.prototype.focus=function(){
+    Ui.prototype.focus=function(){
         this.textarea.focus()
     }
-    ChatView.prototype.updateMessageDivHeight=function(){
+    Ui.prototype.updateMessageDivHeight=function(){
         this.messageDiv.style.height=`calc(100% - 8px - ${
             this.sendDiv.clientHeight+2
         }px)`
     }
-    ChatView.prototype.updateTextareaHeight=function(){
+    Ui.prototype.updateTextareaHeight=function(){
         let rows=Math.min(4,this.textarea.value.split('\n').length)
         this.textarea.rows=rows
         this.updateMessageDivHeight()
         this.syncInnerMessageDivScroll()
     }
-    function createDiv(chatView){
-        let chat=chatView._chat
+    Ui.prototype.append=async function(messages){
+        let ui=this,chat=this._chat
+        let[userA,userB]=await chat.readyToRenderMessages
+        messages.map(message=>
+            this._innerMessageDiv.appendChild(createSingleMessageDiv(
+                ui,
+                userA,
+                userB,
+                message
+            ))
+        )
+        this.syncInnerMessageDivScroll()
+    }
+    function createDiv(ui){
+        let chat=ui._chat
         let div=document.createElement('div')
         div.className='chat'
-        div.appendChild(chatView.messageDiv=
-            createMessageDiv(chatView)
+        div.appendChild(ui.messageDiv=
+            createMessageDiv(ui)
         )
-        div.appendChild(chatView.sendDiv=createSendDiv(chat,chatView))
+        div.appendChild(ui.sendDiv=createSendDiv(chat,ui))
         return div
     }
     function createSendDiv(chat,chatView){
@@ -78,5 +93,5 @@
             return textarea
         }
     }
-    return ChatView
+    return Ui
 })()
