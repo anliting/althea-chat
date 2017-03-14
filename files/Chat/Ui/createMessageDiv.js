@@ -10,10 +10,7 @@
         let chat=ui._chat
         let div=document.createElement('div')
         div.className='innerMessage'
-        div.addEventListener('scroll',e=>{
-            if(div.scrollTop==0)
-                ui._queryOlder()
-        })
+        div.appendChild(ui._topDiv=createTopDiv(ui))
         ui.atBottom=Math.abs(
             div.scrollTop+div.clientHeight-div.scrollHeight
         )<=1
@@ -28,5 +25,20 @@
             if(ui.atBottom)
                 div.scrollTop=div.scrollHeight
         }
+    }
+    function createTopDiv(ui){
+        let n=document.createElement('div')
+        n.style.textAlign='center'
+        n.appendChild(createShowOlderMessagesButton(ui))
+        return n
+    }
+    function createShowOlderMessagesButton(ui){
+        let n=document.createElement('button')
+        n.textContent='Show Older Messages'
+        n.onclick=e=>{
+            e.stopPropagation()
+            ui._queryOlder()
+        }
+        return n
     }
 })()

@@ -47,12 +47,12 @@
         messages=messages.slice()
         messages.reverse()
         messages.map(message=>
-            this._innerMessageDiv.insertBefore(createSingleMessageDiv(
+            this._topDiv.after(createSingleMessageDiv(
                 ui,
                 userA,
                 userB,
                 message
-            ),this._innerMessageDiv.firstChild)
+            ))
         )
         this.syncInnerMessageDivScroll()
     }
