@@ -2,7 +2,7 @@
     let[
         compile,
     ]=await Promise.all([
-        module.shareImport('compile.js'),
+        module.shareImport('createSingleMessageDiv/compile.js'),
     ])
     return createSingleMessageDiv
     function createSingleMessageDiv(ui,userA,userB,message){
