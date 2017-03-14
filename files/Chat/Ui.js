@@ -1,11 +1,13 @@
 (async()=>{
     let[
-        createMessageDiv,
+        EventEmmiter,
         ImageUploader,
+        createMessageDiv,
         createSingleMessageDiv,
     ]=await Promise.all([
-        module.shareImport('Ui/createMessageDiv.js'),
+        module.repository.althea.EventEmmiter,
         module.repository.althea.ImageUploader,
+        module.shareImport('Ui/createMessageDiv.js'),
         module.shareImport('Ui/createSingleMessageDiv.js'),
     ])
     function Ui(site,chat){
@@ -21,6 +23,7 @@
             this.updateTextareaHeight()
         })
     }
+    Object.setPrototypeOf(Ui.prototype,EventEmmiter.prototype)
     Ui.prototype.beAppended=function(){
         this.updateMessageDivHeight()
     }
@@ -50,6 +53,9 @@
             ))
         )
         this.syncInnerMessageDivScroll()
+    }
+    Ui.prototype._queryOlder=function(){
+        console.log('queryOlder')
     }
     function createDiv(ui){
         let chat=ui._chat

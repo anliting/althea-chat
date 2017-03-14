@@ -10,6 +10,10 @@
         let chat=ui._chat
         let div=document.createElement('div')
         div.className='innerMessage'
+        div.addEventListener('scroll',e=>{
+            if(div.scrollTop==0)
+                ui._queryOlder()
+        })
         ui.atBottom=Math.abs(
             div.scrollTop+div.clientHeight-div.scrollHeight
         )<=1
