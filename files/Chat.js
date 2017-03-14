@@ -14,8 +14,9 @@
         this._target=target
         this._messages=[]
         this._getMessagesPromise={}
-        this.getMessages('before')
-        setInterval(()=>this.getMessages('after'),200)
+        this.getMessages('before').then(()=>{
+            setInterval(()=>this.getMessages('after'),200)
+        })
     }
     Object.setPrototypeOf(Chat.prototype,EventEmmiter.prototype)
     Object.defineProperty(Chat.prototype,'currentUser',{async get(){
