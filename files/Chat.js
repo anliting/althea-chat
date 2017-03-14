@@ -62,6 +62,8 @@
         let res=await this._getMessagesPromise
         if(this._ui)
             this._ui.append(res)
+        if(res.length)
+            this.emit('append')
         Array.prototype.push.apply(this._messages,res)
         delete this._getMessagesPromise
     }

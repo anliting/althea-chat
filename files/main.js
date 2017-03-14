@@ -28,8 +28,8 @@ async function title(chat,target){
     let notification
     updateTitle()
     setInterval(updateTitle,1000)
-    chat.on('append',mes=>{
-        if(mes.length&&document.hidden)
+    chat.on('append',()=>{
+        if(document.hidden)
             notification=0
     })
     document.addEventListener('visibilitychange',e=>{
