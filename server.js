@@ -1,8 +1,21 @@
 let entities=require('entities')
 module.exports=althea=>{
-    althea.addPagemodule('chat',pagemodule)
+    althea.addPagemodule(env=>{
+        let path=env.analyze.request.parsedUrl.pathname.split('/')
+        return path[1]=='chat'&&path.length==3
+    },pagemodule)
 }
-function pagemodule(env){
+async function pagemodule(env){
+    let path=env.analyze.request.parsedUrl.pathname.split('/')
+    try{
+        let id=await env.database.getUserIdByUsername(path[2])
+        env.userId=id
+        return f(env)
+    }catch(e){
+        return env.httpServer.pagemodules.s400(env)
+    }
+}
+function f(env){
     if(!env.althea.allowOrigin(env.envVars,env.request.headers.origin))
         return 403
     if(env.request.method=='GET')
