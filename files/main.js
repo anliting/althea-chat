@@ -7,15 +7,15 @@ module.importByPath('lib/general.js',{mode:1}).then(general=>{
             site.getUser(module.arguments.userId)
         ),
         chat=loadChat(target)
-    title(chat,target)
-    body(chat)
+    notification(chat,target)
+    content(chat)
 })
 async function loadChat(target){
     let site=module.repository.althea.site
     let Chat=await module.shareImport('Chat.js')
     return new Chat(site,target)
 }
-async function title(chat,target){
+async function notification(chat,target){
     await Promise.all([
         (async()=>{
             chat=await chat
@@ -27,30 +27,32 @@ async function title(chat,target){
     ])
     let
         tabIsFocused=true,
-        notification
+        notification=0,
+        unread=0
     updateTitle()
     setInterval(updateTitle,1000)
     chat.on('append',()=>{
-        if(!tabIsFocused){
-            notification=0
-            console.log('play disjoint sound')
-        }
+        if(tabIsFocused)
+            return
+        if(unread==0)
+            notification=1
+        unread++
+        console.log('play disjoint complete sound')
     })
     addEventListener('focusin',e=>{
         tabIsFocused=true
-        notification=undefined
+        unread=0
     })
     addEventListener('focusout',e=>{
         tabIsFocused=false
     })
     function updateTitle(){
-        let notiPart=notification==undefined?'':`${'◯⬤'[notification]} `
+        let notiPart=unread==0?'':`${'◯⬤'[notification]} (${unread}) `
         document.title=`${notiPart}↔ ${target.nickname}`
-        if(notification!=undefined)
-            notification=1-notification
+        notification=1-notification
     }
 }
-async function body(chat){
+async function content(chat){
     chat=await chat
     let ui=chat.ui,node=ui.node
     document.head.appendChild(await style)
