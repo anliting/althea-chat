@@ -18,24 +18,24 @@
             ui.syncInnerMessageDivScroll()
         })()
         return div
-        function createSpan(message){
-            let
-                span=document.createElement('span'),
-                promises=[]
-            span.title=message.timestamp
-            span.innerHTML=compile(message.message)
-            let collection=span.getElementsByTagName('img')
-            for(let i=0;i<collection.length;i++){
-                let img=collection[i]
-                promises.push(new Promise((rs,rj)=>{
-                    img.addEventListener('load',rs)
-                    img.addEventListener('error',rs)
-                }))
-            }
-            return{
-                span,
-                promise:Promise.all(promises)
-            }
+    }
+    function createSpan(message){
+        let
+            span=document.createElement('span'),
+            promises=[]
+        span.title=message.timestamp
+        span.innerHTML=compile(message.message)
+        let collection=span.getElementsByTagName('img')
+        for(let i=0;i<collection.length;i++){
+            let img=collection[i]
+            promises.push(new Promise((rs,rj)=>{
+                img.addEventListener('load',rs)
+                img.addEventListener('error',rs)
+            }))
+        }
+        return{
+            span,
+            promise:Promise.all(promises)
         }
     }
 })()
