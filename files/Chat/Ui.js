@@ -43,7 +43,7 @@
     }
     Ui.prototype.prepend=async function(messages){
         let ui=this,chat=this._chat
-        let[userA,userB]=await chat.readyToRenderMessages
+        let[userA,userB]=await chat._readyToRenderMessages
         messages=messages.slice()
         messages.reverse()
         messages.map(message=>
@@ -58,7 +58,7 @@
     }
     Ui.prototype.append=async function(messages){
         let ui=this,chat=this._chat
-        let[userA,userB]=await chat.readyToRenderMessages
+        let[userA,userB]=await chat._readyToRenderMessages
         messages.map(message=>
             this._innerMessageDiv.appendChild(createSingleMessageDiv(
                 ui,

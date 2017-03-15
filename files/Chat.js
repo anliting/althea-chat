@@ -14,6 +14,7 @@
         this._target=target
         this._messages=[]
         this._getMessagesPromise={}
+        this._ready={}
         this._getMessages('before').then(()=>{
             setInterval(()=>this._getMessages('after'),200)
         })
@@ -23,19 +24,19 @@
         let site=await this._site
         return site.currentUser
     }})
-    Object.defineProperty(Chat.prototype,'readyToGetMessages',{get(){
-        if(this._readyToGetMessages)
-            return this._readyToGetMessages
-        return this._readyToGetMessages=Promise.all([
+    Object.defineProperty(Chat.prototype,'_readyToGetMessages',{get(){
+        if(this._ready.getMessages)
+            return this._ready.getMessages
+        return this._ready.getMessages=Promise.all([
             this._site,
             this._target,
         ])
     }})
-    Object.defineProperty(Chat.prototype,'readyToRenderMessages',{get(){
-        if(this._readyToRenderMessages)
-            return this._readyToRenderMessages
+    Object.defineProperty(Chat.prototype,'_readyToRenderMessages',{get(){
+        if(this._ready.renderMessages)
+            return this._ready.renderMessages
         let loadNickname=u=>u.load('nickname')
-        return this._readyToRenderMessages=Promise.all([
+        return this._ready.renderMessages=Promise.all([
             this._currentUser.then(loadNickname),
             this._target.then(loadNickname),
         ])
@@ -46,7 +47,7 @@
             [
                 site,
                 targetUser,
-            ]=await this.readyToGetMessages
+            ]=await this._readyToGetMessages
         let doc={
             function:   'getMessages',
             target:     targetUser.id,
