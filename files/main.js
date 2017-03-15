@@ -25,16 +25,21 @@ async function title(chat,target){
             await target.load('nickname')
         })(),
     ])
-    let notification
+    let
+        tabIsFocused=true,
+        notification
     updateTitle()
     setInterval(updateTitle,1000)
     chat.on('append',()=>{
-        if(document.hidden)
+        if(!tabIsFocused)
             notification=0
     })
-    document.addEventListener('visibilitychange',e=>{
-        if(!document.hidden)
-            notification=undefined
+    addEventListener('focusin',e=>{
+        tabIsFocused=true
+        notification=undefined
+    })
+    addEventListener('focusout',e=>{
+        tabIsFocused=false
     })
     function updateTitle(){
         let notiPart=notification==undefined?'':`${'◯⬤'[notification]} `
