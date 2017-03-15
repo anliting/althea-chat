@@ -31,8 +31,10 @@ async function title(chat,target){
     updateTitle()
     setInterval(updateTitle,1000)
     chat.on('append',()=>{
-        if(!tabIsFocused)
+        if(!tabIsFocused){
             notification=0
+            console.log('play disjoint sound')
+        }
     })
     addEventListener('focusin',e=>{
         tabIsFocused=true
