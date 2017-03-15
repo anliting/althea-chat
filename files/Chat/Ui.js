@@ -2,11 +2,13 @@
     let[
         EventEmmiter,
         ImageUploader,
+        dom,
         createMessageDiv,
         createSingleMessageDiv,
     ]=await Promise.all([
         module.repository.althea.EventEmmiter,
         module.repository.althea.ImageUploader,
+        module.repository.althea.dom,
         module.shareImport('Ui/createMessageDiv.js'),
         module.shareImport('Ui/createSingleMessageDiv.js'),
     ])
@@ -15,13 +17,6 @@
         this._chat=chat
         this._imageUploader=new ImageUploader(this._site)
         this.node=createDiv(this)
-        this._imageUploader.on('upload',async imageIds=>{
-            (await imageIds).map(id=>{
-                this.textarea.value+=
-                    `<img src=img/${id}c800x600.jpg>\n`
-            })
-            this.updateTextareaHeight()
-        })
     }
     Object.setPrototypeOf(Ui.prototype,EventEmmiter.prototype)
     Ui.prototype.beAppended=function(){
@@ -86,7 +81,8 @@
         let div=document.createElement('div')
         div.className='send'
         div.appendChild(ui.textarea=createTextarea())
-        div.appendChild(ui._imageUploader.view)
+        setupFileButton(ui)
+        div.appendChild(ui._fileButton.n)
         return div
         function createTextarea(){
             let textarea=document.createElement('textarea')
@@ -112,6 +108,19 @@
                 textarea.placeholder=`${user.nickname}: `
             })()
             return textarea
+        }
+        function setupFileButton(ui){
+            ui._fileButton=dom.createFileButton('Image')
+            ui._fileButton.on('file',async a=>{
+                ui._fileButton.n.disabled=true
+                let imageIds=await ui._imageUploader.uploadImages(a)
+                imageIds.map(id=>{
+                    ui.textarea.value+=
+                        `<img src=img/${id}c800x600.jpg>\n`
+                })
+                ui.updateTextareaHeight()
+                ui._fileButton.n.disabled=false
+            })
         }
     }
     return Ui
