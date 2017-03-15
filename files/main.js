@@ -1,5 +1,5 @@
 let style=module.styleByPath('plugins/althea-chat/main.css')
-module.importByPath('lib/general.js',{mode:1}).then(async general=>{
+module.importByPath('lib/general.js',{mode:1}).then(general=>{
     general(module)
     let
         site=module.repository.althea.site,

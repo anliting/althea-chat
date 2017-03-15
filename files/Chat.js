@@ -14,12 +14,12 @@
         this._target=target
         this._messages=[]
         this._getMessagesPromise={}
-        this.getMessages('before').then(()=>{
-            setInterval(()=>this.getMessages('after'),200)
+        this._getMessages('before').then(()=>{
+            setInterval(()=>this._getMessages('after'),200)
         })
     }
     Object.setPrototypeOf(Chat.prototype,EventEmmiter.prototype)
-    Object.defineProperty(Chat.prototype,'currentUser',{async get(){
+    Object.defineProperty(Chat.prototype,'_currentUser',{async get(){
         let site=await this._site
         return site.currentUser
     }})
@@ -36,11 +36,11 @@
             return this._readyToRenderMessages
         let loadNickname=u=>u.load('nickname')
         return this._readyToRenderMessages=Promise.all([
-            this.currentUser.then(loadNickname),
+            this._currentUser.then(loadNickname),
             this._target.then(loadNickname),
         ])
     }})
-    Chat.prototype._getMessages=async function(mode){
+    Chat.prototype._getMessagesData=async function(mode){
         let
             chat=this,
             [
@@ -73,10 +73,10 @@
                 chat._messages[chat._messages.length-1].id+1
         }
     }
-    Chat.prototype.getMessages=async function(mode='after'){
+    Chat.prototype._getMessages=async function(mode='after'){
         if(this._getMessagesPromise[mode])
             return
-        this._getMessagesPromise[mode]=this._getMessages(mode)
+        this._getMessagesPromise[mode]=this._getMessagesData(mode)
         let res=await this._getMessagesPromise[mode]
         if(res.length){
             res.sort((a,b)=>a.id-b.id)
@@ -94,7 +94,7 @@
         }
         delete this._getMessagesPromise[mode]
     }
-    Chat.prototype.sendMessage=async function(message){
+    Chat.prototype._sendMessage=async function(message){
         let
             site=       await this._site,
             targetUser= await this._target
@@ -108,8 +108,8 @@
         if(this._ui)
             return this._ui
         let ui=new Ui(this._site,this)
-        ui.queryOlder=()=>
-            this.getMessages('before')
+        ui.queryOlder=()=>this._getMessages('before')
+        ui.sendMessage=m=>this._sendMessage(m)
         return this._ui=ui
     }})
     return Chat

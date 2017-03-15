@@ -82,11 +82,11 @@
         div.appendChild(ui.sendDiv=createSendDiv(chat,ui))
         return div
     }
-    function createSendDiv(chat,chatView){
+    function createSendDiv(chat,ui){
         let div=document.createElement('div')
         div.className='send'
-        div.appendChild(chatView.textarea=createTextarea())
-        div.appendChild(chatView._imageUploader.view)
+        div.appendChild(ui.textarea=createTextarea())
+        div.appendChild(ui._imageUploader.view)
         return div
         function createTextarea(){
             let textarea=document.createElement('textarea')
@@ -97,17 +97,17 @@
                     e.stopPropagation()
                     e.preventDefault()
                     if(textarea.value!=''){
-                        chat.sendMessage(textarea.value)
+                        ui.sendMessage(textarea.value)
                         textarea.value=''
                     }
                     return
                 }
             })
             textarea.addEventListener('input',e=>{
-                chatView.updateTextareaHeight()
+                ui.updateTextareaHeight()
             })
             ;(async()=>{
-                let user=await chat.currentUser
+                let user=await chat._currentUser
                 await user.load('nickname')
                 textarea.placeholder=`${user.nickname}: `
             })()
