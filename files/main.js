@@ -38,6 +38,7 @@ async function notification(chat,target){
             notification=1
         unread++
         console.log('play disjoint complete sound')
+        playSound()
     })
     addEventListener('focusin',e=>{
         tabIsFocused=true
@@ -59,4 +60,11 @@ async function content(chat){
     document.body.appendChild(node)
     ui.focus()
     ui.beAppended()
+}
+function playSound(){
+    let n=document.createElement('audio')
+    n.autoplay=true
+    n.src='plugins/althea-chat/notification.mp3'
+    n.onended=e=>document.body.removeChild(n)
+    document.body.appendChild(n)
 }
