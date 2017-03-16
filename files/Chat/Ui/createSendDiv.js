@@ -76,7 +76,7 @@
             n.appendChild(document.createTextNode('Notification Sound: '))
             let scroll=dom.createScroll(128)
             scroll.on('change',e=>{
-                console.log(scroll.value)
+                //console.log(scroll.value)
             })
             n.appendChild(scroll.node)
             return n
