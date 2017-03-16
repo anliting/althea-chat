@@ -9,7 +9,7 @@
         module.repository.althea.EventEmmiter,
         module.repository.althea.ImageUploader,
         module.shareImport('Ui/createMessageDiv.js'),
-        module.shareImport('Ui/createSingleMessageDiv.js'),
+        module.shareImport('Ui/createSingleMessageNode.js'),
         module.shareImport('Ui/createSendDiv.js'),
     ])
     function Ui(site,chat){

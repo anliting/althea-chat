@@ -1,8 +1,10 @@
 (async()=>{
     let[
         dom,
+        EventEmmiter,
     ]=await Promise.all([
         module.repository.althea.dom,
+        module.repository.althea.EventEmmiter,
     ])
     function createSendDiv(chat,ui){
         let div=document.createElement('div')
@@ -57,7 +59,27 @@
         function setupSettingsButton(ui){
             let n=document.createElement('button')
             n.textContent='Settings'
+            n.onclick=e=>{
+                let bF=dom.createBF()
+                ui.node.appendChild(bF.node)
+                bF.appendChild(createSettingsDiv())
+                bF.on('backClick',e=>{
+                    ui.node.removeChild(bF.node)
+                })
+            }
             ui._settingsButton=n
+        }
+        function createSettingsDiv(){
+            let n=document.createElement('div')
+            n.style.margin='32px 48px'
+            n.style.width='300px'
+            n.appendChild(document.createTextNode('Notification Sound: '))
+            let scroll=dom.createScroll(128)
+            scroll.on('change',e=>{
+                console.log(scroll.value)
+            })
+            n.appendChild(scroll.node)
+            return n
         }
     }
     return createSendDiv

@@ -2,22 +2,22 @@
     let[
         compile,
     ]=await Promise.all([
-        module.shareImport('createSingleMessageDiv/compile.js'),
+        module.shareImport('createSingleMessageNode/compile.js'),
     ])
-    return createSingleMessageDiv
-    function createSingleMessageDiv(ui,userA,userB,message){
-        let div=document.createElement('div')
+    return createSingleMessageNode
+    function createSingleMessageNode(ui,userA,userB,message){
+        let n=document.createElement('p')
         ;(async()=>{
             let a=await(message.fromUser==userA.id?userA:userB).finalA
             let span=createSpan(message)
-            div.appendChild(a)
-            div.appendChild(document.createTextNode(': '))
-            div.appendChild(span.span)
+            n.appendChild(a)
+            n.appendChild(document.createTextNode(': '))
+            n.appendChild(span.span)
             ui.syncInnerMessageDivScroll()
             await span.promise
             ui.syncInnerMessageDivScroll()
         })()
-        return div
+        return n
     }
     function createSpan(message){
         let
