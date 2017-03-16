@@ -10,6 +10,11 @@
         div.appendChild(ui.textarea=createTextarea())
         setupFileButton(ui)
         div.appendChild(ui._fileButton.n)
+        if(localStorage.hacker){
+            div.appendChild(document.createTextNode(' '))
+            setupSettingsButton(ui)
+            div.appendChild(ui._settingsButton)
+        }
         return div
         function createTextarea(){
             let textarea=document.createElement('textarea')
@@ -48,6 +53,11 @@
                 ui.updateTextareaHeight()
                 ui._fileButton.n.disabled=false
             })
+        }
+        function setupSettingsButton(ui){
+            let n=document.createElement('button')
+            n.textContent='Settings'
+            ui._settingsButton=n
         }
     }
     return createSendDiv

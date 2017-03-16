@@ -15,9 +15,9 @@
         this._messages=[]
         this._getMessagesPromise={}
         this._ready={}
-        this._getMessages('before').then(()=>{
+        this._getMessages('before').then(()=>
             setInterval(()=>this._getMessages('after'),200)
-        })
+        )
     }
     Object.setPrototypeOf(Chat.prototype,EventEmmiter.prototype)
     Object.defineProperty(Chat.prototype,'_currentUser',{async get(){
@@ -96,12 +96,9 @@
         delete this._getMessagesPromise[mode]
     }
     Chat.prototype._sendMessage=async function(message){
-        let
-            site=       await this._site,
-            targetUser= await this._target
-        site.send({
+        ;(await this._site).send({
             function:   'sendMessage',
-            target:     targetUser.id,
+            target:     (await this._target).id,
             message,
         })
     }

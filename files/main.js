@@ -1,4 +1,8 @@
-let style=module.styleByPath('plugins/althea-chat/main.css')
+let
+    style=module.styleByPath('plugins/althea-chat/main.css'),
+    settings={
+        notificationSound:false,
+    }
 module.importByPath('lib/general.js',{mode:1}).then(general=>{
     general(module)
     let
@@ -37,7 +41,6 @@ async function notification(chat,target){
         if(unread==0)
             notification=1
         unread++
-        console.log('play disjoint complete sound')
         playSound()
     })
     addEventListener('focusin',e=>{
