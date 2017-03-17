@@ -76,6 +76,7 @@
         let chat=ui._chat
         let div=document.createElement('div')
         div.className='chat'
+        div.style.backgroundColor='white'
         div.appendChild(ui.messageDiv=
             createMessageDiv(ui)
         )
