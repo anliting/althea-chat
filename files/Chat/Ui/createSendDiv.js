@@ -13,9 +13,9 @@
         div.appendChild(document.createTextNode(' '))
         setupSettingsButton(ui)
         div.appendChild(ui._settingsButton)
-        fullscreen()
+        //fullscreen()
         return div
-        async function fullscreen(){
+        /*async function fullscreen(){
             if((await module.repository.althea.browser).isMobile){
                 div.appendChild(document.createTextNode(' '))
                 div.appendChild(createFullscreenButton())
@@ -38,7 +38,7 @@
                 }
                 return n
             }
-        }
+        }*/
         function createTextarea(){
             let textarea=document.createElement('textarea')
             textarea.rows=2
