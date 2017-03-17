@@ -38,7 +38,7 @@ div.chat>div.message>div.innerMessage a.user{
     text-decoration:none;
 }
 div.chat>div.message>div.innerMessage img{
-    max-width:100%;
+    max-width:60%;
 }
 div.chat>div.send>textarea{
     width:calc(100% - 6px);
