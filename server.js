@@ -1,4 +1,3 @@
-let entities=require('entities')
 module.exports=althea=>{
     althea.addPagemodule(env=>{
         let path=env.analyze.request.parsedUrl.pathname.split('/')
@@ -37,11 +36,13 @@ function get(env){
 <base href=${env.config.root}>
 <meta name=viewport content='width=device-width,initial-scale=1'>
 <body>
-<script src=${
-    env.environmentvariables.moduleUrl
-} data-main=plugins/althea-chat/main.js data-args=${entities.encodeHTML(JSON.stringify({
-    userId:env.userId
-}))} async></script>
+${env.althea.loadModule(
+    env.envVars,
+    '../plugins/althea-chat/main.js',
+    {
+        userId:env.userId
+    }
+)}
 `
     }
 }
