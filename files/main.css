@@ -62,9 +62,10 @@ div.chat>div.send>textarea{
     height:100%;
     background-color:white;
 }
-body:-webkit-full-screen>div.chat{
+body:-webkit-full-screen>.chat{
     padding:8px;
     width:calc(100% - 16px);
     height:calc(100% - 16px);
+    background-color:white;
 }*/
 /* end fullscreen */
