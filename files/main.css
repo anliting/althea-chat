@@ -55,3 +55,14 @@ div.chat>div.send>textarea{
     border-radius:6px;
     background:#BBB;
 }
+body:-webkit-full-screen{
+    margin:0;
+    width:100%;
+    height:100%;
+    background-color:white;
+}
+body:-webkit-full-screen>div.chat{
+    padding:8px;
+    width:calc(100% - 16px);
+    height:calc(100% - 16px);
+}

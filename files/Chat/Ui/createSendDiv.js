@@ -21,10 +21,21 @@
                 div.appendChild(createFullscreenButton())
             }
             function createFullscreenButton(){
-                let n=document.createElement('button')
-                n.textContent='Fullscreen'
-                n.onclick=e=>
-                    document.body.webkitRequestFullscreen()
+                let
+                    status=0,
+                    n=document.createElement('button')
+                updateTextContent()
+                n.onclick=e=>{
+                    status=1-status
+                    updateTextContent()
+                    if(status==0)
+                        document.webkitExitFullscreen()
+                    else
+                        document.body.webkitRequestFullscreen()
+                }
+                function updateTextContent(){
+                    n.textContent=['Fullscreen','Window'][status]
+                }
                 return n
             }
         }
