@@ -74,6 +74,7 @@
             scroll.value=ui.getSetting('notificationSound')
             scroll.on('change',e=>{
                 ui.setSetting('notificationSound',scroll.value)
+                ui.playNotificationSound()
             })
             n.appendChild(scroll.node)
             return n

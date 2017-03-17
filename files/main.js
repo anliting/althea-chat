@@ -20,6 +20,7 @@ async function loadChat(target){
     let chat=new Chat(site,target)
     chat.getSetting=k=>settings[k]
     chat.setSetting=(k,v)=>settings[k]=v
+    chat.playNotificationSound=()=>playSound()
     return chat
 }
 async function notification(chat,target){

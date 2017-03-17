@@ -110,6 +110,7 @@
         ui.sendMessage=m=>this._sendMessage(m)
         ui.getSetting=k=>this.getSetting(k)
         ui.setSetting=(k,v)=>this.setSetting(k,v)
+        ui.playNotificationSound=()=>this.playNotificationSound()
         return this._ui=ui
     }})
     return Chat
