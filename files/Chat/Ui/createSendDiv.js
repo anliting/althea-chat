@@ -1,4 +1,28 @@
-(async()=>{
+/*async function fullscreen(div){
+    if((await module.repository.althea.browser).isMobile){
+        div.appendChild(document.createTextNode(' '))
+        div.appendChild(createFullscreenButton())
+    }
+    function createFullscreenButton(){
+        let
+            status=0,
+            n=document.createElement('button')
+        updateTextContent()
+        n.onclick=e=>{
+            status=1-status
+            updateTextContent()
+            if(status==0)
+                document.webkitExitFullscreen()
+            else
+                document.body.webkitRequestFullscreen()
+        }
+        function updateTextContent(){
+            n.textContent=['Fullscreen','Window'][status]
+        }
+        return n
+    }
+}*/
+;(async()=>{
     let[
         dom,
     ]=await Promise.all([
@@ -13,32 +37,8 @@
         div.appendChild(document.createTextNode(' '))
         setupSettingsButton(ui)
         div.appendChild(ui._settingsButton)
-        //fullscreen()
+        //fullscreen(div)
         return div
-        /*async function fullscreen(){
-            if((await module.repository.althea.browser).isMobile){
-                div.appendChild(document.createTextNode(' '))
-                div.appendChild(createFullscreenButton())
-            }
-            function createFullscreenButton(){
-                let
-                    status=0,
-                    n=document.createElement('button')
-                updateTextContent()
-                n.onclick=e=>{
-                    status=1-status
-                    updateTextContent()
-                    if(status==0)
-                        document.webkitExitFullscreen()
-                    else
-                        document.body.webkitRequestFullscreen()
-                }
-                function updateTextContent(){
-                    n.textContent=['Fullscreen','Window'][status]
-                }
-                return n
-            }
-        }*/
         function createTextarea(){
             let textarea=document.createElement('textarea')
             textarea.rows=2
@@ -93,9 +93,10 @@
         function createSettingsDiv(ui){
             let n=document.createElement('div')
             n.style.margin='32px 48px'
-            n.style.width='300px'
+            n.style.width='280px'
             n.appendChild(document.createTextNode('Notification Sound: '))
-            let scroll=dom.createScroll(128)
+            n.appendChild(document.createElement('br'))
+            let scroll=dom.createScroll(200)
             scroll.value=ui.getSetting('notificationSound')
             scroll.on('change',e=>{
                 ui.setSetting('notificationSound',scroll.value)
