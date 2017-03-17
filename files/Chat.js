@@ -7,7 +7,7 @@
             module.repository.althea.EventEmmiter,
             module.shareImport('Chat/Ui.js'),
         ]),
-        blockSize=64
+        blockSize=16
     function Chat(site,target){
         EventEmmiter.call(this)
         this._site=site
