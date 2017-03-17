@@ -67,7 +67,7 @@ let whitelist={
             }
             function matchTag(s){
                 let m=s.match(
-                    /\<([a-z]+)((?: [a-z]+(?:=[^ >]*)?)*)\>/
+                    /\<([a-z]+)((?: [a-z]+(?:=[^\t\n >]*)?)*)\>/
                 )
                 if(!m)
                     return
@@ -79,8 +79,7 @@ let whitelist={
             function parseAttributes(s){
                 let res={}
                 s.split(' ').slice(1).forEach(s=>{
-                    let m=s.match(/([a-z]+)(?:=([^ >]*))?/)
-                    console.log(m[1],m[2])
+                    let m=s.match(/([a-z]+)(?:=([^\t\n >]*))?/)
                     res[m[1]]=m[2]
                 })
                 return res
