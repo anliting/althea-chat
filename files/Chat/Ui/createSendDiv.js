@@ -68,7 +68,7 @@
             ui._fileButton=dom.createFileButton('Image')
             ui._fileButton.on('file',async a=>{
                 ui._fileButton.n.disabled=true
-                let imageIds=await ui._imageUploader.uploadImages(a)
+                let imageIds=await ui.imageUploader.uploadImages(a)
                 imageIds.map(id=>{
                     ui.textarea.value+=
                         `<img src=img/${id}c800x600.jpg>\n`
@@ -93,7 +93,7 @@
         function createSettingsDiv(ui){
             let n=document.createElement('div')
             n.style.margin='32px 48px'
-            n.style.width='280px'
+            n.style.width='240px'
             n.appendChild(document.createTextNode('Notification Sound: '))
             n.appendChild(document.createElement('br'))
             let scroll=dom.createScroll(200)

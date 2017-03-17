@@ -1,21 +1,17 @@
 (async()=>{
     let[
         EventEmmiter,
-        ImageUploader,
         createMessageDiv,
         createSingleMessageDiv,
         createSendDiv,
     ]=await Promise.all([
         module.repository.althea.EventEmmiter,
-        module.repository.althea.ImageUploader,
         module.shareImport('Ui/createMessageDiv.js'),
         module.shareImport('Ui/createSingleMessageNode.js'),
         module.shareImport('Ui/createSendDiv.js'),
     ])
-    function Ui(site,chat){
-        this._site=site
+    function Ui(chat){
         this._chat=chat
-        this._imageUploader=new ImageUploader(this._site)
         this.node=createDiv(this)
     }
     Object.setPrototypeOf(Ui.prototype,EventEmmiter.prototype)

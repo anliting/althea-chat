@@ -2,9 +2,11 @@
     let
         [
             EventEmmiter,
+            ImageUploader,
             Ui,
         ]=await Promise.all([
             module.repository.althea.EventEmmiter,
+            module.repository.althea.ImageUploader,
             module.shareImport('Chat/Ui.js'),
         ]),
         blockSize=16
@@ -105,12 +107,13 @@
     Object.defineProperty(Chat.prototype,'ui',{get(){
         if(this._ui)
             return this._ui
-        let ui=new Ui(this._site,this)
+        let ui=new Ui(this)
         ui.queryOlder=()=>this._getMessages('before')
         ui.sendMessage=m=>this._sendMessage(m)
         ui.getSetting=this.getSetting
         ui.setSetting=this.setSetting
         ui.playNotificationSound=this.playNotificationSound
+        ui.imageUploader=new ImageUploader(this._site)
         return this._ui=ui
     }})
     return Chat
