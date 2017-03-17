@@ -1,10 +1,8 @@
 (async()=>{
     let[
         dom,
-        EventEmmiter,
     ]=await Promise.all([
         module.repository.althea.dom,
-        module.repository.althea.EventEmmiter,
     ])
     function createSendDiv(chat,ui){
         let div=document.createElement('div')
@@ -12,11 +10,9 @@
         div.appendChild(ui.textarea=createTextarea())
         setupFileButton(ui)
         div.appendChild(ui._fileButton.n)
-        if(localStorage.hacker){
-            div.appendChild(document.createTextNode(' '))
-            setupSettingsButton(ui)
-            div.appendChild(ui._settingsButton)
-        }
+        div.appendChild(document.createTextNode(' '))
+        setupSettingsButton(ui)
+        div.appendChild(ui._settingsButton)
         return div
         function createTextarea(){
             let textarea=document.createElement('textarea')
@@ -62,21 +58,22 @@
             n.onclick=e=>{
                 let bF=dom.createBF()
                 ui.node.appendChild(bF.node)
-                bF.appendChild(createSettingsDiv())
+                bF.appendChild(createSettingsDiv(ui))
                 bF.on('backClick',e=>{
                     ui.node.removeChild(bF.node)
                 })
             }
             ui._settingsButton=n
         }
-        function createSettingsDiv(){
+        function createSettingsDiv(ui){
             let n=document.createElement('div')
             n.style.margin='32px 48px'
             n.style.width='300px'
             n.appendChild(document.createTextNode('Notification Sound: '))
             let scroll=dom.createScroll(128)
+            scroll.value=ui.getSetting('notificationSound')
             scroll.on('change',e=>{
-                //console.log(scroll.value)
+                ui.setSetting('notificationSound',scroll.value)
             })
             n.appendChild(scroll.node)
             return n

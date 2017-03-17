@@ -108,6 +108,8 @@
         let ui=new Ui(this._site,this)
         ui.queryOlder=()=>this._getMessages('before')
         ui.sendMessage=m=>this._sendMessage(m)
+        ui.getSetting=k=>this.getSetting(k)
+        ui.setSetting=(k,v)=>this.setSetting(k,v)
         return this._ui=ui
     }})
     return Chat

@@ -1,7 +1,7 @@
 let
     style=module.styleByPath('plugins/althea-chat/main.css'),
     settings={
-        notificationSound:false,
+        notificationSound:0,
     }
 module.importByPath('lib/general.js',{mode:1}).then(general=>{
     general(module)
@@ -17,7 +17,10 @@ module.importByPath('lib/general.js',{mode:1}).then(general=>{
 async function loadChat(target){
     let site=module.repository.althea.site
     let Chat=await module.shareImport('Chat.js')
-    return new Chat(site,target)
+    let chat=new Chat(site,target)
+    chat.getSetting=k=>settings[k]
+    chat.setSetting=(k,v)=>settings[k]=v
+    return chat
 }
 async function notification(chat,target){
     await Promise.all([
@@ -69,5 +72,6 @@ function playSound(){
     n.autoplay=true
     n.src='plugins/althea-chat/notification.mp3'
     n.onended=e=>document.body.removeChild(n)
+    n.volume=settings.notificationSound
     document.body.appendChild(n)
 }
