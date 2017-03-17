@@ -1,4 +1,26 @@
-(async()=>{
+let whitelist={
+    br:{},
+    code:{
+        style:/.*/,
+    },
+    div:{
+        style:/.*/,
+    },
+    img:{
+        src:/^img\//,
+        style:/.*/,
+    },
+    p:{
+        style:/.*/,
+    },
+    pre:{
+        style:/.*/,
+    },
+    span:{
+        style:/.*/,
+    },
+}
+;(async()=>{
     let[
         html,
         url,
@@ -14,19 +36,6 @@
         );
         return res+html.encodeText(s)
         function renderHtml(){
-            let whitelist={
-                br:{},
-                div:{
-                    style:/.*/
-                },
-                img:{
-                    src:/^img\//
-                },
-                p:{},
-                span:{
-                    style:/.*/
-                },
-            }
             let tag=matchTag(s)
             if(!tag)
                 return
@@ -50,11 +59,9 @@
                     let
                         value=tag.attributes[i],
                         test=whitelist[tag.name][i]
-                    if(test instanceof RegExp){
+                    if(test instanceof RegExp)
                         if(!test.test(value))
                             return
-                        delete tag.attributes[i]
-                    }
                 }
                 return true
             }
