@@ -31,7 +31,9 @@
         }px)`
     }
     Ui.prototype.updateTextareaHeight=function(){
-        let rows=Math.min(4,this.textarea.value.split('\n').length)
+        let rows=Math.max(2,Math.min(4,
+            this.textarea.value.split('\n').length
+        ))
         this.textarea.rows=rows
         this.updateMessageDivHeight()
         this.syncInnerMessageDivScroll()

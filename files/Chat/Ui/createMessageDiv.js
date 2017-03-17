@@ -4,6 +4,9 @@
         let div=document.createElement('div')
         div.className='message'
         div.appendChild(ui._innerMessageDiv=createInnerMessageDiv(ui))
+        div.onclick=e=>{
+            getSelection().isCollapsed&&ui.textarea.focus()
+        }
         return div
     }
     function createInnerMessageDiv(ui){

@@ -108,9 +108,9 @@
         let ui=new Ui(this._site,this)
         ui.queryOlder=()=>this._getMessages('before')
         ui.sendMessage=m=>this._sendMessage(m)
-        ui.getSetting=k=>this.getSetting(k)
-        ui.setSetting=(k,v)=>this.setSetting(k,v)
-        ui.playNotificationSound=()=>this.playNotificationSound()
+        ui.getSetting=this.getSetting
+        ui.setSetting=this.setSetting
+        ui.playNotificationSound=this.playNotificationSound
         return this._ui=ui
     }})
     return Chat

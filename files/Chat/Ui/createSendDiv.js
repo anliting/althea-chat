@@ -16,7 +16,7 @@
         return div
         function createTextarea(){
             let textarea=document.createElement('textarea')
-            textarea.rows=1
+            textarea.rows=2
             textarea.addEventListener('keydown',e=>{
                 // if only enter
                 if(!e.ctrlKey&&!e.shiftKey&&e.keyCode==13){
