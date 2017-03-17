@@ -1,25 +1,34 @@
-let whitelist={
-    br:{},
-    code:{
-        style:/.*/,
-    },
-    div:{
-        style:/.*/,
-    },
-    img:{
-        src:/^img\//,
-        style:/.*/,
-    },
-    p:{
-        style:/.*/,
-    },
-    pre:{
-        style:/.*/,
-    },
-    span:{
-        style:/.*/,
-    },
-}
+let
+    emptyRegex=/(?:)/,
+    whitelist={
+        br:{},
+        code:{
+            style:emptyRegex,
+        },
+        div:{
+            style:emptyRegex,
+        },
+        iframe:{
+            width:emptyRegex,
+            height:emptyRegex,
+            src:/^https:\/\/www\.youtube\.com\/embed\//,
+            frameborder:emptyRegex,
+            allowfullscreen:emptyRegex,
+        },
+        img:{
+            src:/^img\//,
+            style:emptyRegex,
+        },
+        p:{
+            style:emptyRegex,
+        },
+        pre:{
+            style:emptyRegex,
+        },
+        span:{
+            style:emptyRegex,
+        },
+    }
 ;(async()=>{
     let[
         html,
@@ -79,8 +88,8 @@ let whitelist={
             function parseAttributes(s){
                 let res={}
                 s.split(' ').slice(1).forEach(s=>{
-                    let m=s.match(/([a-z]+)(?:=([^\t\n >]*))?/)
-                    res[m[1]]=m[2]
+                    let m=s.match(/([a-z]+)(?:=(?:([^"][^\t\n >]*)|"([^\t\n >]*)"))?/)
+                    res[m[1]]=m[2]||m[3]
                 })
                 return res
             }
