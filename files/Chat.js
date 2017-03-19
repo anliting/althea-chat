@@ -3,9 +3,11 @@
         [
             EventEmmiter,
             Ui,
+            style,
         ]=await Promise.all([
             module.repository.althea.EventEmmiter,
             module.shareImport('Chat/Ui.js'),
+            module.get('Chat/style.css'),
         ]),
         blockSize=16
     function Chat(imageUploader,currentUser,target){
@@ -93,6 +95,7 @@
     Chat.prototype._send=async function(doc){
         return(await this._sendFunction)(doc)
     }
+    Chat.prototype.style=style
     Object.defineProperty(Chat.prototype,'ui',{get(){
         if(this._ui)
             return this._ui

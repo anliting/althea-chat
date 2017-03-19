@@ -1,8 +1,10 @@
 let
-    style=module.styleByPath('plugins/althea-chat/main.css'),
+    mainStyle=module.get('main.css'),
     settings={
         notificationSound:0,
-    }
+    },
+    style=document.createElement('style')
+document.head.append(style)
 module.importByPath('lib/general.js',{mode:1}).then(general=>{
     general(module)
     let
@@ -75,7 +77,8 @@ async function notification(chat,target){
 async function content(chat){
     chat=await chat
     let ui=chat.ui,node=ui.node
-    document.head.appendChild(await style)
+    style.appendChild(document.createTextNode(await mainStyle))
+    style.appendChild(document.createTextNode(await chat.style))
     document.body.appendChild(node)
     ui.focus()
     ui.beAppended()
