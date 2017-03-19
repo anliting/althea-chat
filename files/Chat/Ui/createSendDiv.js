@@ -1,5 +1,4 @@
 function createTextarea(ui){
-    let chat=ui._chat
     let textarea=document.createElement('textarea')
     textarea.rows=2
     textarea.addEventListener('keydown',e=>{
@@ -18,7 +17,7 @@ function createTextarea(ui){
         ui.updateTextareaHeight()
     })
     ;(async()=>{
-        let user=await chat._currentUser
+        let user=await ui._currentUser
         await user.load('nickname')
         textarea.placeholder=`${user.nickname}: `
     })()

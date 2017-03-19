@@ -10,8 +10,9 @@
         module.shareImport('Ui/createSingleMessageNode.js'),
         module.shareImport('Ui/createSendDiv.js'),
     ])
-    function Ui(chat){
-        this._chat=chat
+    function Ui(currentUser,target){
+        this._currentUser=currentUser
+        this._target=target
         this.node=createDiv(this)
     }
     Object.setPrototypeOf(Ui.prototype,EventEmmiter.prototype)
@@ -35,8 +36,11 @@
         this.syncInnerMessageDivScroll()
     }
     async function uiAddMessages(messages,mode){
-        let chat=this._chat
-        let[userA,userB]=await chat._readyToRenderMessages
+        let[userA,userB]=await Promise.all([
+            this._currentUser,
+            this._target,
+        ])
+        await Promise.all([userA,userB].map(u=>u.load('nickname')))
         if(mode=='prepend'){
             messages=messages.slice()
             messages.reverse()

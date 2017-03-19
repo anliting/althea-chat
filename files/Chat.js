@@ -20,21 +20,11 @@
         )
         this._messages=[]
         this._getMessagesPromise={}
-        this._ready={}
         this._getMessages('before').then(()=>
             setInterval(()=>this._getMessages('after'),200)
         )
     }
     Object.setPrototypeOf(Chat.prototype,EventEmmiter.prototype)
-    Object.defineProperty(Chat.prototype,'_readyToRenderMessages',{get(){
-        if(this._ready.renderMessages)
-            return this._ready.renderMessages
-        let loadNickname=u=>u.load('nickname')
-        return this._ready.renderMessages=Promise.all([
-            this._currentUser.then(loadNickname),
-            this._target.then(loadNickname),
-        ])
-    }})
     Chat.prototype._getMessagesData=async function(mode){
         let
             chat=this
@@ -99,7 +89,10 @@
     Object.defineProperty(Chat.prototype,'ui',{get(){
         if(this._ui)
             return this._ui
-        let ui=new Ui(this)
+        let ui=new Ui(
+            this._currentUser,
+            this._target
+        )
         ui.queryOlder=()=>this._getMessages('before')
         ui.sendMessage=m=>this._sendMessage(m)
         ui.getSetting=this.getSetting

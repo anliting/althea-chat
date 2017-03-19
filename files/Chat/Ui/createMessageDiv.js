@@ -10,7 +10,6 @@
         return div
     }
     function createInnerMessageDiv(ui){
-        let chat=ui._chat
         let div=document.createElement('div')
         div.className='innerMessage'
         div.appendChild(ui._topDiv=createTopDiv(ui))
