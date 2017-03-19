@@ -6,18 +6,30 @@ let
 module.importByPath('lib/general.js',{mode:1}).then(general=>{
     general(module)
     let
-        site=module.repository.althea.site,
-        target=site.then(site=>
-            site.getUser(module.arguments.userId)
-        ),
-        chat=loadChat(target)
+        target=getUser(module.arguments.userId),
+        chat=createChat(target)
     notification(chat,target)
     content(chat)
 })
-async function loadChat(target){
+async function getUser(id){
+    let site=await module.repository.althea.site
+    return site.getUser(id)
+}
+async function createChat(target){
     let site=module.repository.althea.site
-    let Chat=await module.shareImport('Chat.js')
-    let chat=new Chat(site,target)
+    let[
+        Chat,
+        ImageUploader,
+    ]=await Promise.all([
+        module.shareImport('Chat.js'),
+        module.repository.althea.ImageUploader,
+    ])
+    let chat=new Chat(
+        new ImageUploader(site),
+        site.then(site=>site.currentUser),
+        target
+    )
+    chat.send=async d=>(await site).send(d)
     chat.getSetting=k=>settings[k]
     chat.setSetting=(k,v)=>settings[k]=v
     chat.playNotificationSound=playSound

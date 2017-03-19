@@ -2,38 +2,28 @@
     let
         [
             EventEmmiter,
-            ImageUploader,
             Ui,
         ]=await Promise.all([
             module.repository.althea.EventEmmiter,
-            module.repository.althea.ImageUploader,
             module.shareImport('Chat/Ui.js'),
         ]),
         blockSize=16
-    function Chat(site,target){
+    function Chat(imageUploader,currentUser,target){
         EventEmmiter.call(this)
-        this._site=site
+        this._imageUploader=imageUploader
+        this._sendFunction=new Promise(set=>
+            Object.defineProperty(this,'send',{set})
+        )
         this._target=target
         this._messages=[]
         this._getMessagesPromise={}
         this._ready={}
+        this._currentUser=currentUser
         this._getMessages('before').then(()=>
             setInterval(()=>this._getMessages('after'),200)
         )
     }
     Object.setPrototypeOf(Chat.prototype,EventEmmiter.prototype)
-    Object.defineProperty(Chat.prototype,'_currentUser',{async get(){
-        let site=await this._site
-        return site.currentUser
-    }})
-    Object.defineProperty(Chat.prototype,'_readyToGetMessages',{get(){
-        if(this._ready.getMessages)
-            return this._ready.getMessages
-        return this._ready.getMessages=Promise.all([
-            this._site,
-            this._target,
-        ])
-    }})
     Object.defineProperty(Chat.prototype,'_readyToRenderMessages',{get(){
         if(this._ready.renderMessages)
             return this._ready.renderMessages
@@ -45,14 +35,10 @@
     }})
     Chat.prototype._getMessagesData=async function(mode){
         let
-            chat=this,
-            [
-                site,
-                targetUser,
-            ]=await this._readyToGetMessages
+            chat=this
         let doc={
             function:   'getMessages',
-            target:     targetUser.id,
+            target:     (await this._target).id,
         }
         if(mode=='before'){
             doc.after=0
@@ -62,7 +48,7 @@
             doc.after=calcAfter()
             doc.before=0
         }
-        return site.send(doc)
+        return this._send(doc)
         function calcBefore(){
             return chat._messages.length==0?
                 0
@@ -98,11 +84,14 @@
         delete this._getMessagesPromise[mode]
     }
     Chat.prototype._sendMessage=async function(message){
-        ;(await this._site).send({
+        return this._send({
             function:   'sendMessage',
             target:     (await this._target).id,
             message,
         })
+    }
+    Chat.prototype._send=async function(doc){
+        return(await this._sendFunction)(doc)
     }
     Object.defineProperty(Chat.prototype,'ui',{get(){
         if(this._ui)
@@ -113,7 +102,7 @@
         ui.getSetting=this.getSetting
         ui.setSetting=this.setSetting
         ui.playNotificationSound=this.playNotificationSound
-        ui.imageUploader=new ImageUploader(this._site)
+        ui.imageUploader=this._imageUploader
         return this._ui=ui
     }})
     return Chat
