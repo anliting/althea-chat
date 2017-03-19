@@ -3,12 +3,12 @@
         EventEmmiter,
         createMessageDiv,
         createSingleMessageDiv,
-        createSendDiv,
+        createBottom,
     ]=await Promise.all([
         module.repository.althea.EventEmmiter,
         module.shareImport('Ui/createMessageDiv.js'),
         module.shareImport('Ui/createSingleMessageNode.js'),
-        module.shareImport('Ui/createSendDiv.js'),
+        module.shareImport('Ui/createBottom.js'),
     ])
     function Ui(currentUser,target){
         this._currentUser=currentUser
@@ -78,7 +78,7 @@
         div.appendChild(ui.messageDiv=
             createMessageDiv(ui)
         )
-        div.appendChild(ui.sendDiv=createSendDiv(ui))
+        div.appendChild(ui.sendDiv=createBottom(ui))
         return div
     }
     return Ui
