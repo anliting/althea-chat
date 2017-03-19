@@ -11,14 +11,14 @@
     function Chat(imageUploader,currentUser,target){
         EventEmmiter.call(this)
         this._imageUploader=imageUploader
+        this._currentUser=currentUser
+        this._target=target
         this._sendFunction=new Promise(set=>
             Object.defineProperty(this,'send',{set})
         )
-        this._target=target
         this._messages=[]
         this._getMessagesPromise={}
         this._ready={}
-        this._currentUser=currentUser
         this._getMessages('before').then(()=>
             setInterval(()=>this._getMessages('after'),200)
         )
