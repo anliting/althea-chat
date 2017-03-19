@@ -70,9 +70,9 @@ function createTextarea(ui){
         n.appendChild(scroll.node)
         return n
     }
-    function createSendDiv(ui){
+    function createBottom(ui){
         let div=document.createElement('div')
-        div.className='send'
+        div.className='bottom'
         div.appendChild(ui.textarea=createTextarea(ui))
         setupFileButton(ui)
         div.appendChild(ui._fileButton.n)
@@ -82,7 +82,7 @@ function createTextarea(ui){
         //fullscreen(div)
         return div
     }
-    return createSendDiv
+    return createBottom
 })()
 /*async function fullscreen(div){
     if((await module.repository.althea.browser).isMobile){

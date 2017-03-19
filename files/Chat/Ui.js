@@ -1,12 +1,10 @@
 (async()=>{
     let[
-        EventEmmiter,
-        createMessageDiv,
+        createMessage,
         createSingleMessageDiv,
         createBottom,
     ]=await Promise.all([
-        module.repository.althea.EventEmmiter,
-        module.shareImport('Ui/createMessageDiv.js'),
+        module.shareImport('Ui/createMessage.js'),
         module.shareImport('Ui/createSingleMessageNode.js'),
         module.shareImport('Ui/createBottom.js'),
     ])
@@ -15,7 +13,6 @@
         this._target=target
         this.node=createDiv(this)
     }
-    Object.setPrototypeOf(Ui.prototype,EventEmmiter.prototype)
     Ui.prototype.beAppended=function(){
         this.updateMessageDivHeight()
     }
@@ -35,34 +32,6 @@
         this.updateMessageDivHeight()
         this.syncInnerMessageDivScroll()
     }
-    async function uiAddMessages(messages,mode){
-        let[userA,userB]=await Promise.all([
-            this._currentUser,
-            this._target,
-        ])
-        await Promise.all([userA,userB].map(u=>u.load('nickname')))
-        if(mode=='prepend'){
-            messages=messages.slice()
-            messages.reverse()
-            messages.map(message=>
-                this._topDiv.after(createSingleMessageDiv(
-                    this,
-                    userA,
-                    userB,
-                    message
-                ))
-            )
-        }else if(mode=='append')
-            messages.map(message=>
-                this._innerMessageDiv.appendChild(createSingleMessageDiv(
-                    this,
-                    userA,
-                    userB,
-                    message
-                ))
-            )
-        this.syncInnerMessageDivScroll()
-    }
     Ui.prototype.prepend=async function(messages){
         return uiAddMessages.call(this,messages,'prepend')
     }
@@ -72,11 +41,30 @@
     Ui.prototype._queryOlder=function(){
         this.queryOlder()
     }
+    async function uiAddMessages(messages,mode){
+        let[userA,userB]=await Promise.all([
+            this._currentUser,
+            this._target,
+        ])
+        await Promise.all([userA,userB].map(u=>u.load('nickname')))
+        let insert
+        if(mode=='prepend'){
+            messages=messages.slice()
+            messages.reverse()
+            insert=div=>this._topDiv.after(div)
+        }else if(mode=='append'){
+            insert=div=>this._innerMessageDiv.appendChild(div)
+        }
+        messages.map(message=>
+            insert(createSingleMessageDiv(this,userA,userB,message))
+        )
+        this.syncInnerMessageDivScroll()
+    }
     function createDiv(ui){
         let div=document.createElement('div')
         div.className='chat'
         div.appendChild(ui.messageDiv=
-            createMessageDiv(ui)
+            createMessage(ui)
         )
         div.appendChild(ui.sendDiv=createBottom(ui))
         return div
