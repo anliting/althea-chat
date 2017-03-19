@@ -58,21 +58,23 @@
         if(this._getMessagesPromise[mode])
             return
         this._getMessagesPromise[mode]=this._getMessagesData(mode)
-        let res=await this._getMessagesPromise[mode]
-        if(res.length){
-            res.sort((a,b)=>a.id-b.id)
-            if(mode=='before'){
-                if(this._ui)
-                    this._ui.prepend(res)
-                this._messages=res.concat(this._messages)
-            }else if(mode=='after'){
-                if(this._ui)
-                    this._ui.append(res)
-                this._messages=this._messages.concat(res)
-                if(res.length)
-                    this.emit('append')
+        try{
+            let res=await this._getMessagesPromise[mode]
+            if(res.length){
+                res.sort((a,b)=>a.id-b.id)
+                if(mode=='before'){
+                    if(this._ui)
+                        this._ui.prepend(res)
+                    this._messages=res.concat(this._messages)
+                }else if(mode=='after'){
+                    if(this._ui)
+                        this._ui.append(res)
+                    this._messages=this._messages.concat(res)
+                    if(res.length)
+                        this.emit('append')
+                }
             }
-        }
+        }catch(e){}
         delete this._getMessagesPromise[mode]
     }
     Chat.prototype._sendMessage=async function(message){
