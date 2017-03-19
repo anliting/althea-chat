@@ -69,13 +69,12 @@
         this.queryOlder()
     }
     function createDiv(ui){
-        let chat=ui._chat
         let div=document.createElement('div')
         div.className='chat'
         div.appendChild(ui.messageDiv=
             createMessageDiv(ui)
         )
-        div.appendChild(ui.sendDiv=createSendDiv(chat,ui))
+        div.appendChild(ui.sendDiv=createSendDiv(ui))
         return div
     }
     return Ui
