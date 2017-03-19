@@ -1,11 +1,11 @@
 (async()=>{
     let[
         createMessage,
-        createSingleMessageDiv,
+        createSingleMessage,
         createBottom,
     ]=await Promise.all([
         module.shareImport('Ui/createMessage.js'),
-        module.shareImport('Ui/createSingleMessageNode.js'),
+        module.shareImport('Ui/createSingleMessage.js'),
         module.shareImport('Ui/createBottom.js'),
     ])
     function Ui(currentUser,target){
@@ -56,7 +56,7 @@
             insert=div=>this._innerMessageDiv.appendChild(div)
         }
         messages.map(message=>
-            insert(createSingleMessageDiv(this,userA,userB,message))
+            insert(createSingleMessage(this,userA,userB,message))
         )
         this.syncInnerMessageDivScroll()
     }

@@ -2,7 +2,7 @@
     let[
         compile,
     ]=await Promise.all([
-        module.shareImport('createSingleMessageNode/compile.js'),
+        module.shareImport('createSingleMessage/compile.js'),
     ])
     return createSingleMessageNode
     function createSingleMessageNode(ui,userA,userB,message){
