@@ -1,21 +1,29 @@
 (async()=>{
     let[
-        createChatRoom
+        createChatRoom,
+        mainStyle,
     ]=await Promise.all([
-        module.shareImport('chatPage/createChatRoom.js')
+        module.shareImport('chatPage/createChatRoom.js'),
+        module.get('chatPage/style.css'),
     ])
-    function ChatPage(){
+    let chatPage={}
+    chatPage.settings={
+        notificationSound:0,
     }
-    ChatPage.prototype.showChatRoom=function(id,settings,style,mainStyle){
+    chatPage.style=document.createElement('style')
+    chatPage.showContacts=function(){
+        document.title='Chat'
+    }
+    chatPage.showChatRoom=function(id){
         let
             target=getUser(id),
             chatRoom=createChatRoom(
                 target,
                 module.repository.althea.site,
-                settings
+                this.settings
             )
         notification(chatRoom,target)
-        content(chatRoom,style,mainStyle)
+        content.call(this,chatRoom)
         async function getUser(id){
             let site=await module.repository.althea.site
             return site.getUser(id)
@@ -58,14 +66,15 @@
             notification=1-notification
         }
     }
-    async function content(chat,style,mainStyle){
+    async function content(chat){
         chat=await chat
         let ui=chat.ui,node=ui.node
-        style.appendChild(document.createTextNode(await mainStyle))
-        style.appendChild(document.createTextNode(await chat.style))
+        this.style.appendChild(document.createTextNode(await mainStyle))
+        this.style.appendChild(document.createTextNode(await chat.style))
         document.body.appendChild(node)
         ui.focus()
         ui.beAppended()
     }
-    return new ChatPage
+    document.head.append(chatPage.style)
+    return chatPage
 })()
