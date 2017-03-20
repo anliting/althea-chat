@@ -12,8 +12,20 @@ chatPage.playSound=function(settings){
     n.volume=this.settings.notificationSound
     document.body.appendChild(n)
 }
-chatPage.showContacts=function(){
-    document.title='Chat'
+chatPage.showConversationList=function(){
+    document.title='Conversations - Chat'
+    let n=document.createElement('div')
+    n.className='conversationList'
+    ;(async()=>{
+        let site=await module.repository.althea.site
+        let conversations=await site.send('getConversations')
+        console.log(conversations)
+        conversations.map(con=>{
+            n.appendChild(document.createTextNode(con))
+            n.appendChild(document.createTextNode(' '))
+        })
+    })()
+    document.body.appendChild(n)
 }
 async function notification(chat,target){
     await Promise.all([
@@ -54,6 +66,9 @@ async function notification(chat,target){
 }
 ;(async()=>{
     ;(await module.importByPath('lib/general.js',{mode:1}))(module)
+    localStorage.hacker&&(async()=>{
+        module.repository.althea.hacker
+    })()
     module.repository.Chat=module.shareImport('Chat.js')
     let[
         createChatRoom,
@@ -87,7 +102,8 @@ async function notification(chat,target){
         ui.beAppended()
     }
     module.arguments.userId==undefined?
-        chatPage.showContacts()
+        localStorage.hacker&&
+            chatPage.showConversationList()
     :
         chatPage.showChatRoom(module.arguments.userId)
 })()

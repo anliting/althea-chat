@@ -7,3 +7,13 @@ body{
 a:active,a:link,a:hover,a:visited{
     color:blue;
 }
+.chat{
+    height:100%;
+    max-width:600px;
+    margin:0 auto;
+}
+.conversationList{
+    height:100%;
+    max-width:600px;
+    margin:0 auto;
+}
