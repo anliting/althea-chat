@@ -1,9 +1,9 @@
 let
     mainStyle=module.get('main.css'),
+    style=document.createElement('style'),
     settings={
         notificationSound:0,
-    },
-    style=document.createElement('style')
+    }
 document.head.append(style)
 ;(async()=>{
     (await module.importByPath('lib/general.js',{mode:1}))(module)
@@ -12,16 +12,16 @@ document.head.append(style)
     }else{
         let
             target=getUser(module.arguments.userId),
-            chat=createChat(target)
-        notification(chat,target)
-        content(chat)
+            chatRoom=createChatRoom(target)
+        notification(chatRoom,target)
+        content(chatRoom)
     }
 })()
 async function getUser(id){
     let site=await module.repository.althea.site
     return site.getUser(id)
 }
-async function createChat(target){
+async function createChatRoom(target){
     let site=module.repository.althea.site
     let[
         Chat,
@@ -30,23 +30,23 @@ async function createChat(target){
         module.shareImport('Chat.js'),
         module.repository.althea.ImageUploader,
     ])
-    let chat=new Chat.Room(
+    let chatRoom=new Chat.Room(
         new ImageUploader(site),
         (async()=>(await site).currentUser)(),
         target
     )
-    chat.send=async d=>(await site).send(d)
-    chat.getSetting=k=>settings[k]
-    chat.setSetting=(k,v)=>settings[k]=v
-    chat.playNotificationSound=playSound
+    chatRoom.send=async d=>(await site).send(d)
+    chatRoom.getSetting=k=>settings[k]
+    chatRoom.setSetting=(k,v)=>settings[k]=v
+    chatRoom.playNotificationSound=playSound
     ;(async site=>{
         site=await site
-        chat.connectionStatus=site.status
+        chatRoom.connectionStatus=site.status
         site.on('statusChange',_=>
-            chat.connectionStatus=site.status
+            chatRoom.connectionStatus=site.status
         )
     })(site)
-    return chat
+    return chatRoom
 }
 async function notification(chat,target){
     await Promise.all([
