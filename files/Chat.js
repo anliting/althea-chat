@@ -20,9 +20,10 @@
         )
         this._messages=[]
         this._getMessagesPromise={}
-        this._getMessages('before').then(()=>
+        ;(async()=>{
+            await this._getMessages('before')
             setInterval(()=>this._getMessages('after'),200)
-        )
+        })()
     }
     Object.setPrototypeOf(Chat.prototype,EventEmmiter.prototype)
     Chat.prototype._getMessagesData=async function(mode){
@@ -87,6 +88,11 @@
     Chat.prototype._send=async function(doc){
         return(await this._sendFunction)(doc)
     }
+    Object.defineProperty(Chat.prototype,'connectionStatus',{set(val){
+        this._connectionStatus=val
+        if(this._ui)
+            this._ui.connectionStatus=val
+    }})
     Chat.prototype.style=style
     Object.defineProperty(Chat.prototype,'ui',{get(){
         if(this._ui)
@@ -103,11 +109,6 @@
         ui.imageUploader=this._imageUploader
         ui.connectionStatus=this._connectionStatus
         return this._ui=ui
-    }})
-    Object.defineProperty(Chat.prototype,'connectionStatus',{set(val){
-        this._connectionStatus=val
-        if(this._ui)
-            this._ui.connectionStatus=val
     }})
     return Chat
 })()

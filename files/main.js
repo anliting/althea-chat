@@ -5,14 +5,14 @@ let
     },
     style=document.createElement('style')
 document.head.append(style)
-module.importByPath('lib/general.js',{mode:1}).then(general=>{
-    general(module)
+;(async()=>{
+    (await module.importByPath('lib/general.js',{mode:1}))(module)
     let
         target=getUser(module.arguments.userId),
         chat=createChat(target)
     notification(chat,target)
     content(chat)
-})
+})()
 async function getUser(id){
     let site=await module.repository.althea.site
     return site.getUser(id)
@@ -28,7 +28,7 @@ async function createChat(target){
     ])
     let chat=new Chat(
         new ImageUploader(site),
-        site.then(site=>site.currentUser),
+        (async()=>(await site).currentUser)(),
         target
     )
     chat.send=async d=>(await site).send(d)

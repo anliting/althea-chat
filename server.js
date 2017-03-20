@@ -1,9 +1,8 @@
-module.exports=althea=>{
+module.exports=althea=>
     althea.addPagemodule(env=>{
         let path=env.analyze.request.parsedUrl.pathname.split('/')
         return path[1]=='chat'&&path.length==3
     },pagemodule)
-}
 async function pagemodule(env){
     let path=env.analyze.request.parsedUrl.pathname.split('/')
     try{
