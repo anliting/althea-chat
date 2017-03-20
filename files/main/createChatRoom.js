@@ -1,12 +1,4 @@
-function playSound(settings){
-    let n=document.createElement('audio')
-    n.autoplay=true
-    n.src='plugins/althea-chat/notification.mp3'
-    n.onended=e=>document.body.removeChild(n)
-    n.volume=settings.notificationSound
-    document.body.appendChild(n)
-}
-;(async function createChatRoom(target,site,settings){
+;(async function createChatRoom(target,site){
     let[
         Chat,
         ImageUploader,
@@ -20,9 +12,9 @@ function playSound(settings){
         target
     )
     chatRoom.send=async d=>(await site).send(d)
-    chatRoom.getSetting=k=>settings[k]
-    chatRoom.setSetting=(k,v)=>settings[k]=v
-    chatRoom.playNotificationSound=()=>playSound(settings)
+    chatRoom.getSetting=k=>this.settings[k]
+    chatRoom.setSetting=(k,v)=>this.settings[k]=v
+    chatRoom.playNotificationSound=()=>this.playSound()
     ;(async site=>{
         site=await site
         chatRoom.connectionStatus=site.status
