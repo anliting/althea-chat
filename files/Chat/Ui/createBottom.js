@@ -70,15 +70,22 @@ function createTextarea(ui){
         n.appendChild(scroll.node)
         return n
     }
+    function setupStatusNode(ui){
+        let n=document.createElement('span')
+        ui._statusNode=n
+    }
     function createBottom(ui){
         let div=document.createElement('div')
         div.className='bottom'
         div.appendChild(ui.textarea=createTextarea(ui))
         setupFileButton(ui)
         div.appendChild(ui._fileButton.n)
-        div.appendChild(document.createTextNode(' '))
         setupSettingsButton(ui)
+        div.appendChild(document.createTextNode(' '))
         div.appendChild(ui._settingsButton)
+        setupStatusNode(ui)
+        div.appendChild(document.createTextNode(' '))
+        div.appendChild(ui._statusNode)
         //fullscreen(div)
         return div
     }

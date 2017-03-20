@@ -101,7 +101,13 @@
         ui.setSetting=this.setSetting
         ui.playNotificationSound=this.playNotificationSound
         ui.imageUploader=this._imageUploader
+        ui.connectionStatus=this._connectionStatus
         return this._ui=ui
+    }})
+    Object.defineProperty(Chat.prototype,'connectionStatus',{set(val){
+        this._connectionStatus=val
+        if(this._ui)
+            this._ui.connectionStatus=val
     }})
     return Chat
 })()

@@ -21,7 +21,7 @@
     }
     Ui.prototype.updateMessageDivHeight=function(){
         this.messageDiv.style.height=`calc(100% - 8px - ${
-            this.sendDiv.clientHeight+2
+            this.bottomDiv.clientHeight+2
         }px)`
     }
     Ui.prototype.updateTextareaHeight=function(){
@@ -41,6 +41,10 @@
     Ui.prototype._queryOlder=function(){
         this.queryOlder()
     }
+    Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
+        this._connectionStatus=val
+        this._statusNode.textContent=val=='online'?'':'offline'
+    }})
     async function uiAddMessages(messages,mode){
         let[userA,userB]=await Promise.all([
             this._currentUser,
@@ -66,7 +70,7 @@
         div.appendChild(ui.messageDiv=
             createMessage(ui)
         )
-        div.appendChild(ui.sendDiv=createBottom(ui))
+        div.appendChild(ui.bottomDiv=createBottom(ui))
         return div
     }
     return Ui

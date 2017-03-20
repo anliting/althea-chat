@@ -35,6 +35,13 @@ async function createChat(target){
     chat.getSetting=k=>settings[k]
     chat.setSetting=(k,v)=>settings[k]=v
     chat.playNotificationSound=playSound
+    ;(async site=>{
+        site=await site
+        chat.connectionStatus=site.status
+        site.on('statusChange',_=>
+            chat.connectionStatus=site.status
+        )
+    })(site)
     return chat
 }
 async function notification(chat,target){
