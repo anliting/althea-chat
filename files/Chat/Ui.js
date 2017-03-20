@@ -43,7 +43,8 @@
     }
     Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
         this._connectionStatus=val
-        this._statusNode.textContent=val=='online'?'':'offline'
+        if(localStorage.hacker)
+            this._statusNode.textContent=val=='online'?'':'offline'
     }})
     async function uiAddMessages(messages,mode){
         let[userA,userB]=await Promise.all([
