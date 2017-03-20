@@ -26,7 +26,7 @@ async function createChat(target){
         module.shareImport('Chat.js'),
         module.repository.althea.ImageUploader,
     ])
-    let chat=new Chat(
+    let chat=new Chat.Room(
         new ImageUploader(site),
         (async()=>(await site).currentUser)(),
         target
