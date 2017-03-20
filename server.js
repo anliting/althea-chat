@@ -1,17 +1,20 @@
 module.exports=althea=>
     althea.addPagemodule(env=>{
         let path=env.analyze.request.parsedUrl.pathname.split('/')
-        return path[1]=='chat'&&path.length==3
+        return path[1]=='chat'
     },pagemodule)
 async function pagemodule(env){
     let path=env.analyze.request.parsedUrl.pathname.split('/')
-    try{
-        let id=await env.database.getUserIdByUsername(path[2])
-        env.userId=id
-        return f(env)
-    }catch(e){
+    if(3<path.length)
         return env.httpServer.pagemodules.s400(env)
-    }
+    if(path.length==3)
+        try{
+            let id=await env.database.getUserIdByUsername(path[2])
+            env.userId=id
+        }catch(e){
+            return env.httpServer.pagemodules.s400(env)
+        }
+    return f(env)
 }
 function f(env){
     if(!env.althea.allowOrigin(env.envVars,env.request.headers.origin))
