@@ -7,11 +7,15 @@ let
 document.head.append(style)
 ;(async()=>{
     (await module.importByPath('lib/general.js',{mode:1}))(module)
-    let
-        target=getUser(module.arguments.userId),
-        chat=createChat(target)
-    notification(chat,target)
-    content(chat)
+    if(module.arguments.userId==undefined){
+        document.title='Althea Chat'
+    }else{
+        let
+            target=getUser(module.arguments.userId),
+            chat=createChat(target)
+        notification(chat,target)
+        content(chat)
+    }
 })()
 async function getUser(id){
     let site=await module.repository.althea.site
