@@ -16,14 +16,28 @@ chatPage.showConversationList=function(){
     document.title='Conversations - Chat'
     let n=document.createElement('div')
     n.className='conversationList'
+    n.textContent='Conversations:'
     ;(async()=>{
         let site=await module.repository.althea.site
         let conversations=await site.send('getConversations')
-        console.log(conversations)
-        conversations.map(con=>{
-            n.appendChild(document.createTextNode(con))
-            n.appendChild(document.createTextNode(' '))
-        })
+        conversations.map(id=>
+            n.appendChild(createConversation(id))
+        )
+        function createConversation(id){
+            let n=document.createElement('div')
+            ;(async()=>{
+                n.appendChild(await createLink(id))
+            })()
+            return n
+            async function createLink(id){
+                let n=document.createElement('a')
+                let u=await site.getUser(id)
+                await u.load(['username','nickname'])
+                n.textContent=u.nickname||u.username
+                n.href=`chat/${u.username}`
+                return n
+            }
+        }
     })()
     document.body.appendChild(n)
 }
@@ -66,9 +80,7 @@ async function notification(chat,target){
 }
 ;(async()=>{
     ;(await module.importByPath('lib/general.js',{mode:1}))(module)
-    localStorage.hacker&&(async()=>{
-        module.repository.althea.hacker
-    })()
+    localStorage.hacker&&module.repository.althea.hacker
     module.repository.Chat=module.shareImport('Chat.js')
     let[
         createChatRoom,
@@ -95,15 +107,14 @@ async function notification(chat,target){
     async function content(chat){
         chat=await chat
         let ui=chat.ui,node=ui.node
-        this.style.appendChild(document.createTextNode(await mainStyle))
         this.style.appendChild(document.createTextNode(await chat.style))
         document.body.appendChild(node)
         ui.focus()
         ui.beAppended()
     }
+    chatPage.style.appendChild(document.createTextNode(mainStyle))
     module.arguments.userId==undefined?
-        localStorage.hacker&&
-            chatPage.showConversationList()
+        chatPage.showConversationList()
     :
         chatPage.showChatRoom(module.arguments.userId)
 })()
