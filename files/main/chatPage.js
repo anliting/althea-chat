@@ -2,9 +2,11 @@
     let[
         createChatRoom,
         mainStyle,
+        showConversationList,
     ]=await Promise.all([
         module.shareImport('createChatRoom.js'),
         module.get('style.css'),
+        module.shareImport('showConversationList.js'),
     ])
     function ChatPage(){
         this.settings={
@@ -22,35 +24,7 @@
         n.volume=this.settings.notificationSound
         document.body.appendChild(n)
     }
-    ChatPage.prototype.showConversationList=function(){
-        document.title='Conversations - Chat'
-        let n=document.createElement('div')
-        n.className='conversationList'
-        n.textContent='Conversations:'
-        ;(async()=>{
-            let site=await module.repository.althea.site
-            let conversations=await site.send('getConversations')
-            conversations.map(id=>
-                n.appendChild(createConversation(id))
-            )
-            function createConversation(id){
-                let n=document.createElement('div')
-                ;(async()=>{
-                    n.appendChild(await createLink(id))
-                })()
-                return n
-                async function createLink(id){
-                    let n=document.createElement('a')
-                    let u=await site.getUser(id)
-                    await u.load(['username','nickname'])
-                    n.textContent=u.nickname||u.username
-                    n.href=`chat/${u.username}`
-                    return n
-                }
-            }
-        })()
-        document.body.appendChild(n)
-    }
+    ChatPage.prototype.showConversationList=showConversationList
     async function notification(chat,target){
         await Promise.all([
             (async()=>{
