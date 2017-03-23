@@ -3,10 +3,12 @@
         createMessage,
         createSingleMessage,
         createBottom,
+        dom,
     ]=await Promise.all([
         module.shareImport('Ui/createMessage.js'),
         module.shareImport('Ui/createSingleMessage.js'),
         module.shareImport('Ui/createBottom.js'),
+        module.repository.althea.dom,
     ])
     function Ui(currentUser,target){
         this._currentUser=currentUser
@@ -66,13 +68,13 @@
         this.syncInnerMessageDivScroll()
     }
     function createDiv(ui){
-        let div=document.createElement('div')
-        div.className='chat'
-        div.appendChild(ui.messageDiv=
-            createMessage(ui)
-        )
-        div.appendChild(ui.bottomDiv=createBottom(ui))
-        return div
+        return dom.div(n=>{
+            n.className='chat'
+            n.appendChild(ui.messageDiv=
+                createMessage(ui)
+            )
+            n.appendChild(ui.bottomDiv=createBottom(ui))
+        })
     }
     return Ui
 })()

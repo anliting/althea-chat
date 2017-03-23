@@ -43,17 +43,17 @@ function createTextarea(ui){
         })
     }
     function setupSettingsButton(ui){
-        let n=document.createElement('button')
-        n.textContent='Settings'
-        n.onclick=e=>{
-            let bF=dom.createBF()
-            ui.node.appendChild(bF.node)
-            bF.appendChild(createSettingsDiv(ui))
-            bF.on('backClick',e=>{
-                ui.node.removeChild(bF.node)
-            })
-        }
-        ui._settingsButton=n
+        ui._settingsButton=dom.button(n=>{
+            n.onclick=e=>{
+                let bF=dom.createBF()
+                ui.node.appendChild(bF.node)
+                bF.appendChild(createSettingsDiv(ui))
+                bF.on('backClick',e=>{
+                    ui.node.removeChild(bF.node)
+                })
+            }
+            return'Settings'
+        })
     }
     function createSettingsDiv(ui){
         let n=document.createElement('div')
@@ -71,8 +71,7 @@ function createTextarea(ui){
         return n
     }
     function setupStatusNode(ui){
-        let n=document.createElement('span')
-        ui._statusNode=n
+        ui._statusNode=dom.span()
     }
     function createBottom(ui){
         let div=document.createElement('div')

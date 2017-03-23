@@ -3,26 +3,28 @@
         createChatRoom,
         mainStyle,
         showConversationList,
+        dom,
     ]=await Promise.all([
         module.shareImport('createChatRoom.js'),
         module.get('style.css'),
         module.shareImport('showConversationList.js'),
+        module.repository.althea.dom,
     ])
     function ChatPage(){
         this.settings={
             notificationSound:0,
         }
-        this.style=document.createElement('style')
+        this.style=dom.style()
         document.head.append(this.style)
         this.style.appendChild(document.createTextNode(mainStyle))
     }
     ChatPage.prototype.playSound=function(settings){
-        let n=document.createElement('audio')
-        n.autoplay=true
-        n.src='plugins/althea-chat/main/notification.mp3'
-        n.onended=e=>document.body.removeChild(n)
-        n.volume=this.settings.notificationSound
-        document.body.appendChild(n)
+        document.body.appendChild(dom.audio(n=>{
+            n.autoplay=true
+            n.src='plugins/althea-chat/main/notification.mp3'
+            n.onended=e=>document.body.removeChild(n)
+            n.volume=this.settings.notificationSound
+        }))
     }
     ChatPage.prototype.showConversationList=showConversationList
     async function notification(chat,target){
