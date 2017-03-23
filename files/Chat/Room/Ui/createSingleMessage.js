@@ -1,13 +1,14 @@
 (async()=>{
     let[
         compile,
+        dom,
     ]=await Promise.all([
         module.shareImport('createSingleMessage/compile.js'),
+        module.repository.althea.dom,
     ])
     return createSingleMessageNode
     function createSingleMessageNode(ui,userA,userB,message){
-        let n=document.createElement('p')
-        ;(async()=>{
+        return dom.p(async n=>{
             let a=await(message.fromUser==userA.id?userA:userB).finalA
             let span=createSpan(message)
             n.appendChild(a)
@@ -16,12 +17,11 @@
             ui.syncInnerMessageDivScroll()
             await span.promise
             ui.syncInnerMessageDivScroll()
-        })()
-        return n
+        })
     }
     function createSpan(message){
         let
-            span=document.createElement('span'),
+            span=dom.span()
             promises=[]
         span.title=message.timestamp
         span.innerHTML=compile(message.message)

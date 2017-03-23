@@ -1,7 +1,12 @@
 (async()=>{
+    let[
+        dom,
+    ]=await Promise.all([
+        module.repository.althea.dom,
+    ])
     return createMessageDiv
     function createMessageDiv(ui){
-        let div=document.createElement('div')
+        let div=dom.div()
         div.className='message'
         div.appendChild(ui._innerMessageDiv=createInnerMessageDiv(ui))
         div.onclick=e=>{
@@ -10,7 +15,7 @@
         return div
     }
     function createInnerMessageDiv(ui){
-        let div=document.createElement('div')
+        let div=dom.div()
         div.className='innerMessage'
         div.appendChild(ui._topDiv=createTopDiv(ui))
         ui.atBottom=Math.abs(
@@ -29,18 +34,18 @@
         }
     }
     function createTopDiv(ui){
-        let n=document.createElement('div')
+        let n=dom.div()
         n.style.textAlign='center'
         n.appendChild(createShowOlderMessagesButton(ui))
         return n
     }
     function createShowOlderMessagesButton(ui){
-        let n=document.createElement('button')
-        n.textContent='Show Older Messages'
-        n.onclick=e=>{
-            e.stopPropagation()
-            ui._queryOlder()
-        }
-        return n
+        return dom.button(n=>{
+            n.onclick=e=>{
+                e.stopPropagation()
+                ui._queryOlder()
+            }
+            return'Show Older Messages'
+        })
     }
 })()

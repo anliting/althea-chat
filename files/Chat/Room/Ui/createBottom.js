@@ -1,34 +1,34 @@
-function createTextarea(ui){
-    let textarea=document.createElement('textarea')
-    textarea.rows=2
-    textarea.addEventListener('keydown',e=>{
-        // if only enter
-        if(!e.ctrlKey&&!e.shiftKey&&e.keyCode==13){
-            e.stopPropagation()
-            e.preventDefault()
-            if(textarea.value!=''){
-                ui.sendMessage(textarea.value)
-                textarea.value=''
-            }
-            return
-        }
-    })
-    textarea.addEventListener('input',e=>{
-        ui.updateTextareaHeight()
-    })
-    ;(async()=>{
-        let user=await ui._currentUser
-        await user.load('nickname')
-        textarea.placeholder=`${user.nickname}: `
-    })()
-    return textarea
-}
 ;(async()=>{
     let[
         dom,
     ]=await Promise.all([
         module.repository.althea.dom,
     ])
+    function createTextarea(ui){
+        let textarea=dom.textarea()
+        textarea.rows=2
+        textarea.addEventListener('keydown',e=>{
+            // if only enter
+            if(!e.ctrlKey&&!e.shiftKey&&e.keyCode==13){
+                e.stopPropagation()
+                e.preventDefault()
+                if(textarea.value!=''){
+                    ui.sendMessage(textarea.value)
+                    textarea.value=''
+                }
+                return
+            }
+        })
+        textarea.addEventListener('input',e=>{
+            ui.updateTextareaHeight()
+        })
+        ;(async()=>{
+            let user=await ui._currentUser
+            await user.load('nickname')
+            textarea.placeholder=`${user.nickname}: `
+        })()
+        return textarea
+    }
     function setupFileButton(ui){
         ui._fileButton=dom.createFileButton('Image')
         ui._fileButton.on('file',async a=>{
@@ -56,25 +56,27 @@ function createTextarea(ui){
         })
     }
     function createSettingsDiv(ui){
-        let n=document.createElement('div')
-        n.style.margin='32px 48px'
-        n.style.width='240px'
-        n.appendChild(document.createTextNode('Notification Sound: '))
-        n.appendChild(document.createElement('br'))
-        let scroll=dom.createScroll(200)
-        scroll.value=ui.getSetting('notificationSound')
-        scroll.on('change',e=>{
-            ui.setSetting('notificationSound',scroll.value)
-            ui.playNotificationSound()
+        return dom.div(n=>{
+            n.style.margin='32px 48px'
+            n.style.width='240px'
+            let scroll=dom.createScroll(200)
+            scroll.value=ui.getSetting('notificationSound')
+            scroll.on('change',e=>{
+                ui.setSetting('notificationSound',scroll.value)
+                ui.playNotificationSound()
+            })
+            return[
+                'Notification Sound: ',
+                dom.br(),
+                scroll.node,
+            ]
         })
-        n.appendChild(scroll.node)
-        return n
     }
     function setupStatusNode(ui){
         ui._statusNode=dom.span()
     }
     function createBottom(ui){
-        let div=document.createElement('div')
+        let div=dom.div()
         div.className='bottom'
         div.appendChild(ui.textarea=createTextarea(ui))
         setupFileButton(ui)
@@ -98,7 +100,7 @@ function createTextarea(ui){
     function createFullscreenButton(){
         let
             status=0,
-            n=document.createElement('button')
+            n=dom.button()
         updateTextContent()
         n.onclick=e=>{
             status=1-status
