@@ -21,10 +21,9 @@
     }
     function createSpan(message){
         let
-            span=dom.span()
+            span=dom.span(Array.from(compile(message.message).childNodes)),
             promises=[]
         span.title=message.timestamp
-        span.innerHTML=compile(message.message)
         let collection=span.getElementsByTagName('img')
         for(let i=0;i<collection.length;i++){
             let img=collection[i]
