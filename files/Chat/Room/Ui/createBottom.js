@@ -1,8 +1,10 @@
 ;(async()=>{
     let[
         dom,
+        colorScheme,
     ]=await Promise.all([
         module.repository.althea.dom,
+        module.shareImport('colorScheme.js'),
     ])
     function createTextarea(ui){
         let textarea=dom.textarea()
@@ -66,11 +68,35 @@
                 ui.playNotificationSound()
             })
             return[
-                'Notification Sound: ',
-                dom.br(),
-                scroll.node,
+                dom.p(
+                    'Notification Sound: ',dom.br(),
+                    scroll.node
+                ),
+                colorSchemeP(ui),
             ]
         })
+    }
+    function colorSchemeP(ui){
+        let s=ui.getSetting('colorScheme')
+        s=s?s.id:'default'
+        return dom.p(
+            'Color Scheme: ',dom.br(),
+            dom.select(
+                ...colorScheme.map((cs,i)=>
+                    dom.option(cs.name,n=>{
+                        n.value=i
+                        if(s==cs.id)
+                            n.selected=true
+                    })
+                ),
+                n=>{n.onchange=e=>{
+                    ui.setSetting(
+                        'colorScheme',
+                        colorScheme[n.value]
+                    )
+                }}
+            )
+        )
     }
     function setupStatusNode(ui){
         ui._statusNode=dom.span()

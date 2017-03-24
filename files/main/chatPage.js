@@ -27,6 +27,39 @@
         }))
     }
     ChatPage.prototype.showConversationList=showConversationList
+    ChatPage.prototype.showChatRoom=function(id){
+        let
+            target=getUser(id),
+            chatRoom=createChatRoom.call(
+                this,
+                target,
+                module.repository.althea.site
+            )
+        style.call(this,chatRoom)
+        notification.call(this,chatRoom,target)
+        content.call(this,chatRoom)
+        async function getUser(id){
+            let site=await module.repository.althea.site
+            return site.getUser(id)
+        }
+    }
+    ChatPage.prototype.setSetting=function(k,v){
+        this.settings[k]=v
+        if(k=='colorScheme'){
+            if(this.colorScheme)
+                this.style.removeChild(this.colorScheme)
+            this.colorScheme=document.createTextNode(v.style)
+            this.style.appendChild(this.colorScheme)
+            if(v.name=='Default'){
+                document.body.style.backgroundColor=''
+            }else if(v.name=='GNU/Linux'){
+                document.body.style.backgroundColor='black'
+            }
+        }
+    }
+    async function style(chatRoom){
+        chatRoom=await chatRoom
+    }
     async function notification(chat,target){
         await Promise.all([
             (async()=>{
@@ -62,21 +95,6 @@
             let notiPart=unread==0?'':`${'◯⬤'[notification]} (${unread}) `
             document.title=`${notiPart}↔ ${target.nickname}`
             notification=1-notification
-        }
-    }
-    ChatPage.prototype.showChatRoom=function(id){
-        let
-            target=getUser(id),
-            chatRoom=createChatRoom.call(
-                this,
-                target,
-                module.repository.althea.site
-            )
-        notification.call(this,chatRoom,target)
-        content.call(this,chatRoom)
-        async function getUser(id){
-            let site=await module.repository.althea.site
-            return site.getUser(id)
         }
     }
     async function content(chat){

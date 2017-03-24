@@ -13,7 +13,7 @@
     )
     chatRoom.send=async d=>(await site).send(d)
     chatRoom.getSetting=k=>this.settings[k]
-    chatRoom.setSetting=(k,v)=>this.settings[k]=v
+    chatRoom.setSetting=(k,v)=>this.setSetting(k,v)
     chatRoom.playNotificationSound=()=>this.playSound()
     ;(async site=>{
         site=await site
