@@ -19,9 +19,9 @@
                 return
             }
         })
-        textarea.addEventListener('input',e=>{
+        textarea.addEventListener('input',e=>
             ui.updateTextareaHeight()
-        })
+        )
         ;(async()=>{
             let user=await ui._currentUser
             await user.load('nickname')
@@ -76,19 +76,17 @@
         ui._statusNode=dom.span()
     }
     function createBottom(ui){
-        let div=dom.div()
-        div.className='bottom'
-        div.appendChild(ui.textarea=createTextarea(ui))
+        ui.textarea=createTextarea(ui)
         setupFileButton(ui)
-        div.appendChild(ui._fileButton.n)
         setupSettingsButton(ui)
-        div.appendChild(document.createTextNode(' '))
-        div.appendChild(ui._settingsButton)
         setupStatusNode(ui)
-        div.appendChild(document.createTextNode(' '))
-        div.appendChild(ui._statusNode)
-        //fullscreen(div)
-        return div
+        return dom.div(
+            n=>{n.className='bottom'},
+            ui.textarea,
+            ui._fileButton.n,' ',
+            ui._settingsButton,' ',
+            ui._statusNode
+        )
     }
     return createBottom
 })()

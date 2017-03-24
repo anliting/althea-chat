@@ -5,15 +5,13 @@
         module.repository.althea.dom,
     ])
     function createConversation(site,id){
-        let n=dom.div()
         let
             user=site.getUser(id),
             tc=textContent(id)
-        ;(async()=>{
-            n.appendChild(await createLink(id))
-        })()
         return{
-            n,
+            n:dom.div(
+                createLink(id)
+            ),
             order:tc,
         }
         async function textContent(id){
@@ -22,12 +20,12 @@
             return u.nickname||u.username
         }
         async function createLink(id){
-            let n=dom.a()
-            let u=await user
-            await u.load('username')
-            n.textContent=await tc
-            n.href=`chat/${u.username}`
-            return n
+            return dom.a(async n=>{
+                let u=await user
+                await u.load('username')
+                n.href=`chat/${u.username}`
+                return tc
+            })
         }
     }
     return function(){

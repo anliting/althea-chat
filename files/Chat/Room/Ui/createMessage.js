@@ -6,18 +6,18 @@
     ])
     return createMessageDiv
     function createMessageDiv(ui){
-        let div=dom.div()
+        let div=dom.div(
+            ui._innerMessageDiv=createInnerMessageDiv(ui)
+        )
         div.className='message'
-        div.appendChild(ui._innerMessageDiv=createInnerMessageDiv(ui))
         div.onclick=e=>{
             getSelection().isCollapsed&&ui.textarea.focus()
         }
         return div
     }
     function createInnerMessageDiv(ui){
-        let div=dom.div()
+        let div=dom.div(ui._topDiv=createTopDiv(ui))
         div.className='innerMessage'
-        div.appendChild(ui._topDiv=createTopDiv(ui))
         ui.atBottom=Math.abs(
             div.scrollTop+div.clientHeight-div.scrollHeight
         )<=1
