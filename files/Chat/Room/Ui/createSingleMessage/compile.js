@@ -34,11 +34,9 @@ let
 ;(async()=>{
     let[
         dom,
-        html,
         url,
     ]=await Promise.all([
         module.repository.althea.dom,
-        module.repository.althea.html,
         module.repository.althea.url,
     ])
     function compile(s){
@@ -46,7 +44,7 @@ let
             `<!docytpe html><title>0</title><body>${s}`,'text/html'
         ).body
         traverse(body)
-        return body
+        return Array.from(body.childNodes)
     }
     function traverse(m){
         Array.from(m.childNodes).map(n=>{
@@ -76,27 +74,20 @@ let
                     return true
                 return attrTest.test(a.value)
             })
-        }
-        if(n.nodeType==3)
+        }else if(n.nodeType==3)
             return 1
     }
     function*renderUrl(s){
-        for(let match;match=url.match(s);){
-            yield insertText(s.substring(0,match.index))
-            if(/^https?$/.test(match.scheme))
-                yield dom.a(match[0],a=>{
-                    a.href=match.url
-                })
-            else
-                yield insertText(s.substring(
-                    match.index,match.index+match[0].length
-                ))
-            s=s.substring(match.index+match[0].length)
+        let ctn=s=>document.createTextNode(s)
+        for(let m;m=url.match(s);){
+            yield ctn(s.substring(0,m.index))
+            yield /^https?$/.test(m.scheme)?
+                dom.a(m[0],a=>{a.href=m.url})
+            :
+                ctn(s.substring(m.index,m.index+m[0].length))
+            s=s.substring(m.index+m[0].length)
         }
-        yield insertText(s)
-        function insertText(s){
-            return document.createTextNode(s)
-        }
+        yield ctn(s)
     }
     return compile
 })()
