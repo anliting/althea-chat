@@ -7,8 +7,8 @@ div.chat>div.message{
     overflow-y:scroll;
     overflow-wrap:break-word;
 /*
-    'word-break:break-all' is causing a lot of continuous '！' not being
-    broken. I considered it as a browser bug.
+    In Chrome 57, 'word-break:break-all' is causing a lot of continuous
+    '！' not being broken. I considered it as a browser bug.
 */
     /*word-break:break-all;*/
     text-align:justify;
