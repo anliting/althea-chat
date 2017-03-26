@@ -104,7 +104,11 @@
         ui.queryOlder=()=>this._getMessages('before')
         ui.sendMessage=m=>this._sendMessage(m)
         ui.getSetting=this.getSetting
-        ui.setSetting=this.setSetting
+        ui.setSetting=(k,v)=>{
+            this.setSetting(k,v)
+            if(k=='colorScheme')
+                ui.changeStyle(v.style)
+        }
         ui.playNotificationSound=this.playNotificationSound
         ui.imageUploader=this._imageUploader
         ui.connectionStatus=this._connectionStatus

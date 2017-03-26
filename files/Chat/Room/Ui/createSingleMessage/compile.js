@@ -78,16 +78,15 @@ let
             return 1
     }
     function*renderUrl(s){
-        let ctn=s=>document.createTextNode(s)
         for(let m;m=url.match(s);){
-            yield ctn(s.substring(0,m.index))
+            yield dom.tn(s.substring(0,m.index))
             yield /^https?$/.test(m.scheme)?
                 dom.a(m[0],a=>{a.href=m.url})
             :
-                ctn(s.substring(m.index,m.index+m[0].length))
+                dom.tn(s.substring(m.index,m.index+m[0].length))
             s=s.substring(m.index+m[0].length)
         }
-        yield ctn(s)
+        yield dom.tn(s)
     }
     return compile
 })()

@@ -12,7 +12,7 @@
             let a=await(message.fromUser==userA.id?userA:userB).finalA
             let span=createSpan(message)
             n.appendChild(a)
-            n.appendChild(document.createTextNode(': '))
+            n.appendChild(dom.tn(': '))
             n.appendChild(span.span)
             ui.syncInnerMessageDivScroll()
             await span.promise

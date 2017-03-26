@@ -14,9 +14,7 @@
         this.settings={
             notificationSound:0,
         }
-        this.style=dom.style()
-        document.head.append(this.style)
-        this.style.appendChild(document.createTextNode(mainStyle))
+        document.head.append(this.style=dom.style(mainStyle))
     }
     ChatPage.prototype.playSound=function(settings){
         document.body.appendChild(dom.audio(n=>{
@@ -35,7 +33,6 @@
                 target,
                 module.repository.althea.site
             )
-        style.call(this,chatRoom)
         notification.call(this,chatRoom,target)
         content.call(this,chatRoom)
         async function getUser(id){
@@ -46,19 +43,12 @@
     ChatPage.prototype.setSetting=function(k,v){
         this.settings[k]=v
         if(k=='colorScheme'){
-            if(this.colorScheme)
-                this.style.removeChild(this.colorScheme)
-            this.colorScheme=document.createTextNode(v.style)
-            this.style.appendChild(this.colorScheme)
             if(v.id=='default'){
                 document.body.style.backgroundColor=''
             }else if(v.id=='gnulinux'){
                 document.body.style.backgroundColor='black'
             }
         }
-    }
-    async function style(chatRoom){
-        chatRoom=await chatRoom
     }
     async function notification(chat,target){
         await Promise.all([
@@ -93,15 +83,23 @@
         })
         function updateTitle(){
             let notiPart=unread==0?'':`${'◯⬤'[notification]} (${unread}) `
-            document.title=`${notiPart}↔ ${target.nickname}`
+            lazyChangeTitle(`${notiPart}↔ ${target.nickname}`)
             notification=1-notification
+        }
+        function lazyChangeTitle(s){
+            document.title==s||(document.title=s)
         }
     }
     async function content(chat){
         chat=await chat
-        let ui=chat.ui,node=ui.node
-        this.style.appendChild(document.createTextNode(await chat.style))
-        document.body.appendChild(node)
+        let ui=chat.ui
+        this.style.appendChild(dom.tn(await chat.style))
+        ui.style=s=>{
+            let n=dom.tn(s)
+            this.style.appendChild(n)
+            return()=>this.style.removeChild(n)
+        }
+        document.body.appendChild(ui.node)
         ui.focus()
         ui.beAppended()
     }

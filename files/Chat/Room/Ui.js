@@ -47,6 +47,11 @@
     Ui.prototype._queryOlder=function(){
         this.queryOlder()
     }
+    Ui.prototype.changeStyle=function(s){
+        if(this._style)
+            this._style()
+        this._style=this.style(s)
+    }
     Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
         this._connectionStatus=val
         if(localStorage.hacker)
