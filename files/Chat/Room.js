@@ -107,11 +107,14 @@
         ui.setSetting=(k,v)=>{
             this.setSetting(k,v)
             if(k=='colorScheme')
-                ui.changeStyle(v.style)
+                ui.changeStyle(v)
         }
         ui.playNotificationSound=this.playNotificationSound
         ui.imageUploader=this._imageUploader
         ui.connectionStatus=this._connectionStatus
+        if(this.getSetting('colorScheme')==undefined)
+            this.setSetting('colorScheme','default')
+        ui.changeStyle('default')
         return this._ui=ui
     }})
     return Room

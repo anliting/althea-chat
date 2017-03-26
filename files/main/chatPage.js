@@ -43,9 +43,9 @@
     ChatPage.prototype.setSetting=function(k,v){
         this.settings[k]=v
         if(k=='colorScheme'){
-            if(v.id=='default'){
+            if(v=='default'){
                 document.body.style.backgroundColor=''
-            }else if(v.id=='gnulinux'){
+            }else if(v=='gnulinux'){
                 document.body.style.backgroundColor='black'
             }
         }

@@ -16,17 +16,6 @@ div.chat>div.message{
     /*word-break:break-all;*/
     text-align:justify;
 }
-div.chat>div.message::-webkit-scrollbar{
-    width:12px;
-}
-div.chat>div.message::-webkit-scrollbar-track{
-    border-radius:6px;
-    background:#DDD;
-}
-div.chat>div.message::-webkit-scrollbar-thumb{
-    border-radius:6px;
-    background:#BBB;
-}
 div.chat>div.message>div.top{
     text-align:center;
 }

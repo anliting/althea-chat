@@ -4,15 +4,20 @@
         createMessage,
         createSingleMessage,
         createBottom,
+        StyleManager,
+        colorScheme,
     ]=await Promise.all([
         module.repository.althea.dom,
         module.shareImport('Ui/createMessage.js'),
         module.shareImport('Ui/createSingleMessage.js'),
         module.shareImport('Ui/createBottom.js'),
+        module.shareImport('Ui/StyleManager.js'),
+        module.shareImport('Ui/colorScheme.js'),
     ])
     function Ui(currentUser,target){
         this._currentUser=currentUser
         this._target=target
+        this._styleManager=new StyleManager
         this.node=dom.div(
             n=>{n.className='chat'},
             this.messageDiv=createMessage(this),
@@ -48,10 +53,15 @@
         this.queryOlder()
     }
     Ui.prototype.changeStyle=function(s){
-        if(this._style)
-            this._style()
-        this._style=this.style(s)
+        if(this._style!=undefined)
+            this._styleManager.remove(this._style)
+        this._style=this._styleManager.insert(colorScheme[s].style)
     }
+    Object.defineProperty(Ui.prototype,'style',{set(val){
+        this._styleManager.forEach=val
+    },get(){
+        return this._styleManager.forEach
+    }})
     Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
         this._connectionStatus=val
         if(localStorage.hacker)

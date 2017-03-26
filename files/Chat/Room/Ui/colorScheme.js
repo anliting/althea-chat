@@ -1,12 +1,34 @@
-let colorScheme=[
-    {
-        id:'default',
+let colorScheme={
+    'default':{
         name:'Default',
-        style:``,
-    },{
-        id:'gnulinux',
+        style:`
+div.chat>div.message::-webkit-scrollbar{
+    width:12px;
+}
+div.chat>div.message::-webkit-scrollbar-track{
+    border-radius:6px;
+    background:#DDD;
+}
+div.chat>div.message::-webkit-scrollbar-thumb{
+    border-radius:6px;
+    background:#BBB;
+}
+`,
+    },
+    'gnulinux':{
         name:'GNU/Linux',
         style:`
+div.chat>div.message::-webkit-scrollbar{
+    width:12px;
+}
+div.chat>div.message::-webkit-scrollbar-track{
+    border-radius:6px;
+    background:#222;
+}
+div.chat>div.message::-webkit-scrollbar-thumb{
+    border-radius:6px;
+    background:#444;
+}
 div.chat a:active,div.chat a:link,div.chat a:hover,div.chat a:visited{
     color:lightblue;
 }
@@ -27,5 +49,5 @@ div.chat>div.bottom textarea{
 }
 `,
     }
-]
+}
 colorScheme

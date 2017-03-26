@@ -40,23 +40,19 @@
     }
     function colorSchemeP(ui){
         let s=ui.getSetting('colorScheme')
-        s=s?s.id:'default'
         return dom.p(
             'Color Scheme: ',dom.br(),
             dom.select(
-                ...colorScheme.map((cs,i)=>
-                    dom.option(cs.name,n=>{
+                ...Object.keys(colorScheme).map(i=>
+                    dom.option(colorScheme[i].name,n=>{
                         n.value=i
-                        if(s==cs.id)
+                        if(s==i)
                             n.selected=true
                     })
                 ),
-                n=>{n.onchange=e=>{
-                    ui.setSetting(
-                        'colorScheme',
-                        colorScheme[n.value]
-                    )
-                }}
+                n=>{n.onchange=e=>
+                    ui.setSetting('colorScheme',n.value)
+                }
             )
         )
     }
