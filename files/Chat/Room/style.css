@@ -5,7 +5,12 @@ div.chat>div.message{
     padding-right:8px;
     height:100%;
     overflow-y:scroll;
-    word-break:break-all;
+    overflow-wrap:break-word;
+/*
+    'word-break:break-all' is causing a lot of continuous '！' not being
+    broken. I considered it as a browser bug.
+*/
+    /*word-break:break-all;*/
     text-align:justify;
 }
 div.chat>div.message::-webkit-scrollbar{
