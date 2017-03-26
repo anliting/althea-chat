@@ -7,23 +7,23 @@
         module.shareImport('setupSettingsButton.js'),
     ])
     function createTextarea(ui){
-        let textarea=dom.textarea()
-        textarea.rows=2
-        textarea.addEventListener('keydown',e=>{
-            // if only enter
-            if(!e.ctrlKey&&!e.shiftKey&&e.keyCode==13){
-                e.stopPropagation()
-                e.preventDefault()
-                if(textarea.value!=''){
-                    ui.sendMessage(textarea.value)
-                    textarea.value=''
-                }
-                return
+        let textarea=dom.textarea({
+            rows:2,
+            oninput(e){
+                ui.updateTextareaHeight()
             }
         })
-        textarea.addEventListener('input',e=>
-            ui.updateTextareaHeight()
-        )
+        textarea.addEventListener('keydown',e=>{
+            // only enter
+            if(!(!e.ctrlKey&&!e.shiftKey&&e.keyCode==13))
+                return
+            e.stopPropagation()
+            e.preventDefault()
+            if(textarea.value!=''){
+                ui.sendMessage(textarea.value)
+                textarea.value=''
+            }
+        })
         ;(async()=>{
             let user=await ui._currentUser
             await user.load('nickname')
@@ -53,7 +53,7 @@
         setupSettingsButton(ui)
         setupStatusNode(ui)
         return dom.div(
-            n=>{n.className='bottom'},
+            {className:'bottom'},
             ui.textarea,
             ui._fileButton.n,' ',
             ui._settingsButton,' ',

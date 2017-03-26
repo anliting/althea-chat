@@ -10,32 +10,35 @@
             if(ui.atBottom)
                 div.scrollTop=div.scrollHeight
         }
-        let div=dom.div(ui._topDiv=createTopDiv(ui))
-        div.className='message'
-        ui.atBottom=Math.abs(
-            div.scrollTop+div.clientHeight-div.scrollHeight
-        )<=1
-        div.addEventListener('scroll',()=>{
+        let div=dom.div(
+            {
+                className:'message',
+                onscroll:updateAtBottom,
+                onclick(e){
+                    getSelection().isCollapsed&&ui.textarea.focus()
+                },
+            },
+            ui._topDiv=createTopDiv(ui)
+        )
+        updateAtBottom()
+        ui.syncInnerMessageDivScroll=syncDivScroll
+        return ui._innerMessageDiv=div
+        function updateAtBottom(){
             ui.atBottom=Math.abs(
                 div.scrollTop+div.clientHeight-div.scrollHeight
             )<=1
-        })
-        div.onclick=e=>getSelection().isCollapsed&&ui.textarea.focus()
-        ui.syncInnerMessageDivScroll=syncDivScroll
-        return ui._innerMessageDiv=div
+        }
     }
     function createTopDiv(ui){
-        let n=dom.div(createShowOlderMessagesButton(ui))
-        n.className='top'
-        return n
+        return dom.div(
+            {className:'top'},
+            createShowOlderMessagesButton(ui)
+        )
     }
     function createShowOlderMessagesButton(ui){
-        return dom.button(n=>{
-            n.onclick=e=>{
-                e.stopPropagation()
-                ui._queryOlder()
-            }
-            return'Show Older Messages'
-        })
+        return dom.button({onclick(e){
+            e.stopPropagation()
+            ui._queryOlder()
+        }},'Show Older Messages')
     }
 })()
