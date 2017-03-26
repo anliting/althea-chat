@@ -1,29 +1,32 @@
 div.chat>div.message{
     margin-bottom:8px;
 }
-div.chat>div.message>div.innerMessage{
+div.chat>div.message{
     padding-right:8px;
     height:100%;
     overflow-y:scroll;
     word-break:break-all;
     text-align:justify;
 }
-div.chat>div.message>div.innerMessage::-webkit-scrollbar{
+div.chat>div.message::-webkit-scrollbar{
     width:12px;
 }
-div.chat>div.message>div.innerMessage::-webkit-scrollbar-track{
+div.chat>div.message::-webkit-scrollbar-track{
     border-radius:6px;
     background:#DDD;
 }
-div.chat>div.message>div.innerMessage::-webkit-scrollbar-thumb{
+div.chat>div.message::-webkit-scrollbar-thumb{
     border-radius:6px;
     background:#BBB;
 }
-div.chat>div.message>div.innerMessage a.user{
+div.chat>div.message>div.top{
+    text-align:center;
+}
+div.chat>div.message a.user{
     color:black;
     text-decoration:none;
 }
-div.chat>div.message>div.innerMessage img{
+div.chat>div.message img{
     max-width:60%;
 }
 div.chat>div.bottom>textarea{
