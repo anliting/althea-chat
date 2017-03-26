@@ -10,6 +10,11 @@
             if(ui.atBottom)
                 div.scrollTop=div.scrollHeight
         }
+        function updateAtBottom(){
+            ui.atBottom=Math.abs(
+                div.scrollTop+div.clientHeight-div.scrollHeight
+            )<=1
+        }
         let div=dom.div(
             {
                 className:'message',
@@ -23,11 +28,6 @@
         updateAtBottom()
         ui.syncInnerMessageDivScroll=syncDivScroll
         return ui._innerMessageDiv=div
-        function updateAtBottom(){
-            ui.atBottom=Math.abs(
-                div.scrollTop+div.clientHeight-div.scrollHeight
-            )<=1
-        }
     }
     function createTopDiv(ui){
         return dom.div(

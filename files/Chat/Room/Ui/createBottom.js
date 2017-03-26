@@ -13,17 +13,14 @@
                 ui.updateTextareaHeight()
             }
         })
-        textarea.addEventListener('keydown',e=>{
+        textarea.onkeydown=e=>{
             // only enter
             if(!(!e.ctrlKey&&!e.shiftKey&&e.keyCode==13))
                 return
             e.stopPropagation()
             e.preventDefault()
-            if(textarea.value!=''){
-                ui.sendMessage(textarea.value)
-                textarea.value=''
-            }
-        })
+            ui._send()
+        }
         ;(async()=>{
             let user=await ui._currentUser
             await user.load('nickname')
@@ -47,15 +44,20 @@
     function setupStatusNode(ui){
         ui._statusNode=dom.span()
     }
+    function createSendButton(ui){
+        return dom.button('Send',{onclick(){
+            ui._send()
+        }})
+    }
     function createBottom(ui){
-        ui.textarea=createTextarea(ui)
         setupFileButton(ui)
         setupSettingsButton(ui)
         setupStatusNode(ui)
         return dom.div(
             {className:'bottom'},
-            ui.textarea,
+            ui.textarea=createTextarea(ui),
             ui._fileButton.n,' ',
+            createSendButton(ui),' ',
             ui._settingsButton,' ',
             ui._statusNode
         )

@@ -24,6 +24,12 @@
             this.bottomDiv=createBottom(this)
         )
     }
+    Ui.prototype._send=function(){
+        if(this.textarea.value=='')
+            return
+        this.sendMessage(this.textarea.value)
+        this.textarea.value=''
+    }
     Ui.prototype.beAppended=function(){
         this.updateMessageDivHeight()
     }
