@@ -50,9 +50,9 @@
                 this.style.removeChild(this.colorScheme)
             this.colorScheme=document.createTextNode(v.style)
             this.style.appendChild(this.colorScheme)
-            if(v.name=='Default'){
+            if(v.id=='default'){
                 document.body.style.backgroundColor=''
-            }else if(v.name=='GNU/Linux'){
+            }else if(v.id=='gnulinux'){
                 document.body.style.backgroundColor='black'
             }
         }

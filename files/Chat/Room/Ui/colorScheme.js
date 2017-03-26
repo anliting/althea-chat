@@ -18,7 +18,7 @@ div.chat>div.message{
     background-color:black;
     color:lightgray;
 }
-div.chat>div.message>div.innerMessage a.user{
+div.chat>div.message a.user{
     color:lightgray;
 }
 div.chat>div.bottom textarea{
