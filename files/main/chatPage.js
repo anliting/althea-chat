@@ -11,10 +11,14 @@
         module.repository.althea.dom,
     ])
     function ChatPage(){
-        this.settings={
-            notificationSound:0,
-        }
+        this.settings=localStorage.altheaChatSettings?
+            JSON.parse(localStorage.altheaChatSettings)
+        :
+            {notificationSound:0}
         document.head.append(this.style=dom.style(mainStyle))
+        document.head.append(this.themeColor=dom.meta(n=>{
+            n.name='theme-color'
+        }))
     }
     ChatPage.prototype.playSound=function(settings){
         document.body.appendChild(dom.audio(n=>{
@@ -42,13 +46,7 @@
     }
     ChatPage.prototype.setSetting=function(k,v){
         this.settings[k]=v
-        if(k=='colorScheme'){
-            if(v=='default'){
-                document.body.style.backgroundColor=''
-            }else if(v=='gnulinux'){
-                document.body.style.backgroundColor='black'
-            }
-        }
+        localStorage.altheaChatSettings=JSON.stringify(this.settings)
     }
     async function notification(chat,target){
         await Promise.all([
@@ -95,8 +93,14 @@
         let ui=chat.ui
         this.style.appendChild(dom.tn(await chat.style))
         ui.style=s=>{
-            let n=dom.tn(s)
+            let n=dom.tn(s.content)
             this.style.appendChild(n)
+            let color={
+                default:'',
+                gnulinux:'black',
+            }[s.id]
+            this.themeColor.content=color
+            document.body.style.backgroundColor=color
             return()=>this.style.removeChild(n)
         }
         document.body.appendChild(ui.node)

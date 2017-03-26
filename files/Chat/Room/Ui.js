@@ -52,10 +52,13 @@
     Ui.prototype._queryOlder=function(){
         this.queryOlder()
     }
-    Ui.prototype.changeStyle=function(s){
+    Ui.prototype.changeStyle=function(id){
         if(this._style!=undefined)
             this._styleManager.remove(this._style)
-        this._style=this._styleManager.insert(colorScheme[s].style)
+        this._style=this._styleManager.insert({
+            id,
+            content:colorScheme[id].style,
+        })
     }
     Object.defineProperty(Ui.prototype,'style',{set(val){
         this._styleManager.forEach=val

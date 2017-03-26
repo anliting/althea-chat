@@ -114,7 +114,7 @@
         ui.connectionStatus=this._connectionStatus
         if(this.getSetting('colorScheme')==undefined)
             this.setSetting('colorScheme','default')
-        ui.changeStyle('default')
+        ui.changeStyle(this.getSetting('colorScheme'))
         return this._ui=ui
     }})
     return Room
