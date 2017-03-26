@@ -66,8 +66,7 @@
 })()
 /*async function fullscreen(div){
     if((await module.repository.althea.browser).isMobile){
-        div.appendChild(dom.tn(' '))
-        div.appendChild(createFullscreenButton())
+        dom(div,' ',createFullscreenButton())
     }
     function createFullscreenButton(){
         let

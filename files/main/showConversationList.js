@@ -30,9 +30,7 @@
     }
     return function(){
         document.title='Conversations - Chat'
-        let n=dom.div()
-        n.className='conversationList'
-        n.textContent='Conversations:'
+        let n=dom.div('Conversations:',{className:'conversationList'})
         ;(async()=>{
             let[order,site]=await Promise.all([
                 module.repository.althea.order,
@@ -47,10 +45,10 @@
                     }
                 }),
                 (a,b)=>n.insertBefore(a.n,b.n),
-                e=>n.appendChild(e.n),
+                e=>dom(n,e.n),
                 (a,b)=>a.o.localeCompare(b.o)<0
             )
         })()
-        document.body.appendChild(n)
+        dom(document.body,n)
     }
 })()

@@ -11,9 +11,7 @@
         return dom.p(async n=>{
             let a=await(message.fromUser==userA.id?userA:userB).finalA
             let span=createSpan(message)
-            n.appendChild(a)
-            n.appendChild(dom.tn(': '))
-            n.appendChild(span.span)
+            dom(n,a,': ',span.span)
             ui.syncInnerMessageDivScroll()
             await span.promise
             ui.syncInnerMessageDivScroll()

@@ -7,16 +7,14 @@
         module.shareImport('colorScheme.js'),
     ])
     function setupSettingsButton(ui){
-        ui._settingsButton=dom.button({
-            onclick(e){
-                let bF=dom.createBF()
-                ui.node.appendChild(bF.node)
-                bF.appendChild(createSettingsDiv(ui))
-                bF.on('backClick',e=>{
-                    ui.node.removeChild(bF.node)
-                })
-            }
-        },'Settings')
+        ui._settingsButton=dom.button('Settings',{onclick(e){
+            let bF=dom.createBF()
+            dom(ui.node,bF.node)
+            bF.appendChild(createSettingsDiv(ui))
+            bF.on('backClick',e=>{
+                ui.node.removeChild(bF.node)
+            })
+        }})
     }
     function createSettingsDiv(ui){
         return dom.div(n=>{

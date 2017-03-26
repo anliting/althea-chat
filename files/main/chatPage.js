@@ -15,17 +15,17 @@
             JSON.parse(localStorage.altheaChatSettings)
         :
             {notificationSound:0}
-        document.head.append(this.style=dom.style(mainStyle))
-        document.head.append(this.themeColor=dom.meta(n=>{
-            n.name='theme-color'
-        }))
+        dom(document.head,
+            this.style=dom.style(mainStyle),
+            this.themeColor=dom.meta({name:'theme-color'})
+        )
     }
     ChatPage.prototype.playSound=function(settings){
-        document.body.appendChild(dom.audio(n=>{
-            n.autoplay=true
-            n.src='plugins/althea-chat/main/notification.mp3'
-            n.onended=e=>document.body.removeChild(n)
-            n.volume=this.settings.notificationSound
+        dom(document.body,dom.audio({
+            autoplay:true,
+            src:'plugins/althea-chat/main/notification.mp3',
+            onended(e){document.body.removeChild(n)},
+            volume:this.settings.notificationSound,
         }))
     }
     ChatPage.prototype.showConversationList=showConversationList
@@ -91,10 +91,10 @@
     async function content(chat){
         chat=await chat
         let ui=chat.ui
-        this.style.appendChild(dom.tn(await chat.style))
+        dom(this.style,await chat.style)
         ui.style=s=>{
             let n=dom.tn(s.content)
-            this.style.appendChild(n)
+            dom(this.style,n)
             let color={
                 default:'',
                 gnulinux:'black',
@@ -103,7 +103,7 @@
             document.body.style.backgroundColor=color
             return()=>this.style.removeChild(n)
         }
-        document.body.appendChild(ui.node)
+        dom(document.body,ui.node)
         ui.focus()
         ui.beAppended()
     }

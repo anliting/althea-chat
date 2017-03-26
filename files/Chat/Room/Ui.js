@@ -88,7 +88,7 @@
             messages.reverse()
             insert=div=>this._topDiv.after(div)
         }else if(mode=='append'){
-            insert=div=>this._innerMessageDiv.appendChild(div)
+            insert=div=>dom(this._innerMessageDiv,div)
         }
         messages.map(message=>
             insert(createSingleMessage(this,userA,userB,message))
