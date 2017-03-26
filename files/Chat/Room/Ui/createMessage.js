@@ -10,9 +10,6 @@
             ui._innerMessageDiv=createInnerMessageDiv(ui)
         )
         div.className='message'
-        div.onclick=e=>{
-            getSelection().isCollapsed&&ui.textarea.focus()
-        }
         return div
     }
     function createInnerMessageDiv(ui){
@@ -26,6 +23,7 @@
                 div.scrollTop+div.clientHeight-div.scrollHeight
             )<=1
         })
+        div.onclick=e=>getSelection().isCollapsed&&ui.textarea.focus()
         ui.syncInnerMessageDivScroll=syncDivScroll
         return div
         function syncDivScroll(){

@@ -4,9 +4,9 @@ div.chat>div.message{
 div.chat>div.message>div.innerMessage{
     padding-right:8px;
     height:100%;
+    overflow-y:scroll;
     word-break:break-all;
     text-align:justify;
-    overflow-y:scroll;
 }
 div.chat>div.message>div.innerMessage::-webkit-scrollbar{
     width:12px;
