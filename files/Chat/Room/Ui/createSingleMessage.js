@@ -20,21 +20,20 @@
         })
     }
     function createSpan(message){
-        let
-            span=dom.span(compile(message.message)),
-            promises=[]
-        span.title=message.timestamp
-        let collection=span.getElementsByTagName('img')
-        for(let i=0;i<collection.length;i++){
-            let img=collection[i]
-            promises.push(new Promise((rs,rj)=>{
-                img.addEventListener('load',rs)
-                img.addEventListener('error',rs)
-            }))
-        }
+        let span=dom.span(
+            {title:message.timestamp},
+            compile(message.message)
+        )
         return{
             span,
-            promise:Promise.all(promises)
+            promise:Promise.all(
+                Array.from(span.getElementsByTagName('img')).map(img=>
+                    new Promise((rs,rj)=>{
+                        img.addEventListener('load',rs)
+                        img.addEventListener('error',rs)
+                    })
+                )
+            )
         }
     }
 })()

@@ -19,7 +19,7 @@
         this._target=target
         this._styleManager=new StyleManager
         this.node=dom.div(
-            n=>{n.className='chat'},
+            {className:'chat'},
             this.messageDiv=createMessage(this),
             this.bottomDiv=createBottom(this)
         )
