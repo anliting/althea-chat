@@ -80,7 +80,7 @@ let
         for(let m;m=url.match(s);){
             yield dom.tn(s.substring(0,m.index))
             yield /^https?$/.test(m.scheme)?
-                dom.a(m[0],a=>{a.href=m.url})
+                dom('a',m[0],a=>{a.href=m.url})
             :
                 dom.tn(s.substring(m.index,m.index+m[0].length))
             s=s.substring(m.index+m[0].length)

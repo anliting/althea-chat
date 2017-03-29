@@ -16,12 +16,12 @@
         :
             {notificationSound:0}
         dom(document.head,
-            this.style=dom.style(mainStyle),
-            this.themeColor=dom.meta({name:'theme-color'})
+            this.style=dom('style',mainStyle),
+            this.themeColor=dom('meta',{name:'theme-color'})
         )
     }
     ChatPage.prototype.playSound=function(settings){
-        dom(document.body,dom.audio({
+        dom(document.body,dom('audio',{
             autoplay:true,
             src:'plugins/althea-chat/main/notification.mp3',
             onended(e){document.body.removeChild(n)},

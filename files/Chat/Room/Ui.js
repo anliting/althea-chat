@@ -18,7 +18,7 @@
         this._currentUser=currentUser
         this._target=target
         this._styleManager=new StyleManager
-        this.node=dom.div(
+        this.node=dom('div',
             {className:'chat'},
             this.messageDiv=createMessage(this),
             this.bottomDiv=createBottom(this)

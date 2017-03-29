@@ -7,7 +7,7 @@
         module.shareImport('setupSettingsButton.js'),
     ])
     function createTextarea(ui){
-        let textarea=dom.textarea({
+        let textarea=dom('textarea',{
             rows:2,
             oninput(e){
                 ui.updateTextareaHeight()
@@ -42,10 +42,10 @@
         })
     }
     function setupStatusNode(ui){
-        ui._statusNode=dom.span()
+        ui._statusNode=dom('span')
     }
     function createSendButton(ui){
-        return dom.button('Send',{onclick(){
+        return dom('button','Send',{onclick(){
             ui._send()
         }})
     }
@@ -53,7 +53,7 @@
         setupFileButton(ui)
         setupSettingsButton(ui)
         setupStatusNode(ui)
-        return dom.div(
+        return dom('div',
             {className:'bottom'},
             ui.textarea=createTextarea(ui),
             ui._fileButton.n,' ',
@@ -71,7 +71,7 @@
     function createFullscreenButton(){
         let
             status=0,
-            n=dom.button()
+            n=dom('button')
         updateTextContent()
         n.onclick=e=>{
             status=1-status

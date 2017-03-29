@@ -7,7 +7,7 @@
         module.shareImport('colorScheme.js'),
     ])
     function setupSettingsButton(ui){
-        ui._settingsButton=dom.button('Settings',{onclick(e){
+        ui._settingsButton=dom('button','Settings',{onclick(e){
             let bF=dom.createBF()
             dom(ui.node,bF.node)
             bF.appendChild(createSettingsDiv(ui))
@@ -17,7 +17,7 @@
         }})
     }
     function createSettingsDiv(ui){
-        return dom.div(n=>{
+        return dom('div',n=>{
             n.style.margin='32px 48px'
             n.style.width='240px'
             let scroll=dom.createScroll(200)
@@ -27,8 +27,8 @@
                 ui.playNotificationSound()
             })
             return[
-                dom.p(
-                    'Notification Sound: ',dom.br(),
+                dom('p',
+                    'Notification Sound: ',dom('br'),
                     scroll.node
                 ),
                 colorSchemeP(ui),
@@ -37,11 +37,11 @@
     }
     function colorSchemeP(ui){
         let s=ui.getSetting('colorScheme')
-        return dom.p(
-            'Color Scheme: ',dom.br(),
-            dom.select(
+        return dom('p',
+            'Color Scheme: ',dom('br'),
+            dom('select',
                 ...Object.keys(colorScheme).map(i=>
-                    dom.option(colorScheme[i].name,n=>{
+                    dom('option',colorScheme[i].name,n=>{
                         n.value=i
                         if(s==i)
                             n.selected=true
