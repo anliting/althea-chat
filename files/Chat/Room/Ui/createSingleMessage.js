@@ -18,14 +18,14 @@
         })
     }
     function createSpan(message){
-        let span=dom.span(
+        let span=dom('span',
             {title:message.timestamp},
             compile(message.message)
         )
         return{
             span,
             promise:Promise.all(
-                Array.from(span.getElementsByTagName('img')).map(img=>
+                [...span.getElementsByTagName('img')].map(img=>
                     new Promise((rs,rj)=>{
                         img.addEventListener('load',rs)
                         img.addEventListener('error',rs)

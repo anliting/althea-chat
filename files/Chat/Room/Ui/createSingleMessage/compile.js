@@ -44,18 +44,17 @@ let
             `<!docytpe html><title>0</title><body>${s}`,'text/html'
         ).body
         traverse(body)
-        return Array.from(body.childNodes)
+        return[...body.childNodes]
     }
     function traverse(m){
-        Array.from(m.childNodes).map(n=>{
+        [...m.childNodes].map(n=>{
             if(!test(n))
                 return m.removeChild(n)
             if(n.nodeType==1)
                 traverse(n)
             else if(n.nodeType==3){
-                Array.from(renderUrl(n.wholeText)).map(o=>
+                for(let o of renderUrl(n.wholeText))
                     m.insertBefore(o,n)
-                )
                 m.removeChild(n)
             }
         })
@@ -66,7 +65,7 @@ let
             if(!(name in whitelist))
                 return
             let nodeTest=whitelist[name]
-            return Array.from(n.attributes).every(a=>{
+            return[...n.attributes].every(a=>{
                 if(!(a.name in nodeTest))
                     return 
                 let attrTest=nodeTest[a.name]
