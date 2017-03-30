@@ -24,7 +24,7 @@
         dom(document.body,dom('audio',{
             autoplay:true,
             src:'plugins/althea-chat/main/notification.mp3',
-            onended(e){document.body.removeChild(n)},
+            onended(e){document.body.removeChild(this)},
             volume:this.settings.notificationSound,
         }))
     }
