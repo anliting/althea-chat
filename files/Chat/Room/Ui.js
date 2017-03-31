@@ -73,7 +73,10 @@
     }})
     Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
         this._connectionStatus=val
-        if(localStorage.hacker)
+        if(
+            localStorage.althea&&
+            0<=String(localStorage.althea).split(' ').indexOf('h')
+        )
             this._statusNode.textContent=val=='online'?'':'offline'
     }})
     async function uiAddMessages(messages,mode){
