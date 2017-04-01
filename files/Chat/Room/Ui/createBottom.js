@@ -15,7 +15,10 @@
         })
         textarea.onkeydown=e=>{
             // only enter
-            if(!(!e.ctrlKey&&!e.shiftKey&&e.keyCode==13))
+            if(!(
+                ui.getSetting('pressEnterToSend')&&
+                !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
+            ))
                 return
             e.stopPropagation()
             e.preventDefault()
