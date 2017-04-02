@@ -1,43 +1,42 @@
-let
-    whitelist={
-        a:{
-            href:/^https?:\/\//,
-        },
-        br:{},
-        code:{
-            style:0,
-        },
-        div:{
-            style:0,
-        },
-        iframe:{
-            width:0,
-            height:0,
-            src:/^https:\/\/www\.youtube\.com\/embed\//,
-            frameborder:0,
-            allowfullscreen:0,
-        },
-        img:{
-            src:/^img\//,
-            style:0,
-        },
-        p:{
-            style:0,
-        },
-        pre:{
-            style:0,
-        },
-        span:{
-            style:0,
-        },
-    }
+let whitelist={
+    a:{
+        href:/^https?:\/\//,
+    },
+    br:{},
+    code:{
+        style:0,
+    },
+    div:{
+        style:0,
+    },
+    iframe:{
+        width:0,
+        height:0,
+        src:/^https:\/\/www\.youtube\.com\/embed\//,
+        frameborder:0,
+        allowfullscreen:0,
+    },
+    img:{
+        src:/^img\//,
+        style:0,
+    },
+    p:{
+        style:0,
+    },
+    pre:{
+        style:0,
+    },
+    span:{
+        style:0,
+    },
+}
 ;(async()=>{
     let[
         dom,
-        url,
+        uri,
     ]=await Promise.all([
         module.repository.althea.dom,
-        module.repository.althea.url,
+        module.repository.althea.uri,
     ])
     function compile(s){
         let body=(new DOMParser).parseFromString(
@@ -77,12 +76,12 @@ let
             return 1
     }
     function*renderUrl(s){
-        for(let m;m=url.match(s);){
+        for(let m;m=uri.matchAbsoluteUri(s);){
             yield dom.tn(s.substring(0,m.index))
-            yield /^https?$/.test(m.scheme)?
-                dom('a',m[0],a=>{a.href=m.url})
+            yield /^https?/.test(m[0])?
+                dom('a',m[0],{href:m[0]})
             :
-                dom.tn(s.substring(m.index,m.index+m[0].length))
+                dom.tn(m[0])
             s=s.substring(m.index+m[0].length)
         }
         yield dom.tn(s)
