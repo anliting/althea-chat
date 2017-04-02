@@ -50,7 +50,7 @@
     function colorSchemeP(ui){
         let s=ui.getSetting('colorScheme')
         return dom('p',
-            'Color Scheme: ',dom('br'),
+            'Color Scheme: ',
             dom('select',
                 ...Object.keys(colorScheme).map(i=>
                     dom('option',{value:i},colorScheme[i].name,n=>{
@@ -58,9 +58,9 @@
                             n.selected=true
                     })
                 ),
-                n=>{n.onchange=e=>
-                    ui.setSetting('colorScheme',n.value)
-                }
+                {onchange(e){
+                    ui.setSetting('colorScheme',this.value)
+                }}
             )
         )
     }
