@@ -19,21 +19,12 @@
         }})
     }
     function createSettingsDiv(ui){
-        let scroll=dom.createScroll(200)
-        scroll.value=ui.getSetting('notificationSound')
-        scroll.on('change',e=>{
-            ui.setSetting('notificationSound',scroll.value)
-            ui.playNotificationSound()
-        })
         return dom('div',
             n=>{
-                n.style.margin='32px 48px'
-                n.style.width='240px'
+                n.style.margin='16px 24px'
+                n.style.width='280px'
             },
-            dom('p',
-                'Notification Sound: ',dom('br'),
-                scroll.node
-            ),
+            notificationSound(ui),
             colorSchemeP(ui),
             dom('p',
                 dom('input',{
@@ -45,6 +36,21 @@
                 }),
                 ' Press Enter to send.'
             )
+        )
+    }
+    function notificationSound(ui){
+        return dom('p',
+            'Notification Sound: ',
+            dom('input',{
+                type:'range',
+                max:1,
+                step:0.01,
+                value:ui.getSetting('notificationSound'),
+                onchange(e){
+                    ui.setSetting('notificationSound',this.value)
+                    ui.playNotificationSound()
+                }
+            })
         )
     }
     function colorSchemeP(ui){
