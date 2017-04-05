@@ -6,15 +6,15 @@ div.chat>div.message{
     height:100%;
     overflow-y:scroll;
     overflow-wrap:break-word;
+    word-break:break-all;
+    /*text-align:justify;*/
 /*
-    In Chrome 57, 'word-break:break-all' is causing
+    In Chrome 57, 'word-break:break-all;text-align:justify' is causing
     'overflow-wrap:break-word' not to break 'a lot of continuous "！"'. I
     considered it as a browser bug.
 
-    It is disabled because enabling it results in horizontal scroll.
+    It also results in horizontal scroll.
 */
-    /*word-break:break-all;*/
-    text-align:justify;
 }
 div.chat>div.message>div.top{
     text-align:center;

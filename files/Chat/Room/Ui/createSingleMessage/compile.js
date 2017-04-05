@@ -79,7 +79,7 @@ let whitelist={
         for(let m;m=uri.matchAbsoluteUri(s);){
             yield dom.tn(s.substring(0,m.index))
             yield /^https?/.test(m[0])?
-                dom('a',m[0],{href:m[0]})
+                dom('a',decodeURI(m[0]),{href:m[0]})
             :
                 dom.tn(m[0])
             s=s.substring(m.index+m[0].length)
