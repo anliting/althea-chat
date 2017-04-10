@@ -1,0 +1,8 @@
+cd files
+function lib(){
+    echo `find . -type f | grep -v "static"`
+}
+function link(){
+    lib | xargs node $linker $1 > $2
+}
+link main.js main.static.js
