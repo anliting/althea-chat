@@ -17,10 +17,12 @@
     chatRoom.playNotificationSound=()=>this.playSound()
     ;(async site=>{
         site=await site
-        chatRoom.connectionStatus=site.status
-        site.on('statusChange',_=>
-            chatRoom.connectionStatus=site.status
-        )
+        update()
+        addEventListener('offline',update)
+        addEventListener('online',update)
+        function update(){
+            chatRoom.connectionStatus=navigator.onLine?'online':'offline'
+        }
     })(site)
     return chatRoom
 })
