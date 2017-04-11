@@ -1,6 +1,6 @@
 cd files
 function lib(){
-    echo `find . -type f | grep -v "static"`
+    echo `find . -type f | grep -v ".static.js\|.mp3"`
 }
 function link(){
     lib | xargs node $linker $1 > $2
