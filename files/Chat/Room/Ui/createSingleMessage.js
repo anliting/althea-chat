@@ -19,7 +19,7 @@
     }
     function createSpan(message){
         let span=dom('span',
-            {title:message.timestamp},
+            {title:(new Date(message.timestamp)).toLocaleString()},
             compile(message.message)
         )
         return{
