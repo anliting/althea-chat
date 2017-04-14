@@ -1,8 +1,14 @@
-module.exports=althea=>
+let
+    getMessages=require('./server/getMessages'),
+    sendMessage=require('./server/sendMessage')
+module.exports=althea=>{
+    althea.addQueryFunction('getMessages',getMessages)
+    althea.addQueryFunction('sendMessage',sendMessage)
     althea.addPagemodule(env=>{
         let path=env.analyze.request.parsedUrl.pathname.split('/')
         return path[1]=='chat'
     },pagemodule)
+}
 async function pagemodule(env){
     let path=env.analyze.request.parsedUrl.pathname.split('/')
     if(3<path.length)
