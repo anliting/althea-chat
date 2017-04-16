@@ -1,8 +1,10 @@
 ;(async()=>{
     let[
+        arg,
         dom,
         setupSettingsButton,
     ]=await Promise.all([
+        module.repository.althea.arg,
         module.repository.althea.dom,
         module.shareImport('setupSettingsButton.js'),
     ])
@@ -55,15 +57,20 @@
     function createBottom(ui){
         setupFileButton(ui)
         setupSettingsButton(ui)
+        setupFindButton(ui)
         setupStatusNode(ui)
         return dom('div',
             {className:'bottom'},
             ui.textarea=createTextarea(ui),
+            arg.h&&[ui._findButton,' '],
             ui._fileButton.n,' ',
             createSendButton(ui),' ',
             ui._settingsButton,' ',
             ui._statusNode
         )
+    }
+    function setupFindButton(ui){
+        ui._findButton=dom('button','Find')
     }
     return createBottom
 })()
