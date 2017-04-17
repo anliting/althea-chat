@@ -2,7 +2,7 @@ let
     getMessages=require('./server/getMessages'),
     sendMessage=require('./server/sendMessage'),
     getConversations=require('./server/getConversations')
-module.exports=althea=>{
+module.exports=function(althea){
     althea.addQueryFunction('getMessages',getMessages)
     althea.addQueryFunction('sendMessage',sendMessage)
     althea.addQueryFunction('getConversations',getConversations)
