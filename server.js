@@ -27,7 +27,7 @@ async function getData(althea){
 async function getDbVer(althea){
     return(await getData(althea)).databaseVersion||0
 }
-async function setDbVer(althea){
+async function setDbVer(althea,ver){
     let data=await getData(althea)
     data.databaseVersion=ver
     await althea.setData(data)
