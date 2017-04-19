@@ -9,7 +9,7 @@ module.exports=(db,opt,env)=>{
     ))
         return
     opt.before||(opt.before=Infinity)
-    return env.althea.database.getMessages(
+    return db.getMessages(
         env.currentUser.id,
         opt.target,
         opt.after,

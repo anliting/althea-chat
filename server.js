@@ -1,35 +1,12 @@
 let
-    getMessages=        require('./server/getMessages'),
-    sendMessage=        require('./server/sendMessage'),
-    getConversations=   require('./server/getConversations'),
-    edges={
-        0:async db=>{
-            await db.query(`
-                create table message (
-                    id int not null auto_increment,
-                    timestamp timestamp not null default current_timestamp,
-                    fromUser int not null,
-                    toUser int not null,
-                    message text not null,
-                    primary key (id)
-                )
-            `)
-            return 1
-        },
-        1:async db=>{
-            await db.query(`
-                rename table message to chat_message
-            `)
-            await db.query(`
-                create table chat_conversation (
-                    id int not null auto_increment,
-                    primary key (id)
-                )
-            `)
-            return 2
-        },
-    }
-let loadChatProperties=require('./server/loadChatProperties')
+    edges=              require('./server/edges'),
+    loadChatProperties= require('./server/loadChatProperties'),
+    queryFunctions=     require('./server/queryFunctions')
+function extendDatabase(db){
+    db=Object.create(db)
+    loadChatProperties(db)
+    return db
+}
 module.exports=async function(althea){
     {
         let ver=await getDbVer(althea)
@@ -37,20 +14,14 @@ module.exports=async function(althea){
             ver=await edges[ver](althea.database)
         setDbVer(althea,ver)
     }
-    function Database(){
+    {
+        let db=extendDatabase(althea.database)
+        Object.entries(queryFunctions).map(([k,v])=>{
+            althea.addQueryFunction(k,(opt,env)=>
+                v(db,opt,env)
+            )
+        })
     }
-    Database.prototype=althea.database
-    loadChatProperties(Database.prototype)
-    let db=new Database
-    althea.addQueryFunction('getMessages',(opt,env)=>
-        getMessages(db,opt,env)
-    )
-    althea.addQueryFunction('sendMessage',(opt,env)=>
-        sendMessage(db,opt,env)
-    )
-    althea.addQueryFunction('getConversations',(opt,env)=>
-        getConversations(db,opt,env)
-    )
     althea.addPagemodule(env=>{
         let path=env.analyze.request.parsedUrl.pathname.split('/')
         return path[1]=='chat'

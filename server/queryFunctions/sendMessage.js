@@ -4,7 +4,7 @@ module.exports=(db,args,env)=>{
         typeof args.message=='string'
     ))
         return
-    return env.althea.database.newMessage(
+    return db.newMessage(
         env.currentUser.id,
         args.target,
         args.message

@@ -1,4 +1,4 @@
 module.exports=(db,opt,env)=>
-    env.althea.database.getConversations(
+    db.getConversations(
         env.currentUser.id
     )
