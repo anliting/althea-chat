@@ -1,8 +1,17 @@
 let
     getMessages=require('./server/getMessages'),
     sendMessage=require('./server/sendMessage'),
-    getConversations=require('./server/getConversations')
-module.exports=function(althea){
+    getConversations=require('./server/getConversations'),
+    edges={
+        //0:()=>1
+    }
+module.exports=async function(althea){
+    {
+        let ver=await getDbVer(althea)
+        while(ver in edges)
+            ver=edges[ver](althea)
+        setDbVer(althea,ver)
+    }
     althea.addQueryFunction('getMessages',getMessages)
     althea.addQueryFunction('sendMessage',sendMessage)
     althea.addQueryFunction('getConversations',getConversations)
@@ -10,6 +19,18 @@ module.exports=function(althea){
         let path=env.analyze.request.parsedUrl.pathname.split('/')
         return path[1]=='chat'
     },pagemodule)
+}
+async function getData(althea){
+    let data=await althea.getData()
+    return data?JSON.parse(data):{}
+}
+async function getDbVer(althea){
+    return(await getData(althea)).databaseVersion||0
+}
+async function setDbVer(althea){
+    let data=await getData(althea)
+    data.databaseVersion=ver
+    await althea.setData(data)
 }
 async function pagemodule(env){
     let path=env.analyze.request.parsedUrl.pathname.split('/')
