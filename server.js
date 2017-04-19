@@ -15,8 +15,21 @@ let
                 )
             `)
             return 1
-        }
+        },
+        10:async db=>{
+            await db.query(`
+                rename table message to chat_message
+            `)
+            await db.query(`
+                create table chat_conversation (
+                    id int not null auto_increment,
+                    primary key (id)
+                )
+            `)
+            return 2
+        },
     }
+let loadChatProperties=require('./server/loadChatProperties')
 module.exports=async function(althea){
     {
         let ver=await getDbVer(althea)
@@ -24,9 +37,20 @@ module.exports=async function(althea){
             ver=await edges[ver](althea.database)
         setDbVer(althea,ver)
     }
-    althea.addQueryFunction('getMessages',getMessages)
-    althea.addQueryFunction('sendMessage',sendMessage)
-    althea.addQueryFunction('getConversations',getConversations)
+    function Database(){
+    }
+    Database.prototype=althea.database
+    loadChatProperties(Database.prototype)
+    let db=new Database
+    althea.addQueryFunction('getMessages',(opt,env)=>
+        getMessages(db,opt,env)
+    )
+    althea.addQueryFunction('sendMessage',(opt,env)=>
+        sendMessage(db,opt,env)
+    )
+    althea.addQueryFunction('getConversations',(opt,env)=>
+        getConversations(db,opt,env)
+    )
     althea.addPagemodule(env=>{
         let path=env.analyze.request.parsedUrl.pathname.split('/')
         return path[1]=='chat'

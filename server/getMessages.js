@@ -1,4 +1,4 @@
-module.exports=(opt,env)=>{
+module.exports=(db,opt,env)=>{
     if(!(
         typeof opt.target=='number'&&
         typeof opt.after=='number'&&

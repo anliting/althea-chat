@@ -1,4 +1,4 @@
-module.exports=(args,env)=>{
+module.exports=(db,args,env)=>{
     if(!(
         typeof args.target=='number'&&
         typeof args.message=='string'
