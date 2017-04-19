@@ -3,11 +3,11 @@ async function getConversations(uid){
     let rows=await this.query0(`
         (
             select fromUser
-            from message
+            from chat_message
             where toUser=?
         ) union (
             select toUser
-            from message
+            from chat_message
             where fromUser=?
         )
     `,[

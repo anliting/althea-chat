@@ -6,7 +6,7 @@ async function getMessages(userA,userB,after,before,last){
             timestamp,
             fromUser,
             message
-        from message
+        from chat_message
         where (?&&?||?&&?) && ?<=id ${
             before<Infinity?
                 ` && id < ${before} `

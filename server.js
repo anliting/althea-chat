@@ -16,7 +16,7 @@ let
             `)
             return 1
         },
-        10:async db=>{
+        1:async db=>{
             await db.query(`
                 rename table message to chat_message
             `)
