@@ -1,15 +1,27 @@
 let
-    getMessages=require('./server/getMessages'),
-    sendMessage=require('./server/sendMessage'),
-    getConversations=require('./server/getConversations'),
+    getMessages=        require('./server/getMessages'),
+    sendMessage=        require('./server/sendMessage'),
+    getConversations=   require('./server/getConversations'),
     edges={
-        //0:()=>1
+        0:async db=>{
+            await db.query(`
+                create table message (
+                    id int not null auto_increment,
+                    timestamp timestamp not null default current_timestamp,
+                    fromUser int not null,
+                    toUser int not null,
+                    message text not null,
+                    primary key (id)
+                )
+            `)
+            return 1
+        }
     }
 module.exports=async function(althea){
     {
         let ver=await getDbVer(althea)
         while(ver in edges)
-            ver=edges[ver](althea)
+            ver=await edges[ver](althea.database)
         setDbVer(althea,ver)
     }
     althea.addQueryFunction('getMessages',getMessages)
