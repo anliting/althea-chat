@@ -32,4 +32,15 @@ module.exports={
         `)
         return 2
     },
+    3:async db=>{
+        await db.query(`
+            create table chat_twoMen (
+                userA int not null,
+                userB int not null,
+                conversation int not null,
+                primary key (userA,userB)
+            )
+        `)
+        return 3
+    },
 }

@@ -1,12 +1,7 @@
 let
     edges=              require('./server/edges'),
-    loadChatProperties= require('./server/loadChatProperties'),
+    extendDatabase=     require('./server/extendDatabase'),
     queryFunctions=     require('./server/queryFunctions')
-function extendDatabase(db){
-    db=Object.create(db)
-    loadChatProperties(db)
-    return db
-}
 module.exports=async function(althea){
     {
         let ver=await getDbVer(althea)
