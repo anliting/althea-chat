@@ -21,15 +21,17 @@ module.exports={
         return 2
     },
     1:async db=>{
-        await db.query(`
-            rename table message to chat_message
-        `)
-        await db.query(`
-            create table chat_conversation (
-                id int not null auto_increment,
-                primary key (id)
-            )
-        `)
+        await Promise.all([
+            db.query(`
+                rename table message to chat_message
+            `),
+            db.query(`
+                create table chat_conversation (
+                    id int not null auto_increment,
+                    primary key (id)
+                )
+            `),
+        ])
         return 2
     },
     3:async db=>{
@@ -38,7 +40,7 @@ module.exports={
                 userA int not null,
                 userB int not null,
                 conversation int not null,
-                primary key (userA,userB)
+                unique key (userA,userB)
             )
         `)
         return 3
