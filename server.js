@@ -1,38 +1,13 @@
 let
-    edges=              require('./server/edges'),
-    extendDatabase=     require('./server/extendDatabase'),
-    queryFunctions=     require('./server/queryFunctions')
+    updateDatabase=     require('./server/updateDatabase'),
+    addQueryFunctions=  require('./server/addQueryFunctions')
 module.exports=async function(althea){
-    {
-        let ver=await getDbVer(althea)
-        while(ver in edges)
-            ver=await edges[ver](althea.database)
-        setDbVer(althea,ver)
-    }
-    {
-        let db=extendDatabase(althea.database)
-        Object.entries(queryFunctions).map(([k,v])=>{
-            althea.addQueryFunction(k,(opt,env)=>
-                v(db,opt,env)
-            )
-        })
-    }
+    addQueryFunctions(althea)
+    await updateDatabase(althea)
     althea.addPagemodule(env=>{
         let path=env.analyze.request.parsedUrl.pathname.split('/')
         return path[1]=='chat'
     },pagemodule)
-}
-async function getData(althea){
-    let data=await althea.getData()
-    return data?JSON.parse(data):{}
-}
-async function getDbVer(althea){
-    return(await getData(althea)).databaseVersion||0
-}
-async function setDbVer(althea,ver){
-    let data=await getData(althea)
-    data.databaseVersion=ver
-    await althea.setData(data)
 }
 async function pagemodule(env){
     let path=env.analyze.request.parsedUrl.pathname.split('/')
