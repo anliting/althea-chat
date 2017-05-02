@@ -30,17 +30,6 @@ div.chat>div.bottom>textarea{
     width:calc(100% - 6px);
     resize:none;
 }
-div.chat div.scroll *::-webkit-scrollbar{
-    height:12px;
-}
-div.chat div.scroll *::-webkit-scrollbar-track{
-    border-radius:6px;
-    background:#DDD;
-}
-div.chat div.scroll *::-webkit-scrollbar-thumb{
-    border-radius:6px;
-    background:#BBB;
-}
 /* start fullscreen */
 /*body:-webkit-full-screen{
     margin:0;

@@ -4,12 +4,20 @@
             EventEmmiter,
             Ui,
             style,
+            deviceSpecificStyle,
         ]=await Promise.all([
             module.repository.althea.EventEmmiter,
             module.shareImport('Room/Ui.js'),
             module.get('Room/style.css'),
+            getDeviceSpecificStyle(),
         ]),
         blockSize=16
+    async function getDeviceSpecificStyle(){
+        let browser=await module.repository.althea.browser
+        return await module.get(`Room/style.${
+            browser.isMobile?'mobile':'desktop'
+        }.css`)
+    }
     function Room(imageUploader,currentUser,target){
         EventEmmiter.call(this)
         this._imageUploader=imageUploader
@@ -93,7 +101,7 @@
         if(this._ui)
             this._ui.connectionStatus=val
     }})
-    Room.prototype.style=style
+    Room.prototype.style=style+deviceSpecificStyle
     Object.defineProperty(Room.prototype,'ui',{get(){
         if(this._ui)
             return this._ui

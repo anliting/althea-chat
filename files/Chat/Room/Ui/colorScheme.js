@@ -1,7 +1,9 @@
-let colorScheme={
-    'default':{
-        name:'Default',
-        style:`
+(async()=>{
+    let browser=await module.repository.althea.browser
+    let colorScheme={
+        'default':{
+            name:'Default',
+            style:!browser.isMobile?`
 div.chat>div.message::-webkit-scrollbar{
     width:12px;
 }
@@ -13,11 +15,11 @@ div.chat>div.message::-webkit-scrollbar-thumb{
     border-radius:6px;
     background:#BBB;
 }
-`,
-    },
-    'gnulinux':{
-        name:'GNU/Linux',
-        style:`
+`:'',
+        },
+        'gnulinux':{
+            name:'GNU/Linux',
+            style:`${!browser.isMobile?`
 div.chat>div.message::-webkit-scrollbar{
     width:12px;
 }
@@ -29,7 +31,7 @@ div.chat>div.message::-webkit-scrollbar-thumb{
     border-radius:6px;
     background:#444;
 }
-div.chat a:active,div.chat a:link,div.chat a:hover,div.chat a:visited{
+`:''}div.chat a:active,div.chat a:link,div.chat a:hover,div.chat a:visited{
     color:lightblue;
 }
 div.chat button{
@@ -48,6 +50,7 @@ div.chat>div.bottom textarea{
     color:lightgray;
 }
 `,
+        }
     }
-}
-colorScheme
+    return colorScheme
+})()
