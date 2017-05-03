@@ -34,7 +34,13 @@ module.exports={
         ])
         return 2
     },
-    3:async db=>{
+    /*2:async db=>{
+        await db.query(`
+            alter table chat_conversation add column type int not null
+        `)
+        await db.query(`
+            alter table chat_message add column conversation int not null
+        `)
         await db.query(`
             create table chat_twoMen (
                 userA int not null,
@@ -44,5 +50,5 @@ module.exports={
             )
         `)
         return 3
-    },
+    },*/
 }

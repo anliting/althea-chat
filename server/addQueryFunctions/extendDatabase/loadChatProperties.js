@@ -1,4 +1,6 @@
 module.exports=db=>{
+    db.getTwoMenConversation=
+        require('./loadChatProperties/getTwoMenConversation')
     db.getConversations=
         require('./loadChatProperties/getConversations')
     db.getMessages=
