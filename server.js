@@ -20,9 +20,6 @@ async function pagemodule(env){
         }catch(e){
             return env.httpServer.pagemodules.s400(env)
         }
-    return f(env)
-}
-function f(env){
     if(!env.althea.allowOrigin(env.envVars,env.request.headers.origin))
         return 403
     if(env.request.method=='GET')
