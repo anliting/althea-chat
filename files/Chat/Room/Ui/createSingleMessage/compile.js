@@ -54,11 +54,10 @@ let whitelist={
             root='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1'
             styleSheetUrl=`${root}/katex.min.css`,
             scriptUrl=`${root}/katex.min.js`
-        await module.scriptByPath(scriptUrl)
         dom(document.head,
             dom('link',{rel:'stylesheet',href:styleSheetUrl})
         )
-        await new Promise(rs=>setTimeout(rs,1000))
+        await module.scriptByPath(scriptUrl)
     }
     function compile(s){
         let body=(new DOMParser).parseFromString(
