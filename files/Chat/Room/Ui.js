@@ -15,9 +15,8 @@ let mathjaxPath='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js
         module.shareImport('Ui/StyleManager.js'),
         module.shareImport('Ui/colorScheme.js'),
     ])
-    await loadMathJax()
-    function loadMathJax(){
-        return new Promise(onload=>
+    if(typeof MathJax=='undefined')
+        await new Promise(onload=>
             dom(document.head,
                 dom('script',{type:'text/x-mathjax-config'},`
 MathJax.Hub.Config({
@@ -31,7 +30,6 @@ MathJax.Hub.Config({
                 })
             )
         )
-    }
     function Ui(currentUser,target){
         this._currentUser=currentUser
         this._target=target
