@@ -1,4 +1,3 @@
-let mathjaxPath='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML'
 ;(async()=>{
     let[
         dom,
@@ -15,21 +14,6 @@ let mathjaxPath='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js
         module.shareImport('Ui/StyleManager.js'),
         module.shareImport('Ui/colorScheme.js'),
     ])
-    if(typeof MathJax=='undefined')
-        await new Promise(onload=>
-            dom(document.head,
-                dom('script',{type:'text/x-mathjax-config'},`
-MathJax.Hub.Config({
-    messageStyle:'none',
-    skipStartupTypeset:true,
-})
-                `),
-                dom('script',{
-                    src:mathjaxPath,
-                    onload,
-                })
-            )
-        )
     function Ui(currentUser,target){
         this._currentUser=currentUser
         this._target=target
@@ -109,8 +93,6 @@ MathJax.Hub.Config({
             let res=createSingleMessage(this,userA,userB,message)
             insert(res.n)
             await res.p
-            MathJax.Hub.Queue(['Typeset',MathJax.Hub,res.n])
-            this.syncInnerMessageDivScroll()
         })
         this.syncInnerMessageDivScroll()
     }

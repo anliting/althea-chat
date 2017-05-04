@@ -16,15 +16,20 @@
             }
         })
         textarea.onkeydown=e=>{
+            // Ctrl+Shift+Z is simply because it is not used by chrome
+            if(e.ctrlKey&&e.shiftKey&&e.key=='Z'){
+                e.preventDefault()
+                e.stopPropagation()
+                textarea.value+='<span class=tex></span>'
             // only enter
-            if(!(
+            }else if(
                 ui.getSetting('pressEnterToSend')&&
                 !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
-            ))
-                return
-            e.stopPropagation()
-            e.preventDefault()
-            ui._send()
+            ){
+                e.stopPropagation()
+                e.preventDefault()
+                ui._send()
+            }
         }
         ;(async()=>{
             let user=await ui._currentUser

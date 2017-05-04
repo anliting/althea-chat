@@ -27,6 +27,7 @@ let whitelist={
         style:0,
     },
     span:{
+        class:0,
         style:0,
     },
 }
@@ -38,6 +39,27 @@ let whitelist={
         module.repository.althea.dom,
         module.repository.althea.uri,
     ])
+/*
+    To support the math typesetting function, one may
+        . implement it from scratch,
+        . use the KaTeX library, or
+        . use the MathJax library.
+    2017-05-05:
+        I chosed the KaTeX approach, because I don't want to implement it
+        myself, and with KaTeX, I know how to solve the problem in a much
+        proper way by the comparison of MathJax.
+*/
+    if(!('katex' in window)){
+        let
+            root='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1'
+            styleSheetUrl=`${root}/katex.min.css`,
+            scriptUrl=`${root}/katex.min.js`
+        await module.scriptByPath(scriptUrl)
+        dom(document.head,
+            dom('link',{rel:'stylesheet',href:styleSheetUrl})
+        )
+        await new Promise(rs=>setTimeout(rs,1000))
+    }
     function compile(s){
         let body=(new DOMParser).parseFromString(
             `<!docytpe html><title>0</title><body>${s}`,'text/html'
@@ -49,9 +71,18 @@ let whitelist={
         [...m.childNodes].map(n=>{
             if(!test(n))
                 return m.removeChild(n)
-            if(n.nodeType==1)
-                traverse(n)
-            else if(n.nodeType==3){
+            if(n.nodeType==1){
+                if(n.className=='tex'){
+                    let s=n.textContent
+                    n.textContent=''
+                    try{
+                        katex.render(s,n)
+                    }catch(e){
+                        n.textContent=s
+                    }
+                }else
+                    traverse(n)
+            }else if(n.nodeType==3){
                 for(let o of renderUrl(n.wholeText))
                     m.insertBefore(o,n)
                 m.removeChild(n)

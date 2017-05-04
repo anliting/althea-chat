@@ -1,11 +1,13 @@
-(async()=>{
+;(async()=>{
     let
         [
+            dom,
             EventEmmiter,
             Ui,
             style,
             deviceSpecificStyle,
         ]=await Promise.all([
+            module.repository.althea.dom,
             module.repository.althea.EventEmmiter,
             module.shareImport('Room/Ui.js'),
             module.get('Room/style.css'),
