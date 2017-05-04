@@ -1,11 +1,11 @@
 let
-    extendDatabase=     require('./addQueryFunctions/extendDatabase'),
+    ChatServer=         require('./addQueryFunctions/ChatServer'),
     queryFunctions=     require('./addQueryFunctions/queryFunctions')
 function addQueryFunctions(althea){
-    let db=extendDatabase(althea.database)
+    let sv=new ChatServer(althea.database)
     Object.entries(queryFunctions).map(([k,v])=>
         althea.addQueryFunction(k,(opt,env)=>
-            v(db,opt,env)
+            v(sv,opt,env)
         )
     )
 }

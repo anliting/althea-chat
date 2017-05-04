@@ -1,6 +1,6 @@
 module.exports=getConversations
 async function getConversations(uid){
-    let rows=await this.query0(`
+    let rows=await this._db.query0(`
         (
             select fromUser
             from chat_message

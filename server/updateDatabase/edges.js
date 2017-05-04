@@ -34,7 +34,7 @@ module.exports={
         ])
         return 2
     },
-    /*2:async db=>{
+    2:async db=>{
         await db.query(`
             alter table chat_conversation add column type int not null
         `)
@@ -50,5 +50,5 @@ module.exports={
             )
         `)
         return 3
-    },*/
+    },
 }

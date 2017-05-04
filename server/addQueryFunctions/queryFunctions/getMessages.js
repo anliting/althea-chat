@@ -1,4 +1,4 @@
-module.exports=(db,opt,env)=>{
+module.exports=(sv,opt,env)=>{
     if(!(
         typeof opt.target=='number'&&
         typeof opt.after=='number'&&
@@ -9,7 +9,7 @@ module.exports=(db,opt,env)=>{
     ))
         return
     opt.before||(opt.before=Infinity)
-    return db.getMessages(
+    return sv.getMessages(
         env.currentUser.id,
         opt.target,
         opt.after,

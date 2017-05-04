@@ -1,4 +1,4 @@
-module.exports=(db,opt,env)=>
-    db.getConversations(
+module.exports=(sv,opt,env)=>
+    sv.getConversations(
         env.currentUser.id
     )

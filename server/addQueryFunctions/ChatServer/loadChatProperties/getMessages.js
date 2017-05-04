@@ -1,6 +1,6 @@
 module.exports=getMessages
 async function getMessages(userA,userB,after,before,last){
-    let rows=await this.query0(`
+    let rows=await this._db.query0(`
         select
             id,
             timestamp,

@@ -1,10 +1,10 @@
-module.exports=(db,args,env)=>{
+module.exports=(sv,args,env)=>{
     if(!(
         typeof args=='object'&&
         typeof args.target=='number'
     ))
         return
-    return db.getTwoMenConversation(
+    return sv.getTwoMenConversation(
         env.currentUser.id,
         args.target
     )
