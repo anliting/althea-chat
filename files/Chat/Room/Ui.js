@@ -14,6 +14,21 @@
         module.shareImport('Ui/StyleManager.js'),
         module.shareImport('Ui/colorScheme.js'),
     ])
+    await module.scriptByPath('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML')
+    MathJax.Hub.Config({
+        tex2jax:{
+            skipTags:[
+                'script',
+                'noscript',
+                'style',
+                'textarea',
+                'pre',
+                'code'
+            ],
+            ignoreClass:['bordered'],
+        },
+        messageStyle:'none',
+    })
     function Ui(currentUser,target){
         this._currentUser=currentUser
         this._target=target
@@ -92,6 +107,9 @@
         messages.map(message=>
             insert(createSingleMessage(this,userA,userB,message))
         )
+        setTimeout(()=>
+            MathJax.Hub.Queue(['Typeset',MathJax.Hub])
+        ,512)
         this.syncInnerMessageDivScroll()
     }
     return Ui
