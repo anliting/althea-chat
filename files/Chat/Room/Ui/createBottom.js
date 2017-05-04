@@ -16,13 +16,7 @@
             }
         })
         textarea.onkeydown=e=>{
-            // Ctrl+Shift+Z is simply because it is not used by chrome
-            if(e.ctrlKey&&e.shiftKey&&e.key=='Z'){
-                e.preventDefault()
-                e.stopPropagation()
-                textarea.value+='<span class=tex></span>'
-            // only enter
-            }else if(
+            if(
                 ui.getSetting('pressEnterToSend')&&
                 !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
             ){
@@ -68,11 +62,28 @@
             {className:'bottom'},
             ui.textarea=createTextarea(ui),
             arg.h&&[ui._findButton,' '],
+            createTexButton(ui),' ',
             ui._fileButton.n,' ',
             createSendButton(ui),' ',
             ui._settingsButton,' ',
             ui._statusNode
         )
+    }
+    function createTexButton(ui){
+        return dom('button','TeX',{onclick(e){
+            let
+                s=ui.textarea.value,
+                a=ui.textarea.selectionStart,
+                b=ui.textarea.selectionEnd
+            ui.textarea.value=
+                s.substring(0,a)+
+                '<span class=tex></span>'+
+                s.substring(b)
+            ui.textarea.selectionStart=
+                ui.textarea.selectionEnd=
+                a+'<span class=tex>'.length
+            ui.textarea.focus()
+        }})
     }
     function setupFindButton(ui){
         ui._findButton=dom('button','Find')
