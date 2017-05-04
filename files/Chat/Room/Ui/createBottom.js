@@ -70,20 +70,24 @@
         )
     }
     function createTexButton(ui){
-        return dom('button','TeX',{onclick(e){
-            let
-                s=ui.textarea.value,
-                a=ui.textarea.selectionStart,
-                b=ui.textarea.selectionEnd
-            ui.textarea.value=
-                s.substring(0,a)+
-                '<span class=tex></span>'+
-                s.substring(b)
-            ui.textarea.selectionStart=
-                ui.textarea.selectionEnd=
-                a+'<span class=tex>'.length
-            ui.textarea.focus()
-        }})
+        return dom('button','TeX',{
+            title:`
+When you click this button, it places \`<span class=tex>' and \`</span>' around your selection in the input.
+`,
+            onclick(e){
+                let
+                    s=ui.textarea.value,
+                    a=ui.textarea.selectionStart,
+                    b=ui.textarea.selectionEnd,
+                    stepForward='<span class=tex>'.length
+                ui.textarea.value=`${s.substring(0,a)}<span class=tex>${
+                    s.substring(a,b)
+                }</span>${s.substring(b)}`
+                ui.textarea.selectionStart=a+stepForward
+                ui.textarea.selectionEnd=b+stepForward
+                ui.textarea.focus()
+            }
+        })
     }
     function setupFindButton(ui){
         ui._findButton=dom('button','Find')
