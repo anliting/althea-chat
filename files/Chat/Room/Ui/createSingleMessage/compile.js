@@ -31,14 +31,6 @@ let whitelist={
         style:0,
     },
 }
-;(async()=>{
-    let[
-        dom,
-        uri,
-    ]=await Promise.all([
-        module.repository.althea.dom,
-        module.repository.althea.uri,
-    ])
 /*
     To support the math typesetting function, one may
         . implement it from scratch,
@@ -49,16 +41,16 @@ let whitelist={
         myself, and with KaTeX, I know how to solve the problem in a much
         proper way by the comparison of MathJax.
 */
-    if(!('katex' in window)){
-        let
-            root='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1'
-            styleSheetUrl=`${root}/katex.min.css`,
-            scriptUrl=`${root}/katex.min.js`
-        dom(document.head,
-            dom('link',{rel:'stylesheet',href:styleSheetUrl})
-        )
-        await module.scriptByPath(scriptUrl)
-    }
+;(async()=>{
+    let[
+        dom,
+        uri,
+        katex,
+    ]=await Promise.all([
+        module.repository.althea.dom,
+        module.repository.althea.uri,
+        module.shareImport('compile/katex.js'),
+    ])
     function compile(s){
         let body=(new DOMParser).parseFromString(
             `<!docytpe html><title>0</title><body>${s}`,'text/html'
