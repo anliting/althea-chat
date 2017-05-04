@@ -1,4 +1,5 @@
-(async()=>{
+let mathjaxPath='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML'
+;(async()=>{
     let[
         dom,
         createMessage,
@@ -14,21 +15,23 @@
         module.shareImport('Ui/StyleManager.js'),
         module.shareImport('Ui/colorScheme.js'),
     ])
-    await module.scriptByPath('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML')
-    MathJax.Hub.Config({
-        tex2jax:{
-            skipTags:[
-                'script',
-                'noscript',
-                'style',
-                'textarea',
-                'pre',
-                'code'
-            ],
-            ignoreClass:['bordered'],
-        },
-        messageStyle:'none',
-    })
+    await loadMathJax()
+    function loadMathJax(){
+        return new Promise(onload=>
+            dom(document.head,
+                dom('script',{type:'text/x-mathjax-config'},`
+MathJax.Hub.Config({
+    messageStyle:'none',
+    skipStartupTypeset:true,
+})
+                `),
+                dom('script',{
+                    src:mathjaxPath,
+                    onload,
+                })
+            )
+        )
+    }
     function Ui(currentUser,target){
         this._currentUser=currentUser
         this._target=target
@@ -104,12 +107,13 @@
         }else if(mode=='append'){
             insert=div=>dom(this._innerMessageDiv,div)
         }
-        messages.map(message=>
-            insert(createSingleMessage(this,userA,userB,message))
-        )
-        setTimeout(()=>
-            MathJax.Hub.Queue(['Typeset',MathJax.Hub])
-        ,512)
+        messages.map(async message=>{
+            let res=createSingleMessage(this,userA,userB,message)
+            insert(res.n)
+            await res.p
+            MathJax.Hub.Queue(['Typeset',MathJax.Hub,res.n])
+            this.syncInnerMessageDivScroll()
+        })
         this.syncInnerMessageDivScroll()
     }
     return Ui

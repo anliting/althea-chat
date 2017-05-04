@@ -8,14 +8,17 @@
     ])
     return createSingleMessageNode
     function createSingleMessageNode(ui,userA,userB,message){
-        return dom('p',async n=>{
-            let a=await(message.fromUser==userA.id?userA:userB).finalA
-            let span=createSpan(message)
-            dom(n,a,': ',span.span)
-            ui.syncInnerMessageDivScroll()
-            await span.promise
-            ui.syncInnerMessageDivScroll()
-        })
+        let
+            n=dom('p'),
+            p=(async()=>{
+                let a=await(message.fromUser==userA.id?userA:userB).finalA
+                let span=createSpan(message)
+                dom(n,a,': ',span.span)
+                ui.syncInnerMessageDivScroll()
+                await span.promise
+                ui.syncInnerMessageDivScroll()
+            })()
+        return{n,p}
     }
     function createSpan(message){
         let span=dom('span',
