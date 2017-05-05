@@ -1,10 +1,12 @@
-module.exports=db=>{
-    db.getTwoMenConversation=
+module.exports=o=>{
+    o.getTwoMenConversation=
         require('./loadChatProperties/getTwoMenConversation')
-    db.getConversations=
+    o.getConversations=
         require('./loadChatProperties/getConversations')
-    db.getMessages=
+    o.getMessages=
         require('./loadChatProperties/getMessages')
-    db.newMessage=
+    o.newMessage=
         require('./loadChatProperties/newMessage')
+    o.userOwnConversation=
+        require('./loadChatProperties/userOwnConversation')
 }

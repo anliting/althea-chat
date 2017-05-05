@@ -34,12 +34,14 @@ module.exports={
         ])
         return 2
     },
-    /*2:async db=>{
+    2:async db=>{
         await db.query(`
-            alter table chat_conversation add column type int not null
+            alter table chat_conversation
+            add column type int not null
         `)
         await db.query(`
-            alter table chat_message add column conversation int not null
+            alter table chat_message
+            add column conversation int not null
         `)
         await db.query(`
             create table chat_twoMen (
@@ -49,6 +51,45 @@ module.exports={
                 unique key (userA,userB)
             )
         `)
+        {
+            let twoMen={}
+            let rows=await db.query0(`
+                select distinct fromUser,toUser from chat_message
+            `)
+            await Promise.all(rows.map(async r=>{
+                let a=r.fromUser,b=r.toUser
+                if(b<a)
+                    [a,b]=[b,a]
+                if(twoMen[a]&&twoMen[a][b])
+                    return
+                if(!twoMen[a])
+                    twoMen[a]={}
+                twoMen[a][b]=1
+                let id=(await db.query0(`
+                    insert into chat_conversation set type=0
+                `)).insertId
+                await db.query(`
+                    insert into chat_twoMen set ?
+                `,{
+                    userA:a,
+                    userB:b,
+                    conversation:id,
+                })
+                await db.query(`
+                    update chat_message set ? where ?&&?||?&&?
+                `,[
+                    {conversation:id},
+                    {fromUser:a},
+                    {toUser:b},
+                    {fromUser:b},
+                    {toUser:a},
+                ])
+            }))
+        }
+        await db.query(`
+            alter table chat_message
+            drop column toUser
+        `)
         return 3
-    },*/
+    },
 }

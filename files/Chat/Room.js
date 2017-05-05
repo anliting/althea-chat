@@ -20,9 +20,13 @@
             browser.isMobile?'mobile':'desktop'
         }.css`)
     }
-    function Room(imageUploader,currentUser,target){
+    function Room(imageUploader,conversationId,currentUser,target){
         EventEmmiter.call(this)
         this._imageUploader=imageUploader
+        ;(async()=>{
+            console.log(await conversationId)
+        })()
+        this._conversationId=conversationId
         this._currentUser=currentUser
         this._target=target
         this._sendFunction=new Promise(set=>
@@ -40,8 +44,8 @@
         let
             chat=this
         let doc={
-            function:   'getMessages',
-            target:     (await this._target).id,
+            function:       'getMessages',
+            conversation:   (await this._conversationId),
         }
         if(mode=='before'){
             doc.after=0
@@ -90,8 +94,8 @@
     }
     Room.prototype._sendMessage=async function(message){
         return this._send({
-            function:   'sendMessage',
-            target:     (await this._target).id,
+            function:       'sendMessage',
+            conversation:   (await this._conversationId),
             message,
         })
     }

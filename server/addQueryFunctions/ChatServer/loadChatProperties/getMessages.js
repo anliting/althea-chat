@@ -1,5 +1,5 @@
 module.exports=getMessages
-async function getMessages(userA,userB,after,before,last){
+async function getMessages(conversation,after,before,last){
     let rows=await this._db.query0(`
         select
             id,
@@ -7,7 +7,7 @@ async function getMessages(userA,userB,after,before,last){
             fromUser,
             message
         from chat_message
-        where (?&&?||?&&?) && ?<=id ${
+        where ? && ?<=id ${
             before<Infinity?
                 ` && id < ${before} `
             :
@@ -20,10 +20,7 @@ async function getMessages(userA,userB,after,before,last){
                 ''
         }
     `,[
-        {fromUser:userA},
-        {toUser:userB},
-        {fromUser:userB},
-        {toUser:userA},
+        {conversation},
         after
     ])
     return rows.map(row=>({

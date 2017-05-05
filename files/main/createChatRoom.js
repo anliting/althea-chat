@@ -1,3 +1,11 @@
+async function getTwoMenConversation(s,target){
+    let site=await s
+    let id=await site.send({
+        function:'getTwoMenConversation',
+        target:(await target).id,
+    })
+    return id
+}
 ;(async function createChatRoom(target,site){
     let[
         Chat,
@@ -8,6 +16,7 @@
     ])
     let chatRoom=new Chat.Room(
         new ImageUploader(site),
+        getTwoMenConversation(site,target),
         (async()=>(await site).currentUser)(),
         target
     )

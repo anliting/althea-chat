@@ -2,17 +2,17 @@ module.exports=getConversations
 async function getConversations(uid){
     let rows=await this._db.query0(`
         (
-            select fromUser
-            from chat_message
-            where toUser=?
+            select userA
+            from chat_twoMen
+            where userB=?
         ) union (
-            select toUser
-            from chat_message
-            where fromUser=?
+            select userB
+            from chat_twoMen
+            where userA=?
         )
     `,[
         uid,
         uid,
     ])
-    return rows.map(e=>e.fromUser)
+    return rows.map(e=>e.userA)
 }
