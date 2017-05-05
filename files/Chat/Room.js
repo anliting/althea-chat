@@ -23,9 +23,6 @@
     function Room(imageUploader,conversationId,currentUser,target){
         EventEmmiter.call(this)
         this._imageUploader=imageUploader
-        ;(async()=>{
-            console.log(await conversationId)
-        })()
         this._conversationId=conversationId
         this._currentUser=currentUser
         this._target=target
