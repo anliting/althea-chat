@@ -1,6 +1,9 @@
+module.repository.compile=
+    module.shareImport('Ui/compile.js')
 ;(async()=>{
     let[
         dom,
+        compile,
         createMessage,
         createSingleMessage,
         createBottom,
@@ -8,6 +11,7 @@
         colorScheme,
     ]=await Promise.all([
         module.repository.althea.dom,
+        module.repository.compile,
         module.shareImport('Ui/createMessage.js'),
         module.shareImport('Ui/createSingleMessage.js'),
         module.shareImport('Ui/createBottom.js'),
@@ -24,11 +28,15 @@
             this.bottomDiv=createBottom(this)
         )
     }
+    Ui.prototype._updatePreview=function(){
+        dom(this._previewNode,{innerHTML:''},compile(this.textarea.value))
+    }
     Ui.prototype._send=function(){
         if(this.textarea.value=='')
             return
         this.sendMessage(this.textarea.value)
         this.textarea.value=''
+        this._updatePreview()
     }
     Ui.prototype.beAppended=function(){
         this.updateMessageDivHeight()
@@ -87,7 +95,7 @@
             messages.reverse()
             insert=div=>this._topDiv.after(div)
         }else if(mode=='append'){
-            insert=div=>dom(this._innerMessageDiv,div)
+            insert=div=>this._previewNode.before(div)
         }
         messages.map(async message=>{
             let res=createSingleMessage(this,userA,userB,message)

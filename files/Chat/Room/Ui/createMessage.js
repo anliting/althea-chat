@@ -23,7 +23,8 @@
                     getSelection().isCollapsed&&ui.textarea.focus()
                 },
             },
-            ui._topDiv=createTopDiv(ui)
+            ui._topDiv=createTopDiv(ui),
+            ui._previewNode=dom('div',{className:'preview'})
         )
         updateAtBottom()
         ui.syncInnerMessageDivScroll=syncDivScroll

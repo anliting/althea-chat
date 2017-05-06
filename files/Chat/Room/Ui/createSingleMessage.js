@@ -1,9 +1,9 @@
-(async()=>{
+;(async()=>{
     let[
         compile,
         dom,
     ]=await Promise.all([
-        module.shareImport('createSingleMessage/compile.js'),
+        module.repository.compile,
         module.repository.althea.dom,
     ])
     return createSingleMessageNode

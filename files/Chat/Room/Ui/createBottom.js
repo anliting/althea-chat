@@ -13,6 +13,7 @@
             rows:2,
             oninput(e){
                 ui.updateTextareaHeight()
+                ui._updatePreview()
             }
         })
         textarea.onkeydown=e=>{
