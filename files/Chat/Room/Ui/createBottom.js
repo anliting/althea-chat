@@ -87,6 +87,7 @@ When you click this button, it places \`<span class=tex>' and \`</span>' around 
                 ui.textarea.selectionStart=a+stepForward
                 ui.textarea.selectionEnd=b+stepForward
                 ui.textarea.focus()
+                ui._updatePreview()
             }
         })
     }

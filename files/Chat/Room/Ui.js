@@ -29,7 +29,11 @@ module.repository.compile=
         )
     }
     Ui.prototype._updatePreview=function(){
-        dom(this._previewNode,{innerHTML:''},compile(this.textarea.value))
+        dom(this._previewNode,
+            {innerHTML:''},
+            compile(this.textarea.value)
+        )
+        this.syncInnerMessageDivScroll()
     }
     Ui.prototype._send=function(){
         if(this.textarea.value=='')
