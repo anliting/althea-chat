@@ -42,6 +42,7 @@
                 ui.textarea.value+=
                     `<img src=img/${id}c800x600.jpg>\n`
             })
+            ui._updatePreview()
             ui.updateTextareaHeight()
             ui._fileButton.n.disabled=false
         })
