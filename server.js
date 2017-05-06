@@ -1,9 +1,9 @@
 let
-    updateDatabase=     require('./server/updateDatabase'),
+    edges=              require('./server/edges'),
     addQueryFunctions=  require('./server/addQueryFunctions')
 module.exports=async function(althea){
     addQueryFunctions(althea)
-    await updateDatabase(althea)
+    await althea.updateDatabase(edges)
     althea.addPagemodule(env=>{
         let path=env.analyze.request.parsedUrl.pathname.split('/')
         return path[1]=='chat'
