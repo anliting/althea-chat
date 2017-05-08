@@ -4,4 +4,5 @@ module.exports={
     getTwoMenConversation:
         require('./queryFunctions/getTwoMenConversation'),
     getConversations:       require('./queryFunctions/getConversations'),
+    listenMessages:         require('./queryFunctions/listenMessages'),
 }

@@ -14,24 +14,23 @@ async function getTwoMenConversation(s,target){
         module.repository.Chat,
         module.repository.althea.ImageUploader,
     ])
+    site=await site
     let chatRoom=new Chat.Room(
+        ()=>site.createSession(),
         new ImageUploader(site),
         getTwoMenConversation(site,target),
-        (async()=>(await site).currentUser)(),
+        site.currentUser,
         target
     )
-    chatRoom.send=async d=>(await site).send(d)
+    chatRoom.send=async d=>site.send(d)
     chatRoom.getSetting=k=>this.settings[k]
     chatRoom.setSetting=(k,v)=>this.setSetting(k,v)
     chatRoom.playNotificationSound=()=>this.playSound()
-    ;(async site=>{
-        site=await site
-        update()
-        addEventListener('offline',update)
-        addEventListener('online',update)
-        function update(){
-            chatRoom.connectionStatus=navigator.onLine?'online':'offline'
-        }
-    })(site)
+    update()
+    addEventListener('offline',update)
+    addEventListener('online',update)
     return chatRoom
+    function update(){
+        chatRoom.connectionStatus=navigator.onLine?'online':'offline'
+    }
 })

@@ -20,8 +20,15 @@
             browser.isMobile?'mobile':'desktop'
         }.css`)
     }
-    function Room(imageUploader,conversationId,currentUser,target){
+    function Room(
+        createSession,
+        imageUploader,
+        conversationId,
+        currentUser,
+        target
+    ){
         EventEmmiter.call(this)
+        this._createSession=createSession
         this._imageUploader=imageUploader
         this._conversationId=conversationId
         this._currentUser=currentUser
@@ -34,6 +41,16 @@
         ;(async()=>{
             await this._getMessages('before')
             setInterval(()=>this._getMessages('after'),200)
+            // dev
+            /*let session=this._createSession()
+            session.send({
+                function:       'listenMessages',
+                conversation:   (await this._conversationId),
+                after:          roomCalcAfter.call(this),
+            })
+            session.onMessage=doc=>{
+                console.log(doc)
+            }*/
         })()
     }
     Object.setPrototypeOf(Room.prototype,EventEmmiter.prototype)
@@ -49,7 +66,7 @@
             doc.before=calcBefore()
             doc.last=blockSize
         }else if(mode=='after'){
-            doc.after=calcAfter()
+            doc.after=roomCalcAfter.call(this)
             doc.before=0
         }
         return this._send(doc)
@@ -59,12 +76,12 @@
             :
                 chat._messages[0].id
         }
-        function calcAfter(){
-            return chat._messages.length==0?
-                0
-            :
-                chat._messages[chat._messages.length-1].id+1
-        }
+    }
+    function roomCalcAfter(){
+        return this._messages.length==0?
+            0
+        :
+            this._messages[this._messages.length-1].id+1
     }
     Room.prototype._getMessages=async function(mode='after'){
         if(this._getMessagesPromise[mode])
