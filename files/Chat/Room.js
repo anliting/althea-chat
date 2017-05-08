@@ -40,17 +40,20 @@
         this._getMessagesPromise={}
         ;(async()=>{
             await this._getMessages('before')
-            setInterval(()=>this._getMessages('after'),200)
-            // dev
-            /*let session=this._createSession()
+            let session=this._createSession()
             session.send({
                 function:       'listenMessages',
                 conversation:   (await this._conversationId),
                 after:          roomCalcAfter.call(this),
             })
             session.onMessage=doc=>{
-                console.log(doc)
-            }*/
+                let res=doc.value
+                if(this._ui)
+                    this._ui.append(res)
+                this._messages=this._messages.concat(res)
+                if(res.length)
+                    this.emit('append')
+            }
         })()
     }
     Object.setPrototypeOf(Room.prototype,EventEmmiter.prototype)
@@ -65,9 +68,6 @@
             doc.after=0
             doc.before=calcBefore()
             doc.last=blockSize
-        }else if(mode=='after'){
-            doc.after=roomCalcAfter.call(this)
-            doc.before=0
         }
         return this._send(doc)
         function calcBefore(){
@@ -83,7 +83,7 @@
         :
             this._messages[this._messages.length-1].id+1
     }
-    Room.prototype._getMessages=async function(mode='after'){
+    Room.prototype._getMessages=async function(mode){
         if(this._getMessagesPromise[mode])
             return
         this._getMessagesPromise[mode]=this._getMessagesData(mode)
@@ -95,12 +95,6 @@
                     if(this._ui)
                         this._ui.prepend(res)
                     this._messages=res.concat(this._messages)
-                }else if(mode=='after'){
-                    if(this._ui)
-                        this._ui.append(res)
-                    this._messages=this._messages.concat(res)
-                    if(res.length)
-                        this.emit('append')
                 }
             }
         }catch(e){}
