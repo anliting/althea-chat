@@ -37,7 +37,6 @@
             Object.defineProperty(this,'send',{set})
         )
         this._messages=[]
-        this._getMessagesPromise={}
         ;(async()=>{
             await this._getMessages('before')
             let session=this._createSession()
@@ -57,18 +56,16 @@
         })()
     }
     Object.setPrototypeOf(Room.prototype,EventEmmiter.prototype)
-    Room.prototype._getMessagesData=async function(mode){
+    Room.prototype._getMessagesData=async function(){
         let
             chat=this
         let doc={
             function:       'getMessages',
             conversation:   (await this._conversationId),
         }
-        if(mode=='before'){
-            doc.after=0
-            doc.before=calcBefore()
-            doc.last=blockSize
-        }
+        doc.after=0
+        doc.before=calcBefore()
+        doc.last=blockSize
         return this._send(doc)
         function calcBefore(){
             return chat._messages.length==0?
@@ -84,21 +81,19 @@
             this._messages[this._messages.length-1].id+1
     }
     Room.prototype._getMessages=async function(mode){
-        if(this._getMessagesPromise[mode])
+        if(this._getMessagesPromise)
             return
-        this._getMessagesPromise[mode]=this._getMessagesData(mode)
+        this._getMessagesPromise=this._getMessagesData()
         try{
-            let res=await this._getMessagesPromise[mode]
+            let res=await this._getMessagesPromise
             if(res.length){
                 res.sort((a,b)=>a.id-b.id)
-                if(mode=='before'){
-                    if(this._ui)
-                        this._ui.prepend(res)
-                    this._messages=res.concat(this._messages)
-                }
+                if(this._ui)
+                    this._ui.prepend(res)
+                this._messages=res.concat(this._messages)
             }
         }catch(e){}
-        delete this._getMessagesPromise[mode]
+        delete this._getMessagesPromise
     }
     Room.prototype._sendMessage=async function(message){
         return this._send({

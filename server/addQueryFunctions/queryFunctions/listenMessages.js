@@ -22,7 +22,9 @@ module.exports=async(sv,opt,env)=>{
         getting=false
         if(1<env.wsConnection.readyState)
             return clearInterval(interval,1)
-        opt.after=Math.max(opt.after,...res.map(row=>row.id+1))
-        env.sendValue(res)
+        if(res.length){
+            opt.after=Math.max(...res.map(row=>row.id))+1
+            env.sendValue(res)
+        }
     },200)
 }
