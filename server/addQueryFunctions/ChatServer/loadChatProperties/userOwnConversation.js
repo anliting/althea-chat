@@ -5,7 +5,7 @@ async function userOwnConversation(user,conversation){
         from chat_userRoom
         where ?&&?
     `,[
-        {user},
+        {user:user.id},
         {room:conversation},
     ])
     return rows[0]['count(*)']
