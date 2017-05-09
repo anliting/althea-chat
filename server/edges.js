@@ -92,4 +92,29 @@ module.exports={
         `)
         return 3
     },
+    3:async db=>{
+        await db.query(`
+            create table chat_userRoom (
+                user int not null,
+                room int not null,
+                unique key (user,room)
+            )
+        `)
+        {
+            let res=await db.query0(`
+                select userA,userB,conversation from chat_twoMen
+            `)
+            await Promise.all(res.map(async row=>{
+                await insertUserRoom(db,row.userA,row.conversation)
+                if(row.userA!=row.userB)
+                    await insertUserRoom(db,row.userB,row.conversation)
+            }))
+        }
+        return 4
+        async function insertUserRoom(db,user,room){
+            await db.query(`
+                insert into chat_userRoom set ?
+            `,{user,room})
+        }
+    },
 }
