@@ -23,7 +23,7 @@
     ChatPage.prototype.playSound=function(settings){
         dom(document.body,dom('audio',{
             autoplay:true,
-            src:'plugins/althea-chat/main/notification.mp3',
+            src:'plugins/althea-chat/main/notification-a.mp3',
             onended(e){document.body.removeChild(this)},
             volume:this.settings.notificationSound,
         }))
