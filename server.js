@@ -46,7 +46,9 @@ ${env.althea.loadModule(
     'plugins/althea-chat/main.static.js',
     {
         userId:env.userId
-    }
+    },
+    false,
+    {sharedWorker:true}
 )}
 `
     }
