@@ -7,11 +7,11 @@
         module.repository.althea.dom,
     ])
     return createSingleMessageNode
-    function createSingleMessageNode(ui,userA,userB,message){
+    function createSingleMessageNode(ui,message){
         let
             n=dom('p'),
             p=(async()=>{
-                let a=await(message.fromUser==userA.id?userA:userB).finalA
+                let a=await(ui.users[message.fromUser]).finalA
                 let span=createSpan(message)
                 dom(n,a,': ',span.span)
                 ui.syncInnerMessageDivScroll()

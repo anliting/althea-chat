@@ -21,21 +21,21 @@
         }.css`)
     }
     function Room(
+        send,
         createSession,
+        getUser,
         imageUploader,
         conversationId,
         currentUser,
         target
     ){
         EventEmmiter.call(this)
+        this._sendFunction=send
         this._createSession=createSession
+        this._getUser=getUser
         this._imageUploader=imageUploader
         this._conversationId=conversationId
         this._currentUser=currentUser
-        this._target=target
-        this._sendFunction=new Promise(set=>
-            Object.defineProperty(this,'send',{set})
-        )
         this._messages=[]
         ;(async()=>{
             await this._getMessages('before')
@@ -48,7 +48,7 @@
             session.onMessage=doc=>{
                 let res=doc.value
                 if(this._ui)
-                    this._ui.append(res)
+                    roomAddMessagesToUi.call(this,'append',res)
                 this._messages=this._messages.concat(res)
                 if(res.length)
                     this.emit('append')
@@ -80,7 +80,7 @@
         :
             this._messages[this._messages.length-1].id+1
     }
-    Room.prototype._getMessages=async function(mode){
+    Room.prototype._getMessages=async function(){
         if(this._getMessagesPromise)
             return
         this._getMessagesPromise=this._getMessagesData()
@@ -89,7 +89,7 @@
             if(res.length){
                 res.sort((a,b)=>a.id-b.id)
                 if(this._ui)
-                    this._ui.prepend(res)
+                    roomAddMessagesToUi.call(this,'prepend',res)
                 this._messages=res.concat(this._messages)
             }
         }catch(e){}
@@ -103,7 +103,7 @@
         })
     }
     Room.prototype._send=async function(doc){
-        return(await this._sendFunction)(doc)
+        return this._sendFunction(doc)
     }
     Object.defineProperty(Room.prototype,'connectionStatus',{set(val){
         this._connectionStatus=val
@@ -112,5 +112,11 @@
     }})
     Room.prototype.style=style+deviceSpecificStyle
     Object.defineProperty(Room.prototype,'ui',ui)
+    async function roomAddMessagesToUi(mode,messages){
+        await Promise.all(messages.map(async row=>{
+            this._ui.users[row.fromUser]=await this._getUser(row.fromUser)
+        }))
+        this._ui[mode](messages)
+    }
     return Room
 })()

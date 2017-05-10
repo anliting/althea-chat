@@ -1,5 +1,4 @@
-module.repository.compile=
-    module.shareImport('Ui/compile.js')
+module.repository.compile=module.shareImport('Ui/compile.js')
 ;(async()=>{
     let[
         dom,
@@ -18,10 +17,10 @@ module.repository.compile=
         module.shareImport('Ui/StyleManager.js'),
         module.shareImport('Ui/colorScheme.js'),
     ])
-    function Ui(currentUser,target){
+    function Ui(currentUser){
         this._currentUser=currentUser
-        this._target=target
         this._styleManager=new StyleManager
+        this.users={}
         this.node=dom('div',
             {className:'chat'},
             this.messageDiv=createMessage(this),
@@ -88,11 +87,6 @@ module.repository.compile=
         this._statusNode.textContent=val=='online'?'':'offline'
     }})
     async function uiAddMessages(messages,mode){
-        let[userA,userB]=await Promise.all([
-            this._currentUser,
-            this._target,
-        ])
-        await Promise.all([userA,userB].map(u=>u.load('nickname')))
         let insert
         if(mode=='prepend'){
             messages=messages.slice()
@@ -101,11 +95,9 @@ module.repository.compile=
         }else if(mode=='append'){
             insert=div=>this._previewNode.before(div)
         }
-        messages.map(async message=>{
-            let res=createSingleMessage(this,userA,userB,message)
-            insert(res.n)
-            await res.p
-        })
+        messages.map(message=>
+            insert(createSingleMessage(this,message).n)
+        )
         this.syncInnerMessageDivScroll()
     }
     return Ui

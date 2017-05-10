@@ -16,13 +16,14 @@ async function getTwoMenConversation(s,target){
     ])
     site=await site
     let chatRoom=new Chat.Room(
+        async d=>site.send(d),
         ()=>site.createSession(),
+        async i=>site.getUser(i),
         new ImageUploader(site),
         getTwoMenConversation(site,target),
         site.currentUser,
         target
     )
-    chatRoom.send=async d=>site.send(d)
     chatRoom.getSetting=k=>this.settings[k]
     chatRoom.setSetting=(k,v)=>this.setSetting(k,v)
     chatRoom.playNotificationSound=()=>this.playSound()

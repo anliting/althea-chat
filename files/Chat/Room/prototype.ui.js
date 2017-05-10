@@ -3,10 +3,7 @@
     return{get(){
         if(this._ui)
             return this._ui
-        let ui=new Ui(
-            this._currentUser,
-            this._target
-        )
+        let ui=new Ui(this._currentUser)
         ui.queryOlder=()=>this._getMessages('before')
         ui.sendMessage=m=>this._sendMessage(m)
         ui.getSetting=this.getSetting
