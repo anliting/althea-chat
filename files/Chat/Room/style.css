@@ -19,9 +19,6 @@ div.chat>div.message{
 div.chat>div.message>div.top{
     text-align:center;
 }
-div.chat>div.message>div.preview{
-    color:gray;
-}
 div.chat>div.message a.user{
     color:black;
     text-decoration:none;
