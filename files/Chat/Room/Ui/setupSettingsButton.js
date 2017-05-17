@@ -27,14 +27,14 @@
             notificationSound(ui),
             colorSchemeP(ui),
             dom('p',
-                dom('input',{
-                    type:'checkbox',
-                    checked:ui.getSetting('pressEnterToSend'),
-                    onchange(e){
-                        ui.setSetting('pressEnterToSend',this.checked)
-                    }
-                }),
-                ' Press Enter to send.'
+                dom('label',
+                    dom('input',{
+                        type:'checkbox',
+                        checked:ui.getSetting('pressEnterToSend'),
+                        onchange(e){
+                            ui.setSetting('pressEnterToSend',this.checked)
+                        }
+                    }),' Press Enter to send.')
             )
         )
     }
