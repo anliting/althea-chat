@@ -43,8 +43,7 @@ function get(env){
 <body>
 ${env.althea.loadModule(
     env.envVars,
-    'plugins/althea-chat/main.js',
-    //'plugins/althea-chat/main.static.js',
+    'plugins/althea-chat/main.static.js',
     {
         userId:env.userId
     },
