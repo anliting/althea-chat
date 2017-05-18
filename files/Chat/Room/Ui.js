@@ -27,6 +27,11 @@ module.repository.compile=module.shareImport('Ui/compile.js')
             this.bottomDiv=createBottom(this)
         )
     }
+    Ui.prototype._changeTextareaValue=function(v){
+        this.textarea.value=v
+        this._updatePreview()
+        this.updateTextareaHeight()
+    }
     Ui.prototype._updatePreview=function(){
         dom(this._previewNode,
             {innerHTML:''},

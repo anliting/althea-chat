@@ -3,27 +3,34 @@
         arg,
         dom,
         setupSettingsButton,
+        setUpVim,
     ]=await Promise.all([
         module.repository.althea.arg,
         module.repository.althea.dom,
         module.shareImport('setupSettingsButton.js'),
+        module.shareImport('createBottom/setUpVim.js'),
     ])
     function createTextarea(ui){
         let textarea=dom('textarea',{
             rows:2,
+            title:'Alt+V: Open the Web Vim editor.',
             oninput(e){
                 ui.updateTextareaHeight()
                 ui._updatePreview()
             }
         })
         textarea.onkeydown=e=>{
+            let pdsp=_=>{e.stopPropagation(),e.preventDefault()}
             if(
                 ui.getSetting('pressEnterToSend')&&
                 !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
             ){
-                e.stopPropagation()
-                e.preventDefault()
-                ui._send()
+                pdsp()
+                return ui._send()
+            }
+            if(e.altKey&&e.key.toLowerCase()=='v'){
+                pdsp()
+                return setUpVim(ui,textarea)
             }
         }
         ;(async()=>{
@@ -97,26 +104,3 @@ When you click this button, it places \`<span class=tex>' and \`</span>' around 
     }
     return createBottom
 })()
-/*async function fullscreen(div){
-    if((await module.repository.althea.browser).isMobile){
-        dom(div,' ',createFullscreenButton())
-    }
-    function createFullscreenButton(){
-        let
-            status=0,
-            n=dom('button')
-        updateTextContent()
-        n.onclick=e=>{
-            status=1-status
-            updateTextContent()
-            if(status==0)
-                document.webkitExitFullscreen()
-            else
-                document.body.webkitRequestFullscreen()
-        }
-        function updateTextContent(){
-            n.textContent=['Fullscreen','Window'][status]
-        }
-        return n
-    }
-}*/
