@@ -51,6 +51,10 @@ let whitelist={
         module.repository.althea.uri,
         module.shareImport('compile/katex.js'),
     ])
+// pollution
+    dom(document.head,
+        dom('link',{rel:'stylesheet',href:katex.styleSheet})
+    )
     function compile(s){
         let body=(new DOMParser).parseFromString(
             `<!docytpe html><title>0</title><body>${s}`,'text/html'
@@ -67,7 +71,7 @@ let whitelist={
                     let s=n.textContent
                     n.textContent=''
                     try{
-                        katex.render(s,n)
+                        katex.katex.render(s,n)
                     }catch(e){
                         n.textContent=s
                     }
