@@ -32,10 +32,10 @@ module.repository.compile=module.shareImport('Ui/compile.js')
         this._updatePreview()
         this.updateTextareaHeight()
     }
-    Ui.prototype._updatePreview=function(){
+    Ui.prototype._updatePreview=async function(){
         dom(this._previewNode,
             {innerHTML:''},
-            compile(this.textarea.value)
+            await compile(this.textarea.value)
         )
         this.syncInnerMessageDivScroll()
     }

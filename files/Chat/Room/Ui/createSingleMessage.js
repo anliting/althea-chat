@@ -12,7 +12,7 @@
             n=dom('p'),
             p=(async()=>{
                 let a=await(ui.users[message.fromUser]).finalA
-                let span=createSpan(message)
+                let span=await createSpan(message)
                 dom(n,a,': ',span.span)
                 ui.syncInnerMessageDivScroll()
                 await span.promise
@@ -20,10 +20,10 @@
             })()
         return{n,p}
     }
-    function createSpan(message){
+    async function createSpan(message){
         let span=dom('span',
             {title:(new Date(message.timestamp)).toLocaleString()},
-            compile(message.message)
+            await compile(message.message)
         )
         return{
             span,

@@ -45,25 +45,37 @@ let whitelist={
     let[
         dom,
         uri,
-        katex,
     ]=await Promise.all([
         module.repository.althea.dom,
         module.repository.althea.uri,
-        module.shareImport('compile/katex.js'),
-    ])
-// pollution
-    dom(document.head,
-        dom('link',{rel:'stylesheet',href:katex.styleSheet})
-    )
-    function compile(s){
+    ]),dynamic={
+        katex:{
+            async load(){
+                let katex=await module.shareImport('compile/katex.js')
+                // pollution
+                dom(document.head,
+                    dom('link',{
+                        rel:'stylesheet',
+                        href:katex.styleSheet
+                    })
+                )
+                return katex
+            }
+        }
+    }
+    function load(name){
+        let o=dynamic[name]
+        return o.value||(o.value=o.load())
+    }
+    async function compile(s){
         let body=(new DOMParser).parseFromString(
             `<!docytpe html><title>0</title><body>${s}`,'text/html'
         ).body
-        traverse(body)
+        await traverse(body)
         return[...body.childNodes]
     }
-    function traverse(m){
-        [...m.childNodes].map(n=>{
+    async function traverse(m){
+        await Promise.all([...m.childNodes].map(async n=>{
             if(!test(n))
                 return m.removeChild(n)
             if(n.nodeType==1){
@@ -71,6 +83,7 @@ let whitelist={
                     let s=n.textContent
                     n.textContent=''
                     try{
+                        let katex=await load('katex')
                         katex.katex.render(s,n)
                     }catch(e){
                         n.textContent=s
@@ -82,7 +95,7 @@ let whitelist={
                     m.insertBefore(o,n)
                 m.removeChild(n)
             }
-        })
+        }))
     }
     function test(n){
         if(n.nodeType==1){
