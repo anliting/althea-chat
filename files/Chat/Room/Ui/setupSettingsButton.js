@@ -1,11 +1,9 @@
 ;(async()=>{
     let[
         dom,
-        arg,
         colorScheme,
     ]=await Promise.all([
         module.repository.althea.dom,
-        module.repository.althea.arg,
         module.shareImport('colorScheme.js'),
     ])
     function setupSettingsButton(ui){
@@ -35,6 +33,34 @@
                             ui.setSetting('pressEnterToSend',this.checked)
                         }
                     }),' Press Enter to send.')
+            ),
+            dom('p',
+                dom('label',
+                    dom('input',{
+                        type:'checkbox',
+                        checked:ui.getSetting('showTexButton'),
+                        onchange(e){
+                            ui.setSetting('showTexButton',this.checked)
+                            ui._changeButtonDisplay(
+                                '_bottomTexButton',
+                                this.checked
+                            )
+                        }
+                    }),' Show `Tex\' button.')
+            ),
+            dom('p',
+                dom('label',
+                    dom('input',{
+                        type:'checkbox',
+                        checked:ui.getSetting('showSendButton'),
+                        onchange(e){
+                            ui.setSetting('showSendButton',this.checked)
+                            ui._changeButtonDisplay(
+                                '_bottomSendButton',
+                                this.checked
+                            )
+                        }
+                    }),' Show `Send\' button.')
             )
         )
     }

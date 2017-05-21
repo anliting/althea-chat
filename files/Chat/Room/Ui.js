@@ -17,15 +17,28 @@ module.repository.compile=module.shareImport('Ui/compile.js')
         module.shareImport('Ui/StyleManager.js'),
         module.shareImport('Ui/colorScheme.js'),
     ])
-    function Ui(currentUser){
+    function Ui(currentUser,getSetting,setSetting){
         this._currentUser=currentUser
         this._styleManager=new StyleManager
+        this.getSetting=getSetting
+        this.setSetting=setSetting
         this.users={}
         this.node=dom('div',
             {className:'chat'},
             this.messageDiv=createMessage(this),
             this.bottomDiv=createBottom(this)
         )
+        this._changeButtonDisplay(
+            '_bottomTexButton',
+            this.getSetting('showTexButton')
+        )
+        this._changeButtonDisplay(
+            '_bottomSendButton',
+            this.getSetting('showSendButton')
+        )
+    }
+    Ui.prototype._changeButtonDisplay=function(button,display){
+        this[button].style.display=display?'':'none'
     }
     Ui.prototype._changeTextareaValue=function(v){
         this.textarea.value=v

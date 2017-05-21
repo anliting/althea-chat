@@ -71,9 +71,9 @@
             {className:'bottom'},
             ui.textarea=createTextarea(ui),
             arg.h&&[ui._findButton,' '],
-            createTexButton(ui),' ',
+            ui._bottomTexButton=createTexButton(ui),' ',
             ui._fileButton.n,' ',
-            createSendButton(ui),' ',
+            ui._bottomSendButton=createSendButton(ui),' ',
             ui._settingsButton,' ',
             ui._statusNode
         )
