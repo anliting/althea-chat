@@ -4,18 +4,20 @@ module.repository.compile=module.shareImport('Ui/compile.js')
         dom,
         compile,
         createMessage,
-        createSingleMessage,
         createBottom,
         StyleManager,
         colorScheme,
+        loadSettings,
+        uiAddMessages,
     ]=await Promise.all([
         module.repository.althea.dom,
         module.repository.compile,
         module.shareImport('Ui/createMessage.js'),
-        module.shareImport('Ui/createSingleMessage.js'),
         module.shareImport('Ui/createBottom.js'),
         module.shareImport('Ui/StyleManager.js'),
         module.shareImport('Ui/colorScheme.js'),
+        module.shareImport('Ui/loadSettings.js'),
+        module.shareImport('Ui/uiAddMessages.js'),
     ])
     function Ui(currentUser,getSetting,setSetting){
         this._currentUser=currentUser
@@ -28,14 +30,7 @@ module.repository.compile=module.shareImport('Ui/compile.js')
             this.messageDiv=createMessage(this),
             this.bottomDiv=createBottom(this)
         )
-        this._changeButtonDisplay(
-            '_bottomTexButton',
-            this.getSetting('showTexButton')
-        )
-        this._changeButtonDisplay(
-            '_bottomSendButton',
-            this.getSetting('showSendButton')
-        )
+        loadSettings.call(this)
     }
     Ui.prototype._push=function(){
         this._settingsButton.disabled=true
@@ -65,6 +60,9 @@ module.repository.compile=module.shareImport('Ui/compile.js')
         this.textarea.value=''
         this._updatePreview()
     }
+    Ui.prototype._queryOlder=function(){
+        this.queryOlder()
+    }
     Ui.prototype.beAppended=function(){
         this.updateMessageDivHeight()
     }
@@ -90,9 +88,6 @@ module.repository.compile=module.shareImport('Ui/compile.js')
     Ui.prototype.append=async function(messages){
         return uiAddMessages.call(this,messages,'append')
     }
-    Ui.prototype._queryOlder=function(){
-        this.queryOlder()
-    }
     Ui.prototype.changeStyle=function(id){
         if(this._style!=undefined)
             this._styleManager.remove(this._style)
@@ -110,19 +105,5 @@ module.repository.compile=module.shareImport('Ui/compile.js')
         this._connectionStatus=val
         this._statusNode.textContent=val=='online'?'':'offline'
     }})
-    async function uiAddMessages(messages,mode){
-        let insert
-        if(mode=='prepend'){
-            messages=messages.slice()
-            messages.reverse()
-            insert=div=>this._topDiv.after(div)
-        }else if(mode=='append'){
-            insert=div=>this._previewNode.before(div)
-        }
-        messages.map(message=>
-            insert(createSingleMessage(this,message).n)
-        )
-        this.syncInnerMessageDivScroll()
-    }
     return Ui
 })()
