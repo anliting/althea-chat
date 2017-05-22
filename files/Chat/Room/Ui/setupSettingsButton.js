@@ -8,11 +8,13 @@
     ])
     function setupSettingsButton(ui){
         ui._settingsButton=dom('button','Settings',{onclick(e){
+            ui._push()
             let bF=dom.createBF()
             dom(ui.node,bF.node)
             bF.appendChild(createSettingsDiv(ui))
             bF.on('backClick',e=>{
                 ui.node.removeChild(bF.node)
+                ui._pop()
             })
         }})
     }

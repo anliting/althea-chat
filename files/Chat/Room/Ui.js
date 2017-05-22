@@ -37,6 +37,12 @@ module.repository.compile=module.shareImport('Ui/compile.js')
             this.getSetting('showSendButton')
         )
     }
+    Ui.prototype._push=function(){
+        this._settingsButton.disabled=true
+    }
+    Ui.prototype._pop=function(){
+        this._settingsButton.disabled=false
+    }
     Ui.prototype._changeButtonDisplay=function(button,display){
         this[button].style.display=display?'':'none'
     }
