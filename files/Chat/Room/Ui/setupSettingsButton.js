@@ -21,49 +21,16 @@
     function createSettingsDiv(ui){
         return dom('div',
             n=>{
-                n.style.margin='16px 24px'
-                n.style.width='280px'
+                dom(n.style,{
+                    margin:'16px 24px',
+                    width:'280px',
+                })
             },
             notificationSound(ui),
             colorSchemeP(ui),
-            dom('p',
-                dom('label',
-                    dom('input',{
-                        type:'checkbox',
-                        checked:ui.getSetting('pressEnterToSend'),
-                        onchange(e){
-                            ui.setSetting('pressEnterToSend',this.checked)
-                        }
-                    }),' Press Enter to send.')
-            ),
-            dom('p',
-                dom('label',
-                    dom('input',{
-                        type:'checkbox',
-                        checked:ui.getSetting('showTexButton'),
-                        onchange(e){
-                            ui.setSetting('showTexButton',this.checked)
-                            ui._changeButtonDisplay(
-                                '_bottomTexButton',
-                                this.checked
-                            )
-                        }
-                    }),' Show `Tex\' button.')
-            ),
-            dom('p',
-                dom('label',
-                    dom('input',{
-                        type:'checkbox',
-                        checked:ui.getSetting('showSendButton'),
-                        onchange(e){
-                            ui.setSetting('showSendButton',this.checked)
-                            ui._changeButtonDisplay(
-                                '_bottomSendButton',
-                                this.checked
-                            )
-                        }
-                    }),' Show `Send\' button.')
-            )
+            pressEnterToSendP(ui),
+            showTexButton(ui),
+            showSendButton(ui),
         )
     }
     function notificationSound(ui){
@@ -96,6 +63,50 @@
                     ui.setSetting('colorScheme',this.value)
                 }}
             )
+        )
+    }
+    function pressEnterToSendP(ui){
+        return dom('p',
+            dom('label',
+                dom('input',{
+                    type:'checkbox',
+                    checked:ui.getSetting('pressEnterToSend'),
+                    onchange(e){
+                        ui.setSetting('pressEnterToSend',this.checked)
+                    }
+                }),' Press Enter to send.')
+        )
+    }
+    function showTexButton(ui){
+        return dom('p',
+            dom('label',
+                dom('input',{
+                    type:'checkbox',
+                    checked:ui.getSetting('showTexButton'),
+                    onchange(e){
+                        ui.setSetting('showTexButton',this.checked)
+                        ui._changeButtonDisplay(
+                            '_bottomTexButton',
+                            this.checked
+                        )
+                    }
+                }),' Show `TeX\' button.')
+        )
+    }
+    function showSendButton(ui){
+        return dom('p',
+            dom('label',
+                dom('input',{
+                    type:'checkbox',
+                    checked:ui.getSetting('showSendButton'),
+                    onchange(e){
+                        ui.setSetting('showSendButton',this.checked)
+                        ui._changeButtonDisplay(
+                            '_bottomSendButton',
+                            this.checked
+                        )
+                    }
+                }),' Show `Send\' button.')
         )
     }
     return setupSettingsButton

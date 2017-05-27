@@ -45,10 +45,9 @@
         ui._fileButton.on('file',async a=>{
             ui._fileButton.n.disabled=true
             let imageIds=await ui.imageUploader.uploadImages(a)
-            imageIds.map(id=>{
-                ui.textarea.value+=
-                    `<img src=img/${id}c800x600.jpg>\n`
-            })
+            ui.textarea.value+=imageIds.map(id=>
+                `<img src=img/${id}c800x600.jpg>\n`
+            ).join('')
             ui._updatePreview()
             ui.updateTextareaHeight()
             ui._fileButton.n.disabled=false
