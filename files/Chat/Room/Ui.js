@@ -25,7 +25,7 @@ module.repository.compile=module.shareImport('Ui/compile.js')
         this.getSetting=getSetting
         this.setSetting=setSetting
         this.users={}
-        this.node=dom('div',
+        this.node=dom.div(
             {className:'chat'},
             this.messageDiv=createMessage(this),
             this.bottomDiv=createBottom(this)

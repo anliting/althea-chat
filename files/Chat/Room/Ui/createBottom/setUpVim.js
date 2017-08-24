@@ -17,8 +17,8 @@
         }),viewDiv=createViewDiv(vim)
         vim.text=textarea.value
         vim._cursor.moveTo(textarea.selectionStart)
-        dom(document.head,vim.style)
-        dom(document.body,viewDiv)
+        dom.head(vim.style)
+        dom.body(viewDiv)
         vim.polluteCopy
         vim.focus()
         vim.on('quit',e=>{
@@ -39,7 +39,7 @@
     function createViewDiv(vim){
         vim.width=80
         vim.height=24
-        return dom('div',
+        return dom.div(
             vim.node,
             {onclick(){
                 vim.focus()

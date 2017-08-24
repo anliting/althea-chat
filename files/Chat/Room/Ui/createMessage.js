@@ -15,7 +15,7 @@
                 div.scrollTop+div.clientHeight-div.scrollHeight
             )<=1
         }
-        let div=dom('div',
+        let div=dom.div(
             {
                 className:'message',
                 onscroll:updateAtBottom,
@@ -24,20 +24,20 @@
                 },
             },
             ui._topDiv=createTopDiv(ui),
-            ui._previewNode=dom('div',{className:'preview'})
+            ui._previewNode=dom.div({className:'preview'})
         )
         updateAtBottom()
         ui.syncInnerMessageDivScroll=syncDivScroll
         return ui._innerMessageDiv=div
     }
     function createTopDiv(ui){
-        return dom('div',
+        return dom.div(
             {className:'top'},
             createShowOlderMessagesButton(ui)
         )
     }
     function createShowOlderMessagesButton(ui){
-        return dom('button',{onclick(e){
+        return dom.button({onclick(e){
             e.stopPropagation()
             ui._queryOlder()
         }},'Show Older Messages')

@@ -3,8 +3,8 @@
     module.repository.Chat=module.shareImport('Chat.js')
     ;(async()=>{
         let dom=await module.repository.althea.dom
-        dom(document.head,
-            dom('link',{rel:'icon',href:'plugins/althea-chat/icon.png'})
+        dom.head(
+            dom.link({rel:'icon',href:'plugins/althea-chat/icon.png'})
         )
     })()
     let[

@@ -7,7 +7,7 @@
         module.shareImport('colorScheme.js'),
     ])
     function setupSettingsButton(ui){
-        ui._settingsButton=dom('button','Settings',{onclick(e){
+        ui._settingsButton=dom.button('Settings',{onclick(e){
             ui._push()
             let bF=dom.createBF()
             dom(ui.node,bF.node)
@@ -19,7 +19,7 @@
         }})
     }
     function createSettingsDiv(ui){
-        return dom('div',
+        return dom.div(
             n=>{
                 dom(n.style,{
                     margin:'16px 24px',
@@ -34,9 +34,9 @@
         )
     }
     function notificationSound(ui){
-        return dom('p',
+        return dom.p(
             'Notification Sound: ',
-            dom('input',{
+            dom.input({
                 type:'range',
                 max:1,
                 step:0.01,
@@ -50,11 +50,11 @@
     }
     function colorSchemeP(ui){
         let s=ui.getSetting('colorScheme')
-        return dom('p',
+        return dom.p(
             'Color Scheme: ',
-            dom('select',
+            dom.select(
                 ...Object.keys(colorScheme).map(i=>
-                    dom('option',{value:i},colorScheme[i].name,n=>{
+                    dom.option({value:i},colorScheme[i].name,n=>{
                         if(s==i)
                             n.selected=true
                     })
@@ -66,9 +66,9 @@
         )
     }
     function pressEnterToSendP(ui){
-        return dom('p',
-            dom('label',
-                dom('input',{
+        return dom.p(
+            dom.label(
+                dom.input({
                     type:'checkbox',
                     checked:ui.getSetting('pressEnterToSend'),
                     onchange(e){
@@ -78,9 +78,9 @@
         )
     }
     function showTexButton(ui){
-        return dom('p',
-            dom('label',
-                dom('input',{
+        return dom.p(
+            dom.label(
+                dom.input({
                     type:'checkbox',
                     checked:ui.getSetting('showTexButton'),
                     onchange(e){
@@ -94,9 +94,9 @@
         )
     }
     function showSendButton(ui){
-        return dom('p',
-            dom('label',
-                dom('input',{
+        return dom.p(
+            dom.label(
+                dom.input({
                     type:'checkbox',
                     checked:ui.getSetting('showSendButton'),
                     onchange(e){

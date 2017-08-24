@@ -15,13 +15,13 @@
             JSON.parse(localStorage.altheaChatSettings)
         :
             {notificationSound:0}
-        dom(document.head,
-            this.style=dom('style',mainStyle),
-            this.themeColor=dom('meta',{name:'theme-color'})
+        dom.head(
+            this.style=dom.style(mainStyle),
+            this.themeColor=dom.meta({name:'theme-color'})
         )
     }
     ChatPage.prototype.playSound=function(settings){
-        dom(document.body,dom('audio',{
+        dom.body(dom.audio({
             autoplay:true,
             src:'plugins/althea-chat/main/notification-a.mp3',
             onended(e){document.body.removeChild(this)},
@@ -103,7 +103,7 @@
             document.body.style.backgroundColor=color
             return()=>this.style.removeChild(n)
         }
-        dom(document.body,ui.node)
+        dom.body(ui.node)
         ui.focus()
         ui.beAppended()
     }

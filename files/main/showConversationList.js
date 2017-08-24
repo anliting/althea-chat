@@ -9,7 +9,7 @@
             user=site.getUser(id),
             tc=textContent(id)
         return{
-            n:dom('div',createLink(id)),
+            n:dom.div(createLink(id)),
             order:tc,
         }
         async function textContent(id){
@@ -18,7 +18,7 @@
             return u.nickname||u.username
         }
         async function createLink(id){
-            return dom('a',async n=>{
+            return dom.a(async n=>{
                 let u=await user
                 await u.load('username')
                 n.href=`chat/${u.username}`
@@ -28,7 +28,7 @@
     }
     return function(){
         document.title='Conversations - Chat'
-        let n=dom('div','Conversations:',{className:'conversationList'})
+        let n=dom.div('Conversations:',{className:'conversationList'})
         ;(async()=>{
             let[order,site]=await Promise.all([
                 module.repository.althea.order,
@@ -47,6 +47,6 @@
                 (a,b)=>a.o.localeCompare(b.o)<0
             )
         })()
-        dom(document.body,n)
+        dom.body(n)
     }
 })()

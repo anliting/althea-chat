@@ -9,7 +9,7 @@
     return createSingleMessageNode
     function createSingleMessageNode(ui,message){
         let
-            n=dom('p'),
+            n=dom.p(),
             p=(async()=>{
                 let a=await(ui.users[message.fromUser]).finalA
                 let span=await createSpan(message)
@@ -21,7 +21,7 @@
         return{n,p}
     }
     async function createSpan(message){
-        let span=dom('span',
+        let span=dom.span(
             {title:(new Date(message.timestamp)).toLocaleString()},
             await compile(message.message)
         )

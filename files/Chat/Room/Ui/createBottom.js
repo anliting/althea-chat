@@ -11,7 +11,7 @@
         module.shareImport('createBottom/setUpVim.js'),
     ])
     function createTextarea(ui){
-        let textarea=dom('textarea',{
+        let textarea=dom.textarea({
             rows:2,
             title:'Alt+V: Open the Web Vim editor.',
             oninput(e){
@@ -54,10 +54,10 @@
         })
     }
     function setupStatusNode(ui){
-        ui._statusNode=dom('span')
+        ui._statusNode=dom.span()
     }
     function createSendButton(ui){
-        return dom('button','Send',{onclick(){
+        return dom.button('Send',{onclick(){
             ui._send()
         }})
     }
@@ -66,7 +66,7 @@
         setupSettingsButton(ui)
         setupFindButton(ui)
         setupStatusNode(ui)
-        return dom('div',
+        return dom.div(
             {className:'bottom'},
             ui.textarea=createTextarea(ui),
             arg.h&&[ui._findButton,' '],
@@ -78,7 +78,7 @@
         )
     }
     function createTexButton(ui){
-        return dom('button','TeX',{
+        return dom.button('TeX',{
             title:`
 When you click this button, it places \`<span class=tex>' and \`</span>' around your selection in the input.
 `,
@@ -99,7 +99,7 @@ When you click this button, it places \`<span class=tex>' and \`</span>' around 
         })
     }
     function setupFindButton(ui){
-        ui._findButton=dom('button','Find')
+        ui._findButton=dom.button('Find')
     }
     return createBottom
 })()

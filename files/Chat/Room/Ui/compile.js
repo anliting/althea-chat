@@ -53,8 +53,8 @@ let whitelist={
             async load(){
                 let katex=await module.shareImport('compile/katex.js')
                 // pollution
-                dom(document.head,
-                    dom('link',{
+                dom.head(
+                    dom.link({
                         rel:'stylesheet',
                         href:katex.styleSheet
                     })
@@ -118,7 +118,7 @@ let whitelist={
         for(let m;m=uri.matchAbsoluteUri(s);){
             yield dom.tn(s.substring(0,m.index))
             yield /^https?/.test(m[0])?
-                dom('a',decodeURI(m[0]),{href:m[0]})
+                dom.a(decodeURI(m[0]),{href:m[0]})
             :
                 dom.tn(m[0])
             s=s.substring(m.index+m[0].length)
