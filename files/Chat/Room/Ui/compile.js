@@ -2,6 +2,9 @@ let whitelist={
     a:{
         href:/^https?:\/\//,
     },
+    blockquote:{
+        style:0,
+    },
     br:{},
     code:{
         style:0,
@@ -24,6 +27,9 @@ let whitelist={
         style:0,
     },
     pre:{
+        style:0,
+    },
+    q:{
         style:0,
     },
     span:{
