@@ -47,7 +47,6 @@ ${env.althea.loadModule(
     {
         userId:env.userId
     },
-    false,
     {sharedWorker:true}
 )}
 `
