@@ -1,5 +1,5 @@
 ;(async()=>{
-    ;(await module.importByPath('lib/general.static.js',{mode:1}))(module)
+    ;(await module.importByPath('lib/general.js',{mode:1}))(module)
     module.repository.Chat=module.shareImport('Chat.js')
     ;(async()=>{
         let dom=await module.repository.althea.dom

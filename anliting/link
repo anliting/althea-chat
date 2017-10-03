@@ -5,4 +5,4 @@ function lib(){
 function link(){
     lib | xargs node $linker $1 > $2
 }
-link main.js main.static.js
+#link main.js main.static.js
