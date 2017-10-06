@@ -12,11 +12,11 @@ module.repository.compile=module.shareImport('Ui/compile.js')
     ]=await Promise.all([
         module.repository.althea.dom,
         module.repository.compile,
-        module.shareImport('Ui/createMessage.js'),
+        module.module('Ui/createMessage.js'),
         module.shareImport('Ui/createBottom.js'),
-        module.shareImport('Ui/StyleManager.js'),
-        module.shareImport('Ui/colorScheme.js'),
-        module.shareImport('Ui/loadSettings.js'),
+        module.module('Ui/StyleManager.js'),
+        module.module('Ui/colorScheme.js'),
+        module.module('Ui/loadSettings.js'),
         module.shareImport('Ui/uiAddMessages.js'),
     ])
     function Ui(currentUser,getSetting,setSetting){

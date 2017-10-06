@@ -1,9 +1,8 @@
-(async()=>{
-    let browser=await module.repository.althea.browser
-    let colorScheme={
-        'default':{
-            name:'Default',
-            style:`
+import browser from '/lib/tools/browser.js'
+let colorScheme={
+    'default':{
+        name:'Default',
+        style:`
 div.chat>div.message>div.preview{
     color:gray;
 }
@@ -20,10 +19,10 @@ div.chat>div.message::-webkit-scrollbar-thumb{
     background:#BBB;
 }
 `:''}`,
-        },
-        'gnulinux':{
-            name:'GNU/Linux',
-            style:`
+    },
+    'gnulinux':{
+        name:'GNU/Linux',
+        style:`
 div.chat>div.message>div.preview{
     color:dimgray;
 }
@@ -59,7 +58,6 @@ div.chat>div.message::-webkit-scrollbar-thumb{
 }
 `:''}
 `,
-        }
     }
-    return colorScheme
-})()
+}
+export default colorScheme

@@ -1,4 +1,4 @@
-(async()=>{
+;(async()=>{
     let
         dom=await module.repository.althea.dom,
         loadVim=()=>module.importByPath(`${

@@ -1,6 +1,6 @@
-(async()=>{
+;(async()=>{
     let
-        root='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1'
+        root='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3'
         styleSheetUrl=`${root}/katex.min.css`,
         scriptUrl=`${root}/katex.min.js`
     let o={}

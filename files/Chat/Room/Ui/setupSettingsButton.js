@@ -4,7 +4,7 @@
         colorScheme,
     ]=await Promise.all([
         module.repository.althea.dom,
-        module.shareImport('colorScheme.js'),
+        module.module('colorScheme.js'),
     ])
     function setupSettingsButton(ui){
         ui._settingsButton=dom.button('Settings',{onclick(e){

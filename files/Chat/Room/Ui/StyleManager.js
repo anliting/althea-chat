@@ -24,4 +24,4 @@ Object.defineProperty(StyleManager.prototype,'forEach',{set(forEach){
 },get(){
     return this._forEach
 }})
-StyleManager
+export default StyleManager

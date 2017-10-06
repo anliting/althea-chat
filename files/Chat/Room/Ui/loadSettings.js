@@ -8,4 +8,4 @@ function loadSettings(){
         this.getSetting('showSendButton')
     )
 }
-loadSettings
+export default loadSettings
