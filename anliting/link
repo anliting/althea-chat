@@ -1,2 +1,0 @@
-cd files
-$rollup -i Chat.js -o Chat.static.js -f es

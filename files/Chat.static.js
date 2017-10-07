@@ -1,8 +1,8 @@
 import EventEmmiter from 'https://gitcdn.link/cdn/anliting/simple.js/99b7ab1b872bc2da746dd648dd0c078b3bc6961e/src/simple/EventEmmiter.js';
-import dom from '../../../../../../../../lib/tools/dom.js';
-import uri from '../../../../../../../../lib/tools/uri.js';
-import arg from '../../../../../../../../lib/arg.js';
-import browser from '../../../../../../../../lib/tools/browser.js';
+import dom from '/lib/tools/dom.js';
+import uri from '/lib/tools/uri.js';
+import arg from '/lib/arg.js';
+import browser from '/lib/tools/browser.js';
 
 let loadPromise;
 async function load(){
