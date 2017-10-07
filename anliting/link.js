@@ -6,20 +6,16 @@ let
         '/lib/tools/uri.js',
         '/lib/arg.js',
         '/lib/tools/browser.js',
-    ],
-    skipMap=Object.assign({},...skip.map(s=>{
-        let o={}
-        o[s]=s
-        return o
-    }))
-;(async()=>{
+    ]
+link('files/Chat.js','files/Chat.static.js')
+async function link(input,file){
     let bundle=await rollup.rollup({
-        input:'files/Chat.js',
-        external:skip,
+        input,
+        external:s=>skip.includes(s),
     })
     await bundle.write({
-        file:'files/Chat.static.js',
+        file,
         format:'es',
-        paths:skipMap,
+        paths:s=>skip.includes(s)&&s,
     })
-})()
+}
