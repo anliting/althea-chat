@@ -1,6 +1,4 @@
-(async()=>{
-    let Room=await module.shareImport('Chat/Room.js')
-    return{
-        Room
-    }
-})()
+import Room from './Chat/Room.js'
+export default{
+    Room
+}

@@ -1,3 +1,4 @@
+export default`
 div.chat>div.message{
     margin-bottom:8px;
 }
@@ -44,3 +45,4 @@ body:-webkit-full-screen>.chat{
     background-color:white;
 }*/
 /* end fullscreen */
+`

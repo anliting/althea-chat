@@ -1,8 +1,2 @@
 cd files
-function lib(){
-    echo `find . -type f | grep -v ".static.js\|.mp3"`
-}
-function link(){
-    lib | xargs node $linker $1 > $2
-}
-#link main.js main.static.js
+$rollup -i Chat.js -o Chat.static.js -f es
