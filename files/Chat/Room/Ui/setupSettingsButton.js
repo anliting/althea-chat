@@ -1,113 +1,106 @@
-;(async()=>{
-    let[
-        dom,
-        colorScheme,
-    ]=await Promise.all([
-        module.repository.althea.dom,
-        module.module('colorScheme.js'),
-    ])
-    function setupSettingsButton(ui){
-        ui._settingsButton=dom.button('Settings',{onclick(e){
-            ui._push()
-            let bF=dom.createBF()
-            dom(ui.node,bF.node)
-            bF.appendChild(createSettingsDiv(ui))
-            bF.on('backClick',e=>{
-                ui.node.removeChild(bF.node)
-                ui._pop()
+import dom from '/lib/tools/dom.js'
+import colorScheme from './colorScheme.js'
+function setupSettingsButton(ui){
+    ui._settingsButton=dom.button('Settings',{onclick(e){
+        ui._push()
+        let bF=dom.createBF()
+        dom(ui.node,bF.node)
+        bF.appendChild(createSettingsDiv(ui))
+        bF.on('backClick',e=>{
+            ui.node.removeChild(bF.node)
+            ui._pop()
+        })
+    }})
+}
+function createSettingsDiv(ui){
+    return dom.div(
+        n=>{
+            dom(n.style,{
+                margin:'16px 24px',
+                width:'280px',
             })
-        }})
-    }
-    function createSettingsDiv(ui){
-        return dom.div(
-            n=>{
-                dom(n.style,{
-                    margin:'16px 24px',
-                    width:'280px',
+        },
+        notificationSound(ui),
+        colorSchemeP(ui),
+        pressEnterToSendP(ui),
+        showTexButton(ui),
+        showSendButton(ui),
+    )
+}
+function notificationSound(ui){
+    return dom.p(
+        'Notification Sound: ',
+        dom.input({
+            type:'range',
+            max:1,
+            step:0.01,
+            value:ui.getSetting('notificationSound'),
+            onchange(e){
+                ui.setSetting('notificationSound',this.value)
+                ui.playNotificationSound()
+            }
+        })
+    )
+}
+function colorSchemeP(ui){
+    let s=ui.getSetting('colorScheme')
+    return dom.p(
+        'Color Scheme: ',
+        dom.select(
+            ...Object.keys(colorScheme).map(i=>
+                dom.option({value:i},colorScheme[i].name,n=>{
+                    if(s==i)
+                        n.selected=true
                 })
-            },
-            notificationSound(ui),
-            colorSchemeP(ui),
-            pressEnterToSendP(ui),
-            showTexButton(ui),
-            showSendButton(ui),
+            ),
+            {onchange(e){
+                ui.setSetting('colorScheme',this.value)
+            }}
         )
-    }
-    function notificationSound(ui){
-        return dom.p(
-            'Notification Sound: ',
+    )
+}
+function pressEnterToSendP(ui){
+    return dom.p(
+        dom.label(
             dom.input({
-                type:'range',
-                max:1,
-                step:0.01,
-                value:ui.getSetting('notificationSound'),
+                type:'checkbox',
+                checked:ui.getSetting('pressEnterToSend'),
                 onchange(e){
-                    ui.setSetting('notificationSound',this.value)
-                    ui.playNotificationSound()
+                    ui.setSetting('pressEnterToSend',this.checked)
                 }
-            })
-        )
-    }
-    function colorSchemeP(ui){
-        let s=ui.getSetting('colorScheme')
-        return dom.p(
-            'Color Scheme: ',
-            dom.select(
-                ...Object.keys(colorScheme).map(i=>
-                    dom.option({value:i},colorScheme[i].name,n=>{
-                        if(s==i)
-                            n.selected=true
-                    })
-                ),
-                {onchange(e){
-                    ui.setSetting('colorScheme',this.value)
-                }}
-            )
-        )
-    }
-    function pressEnterToSendP(ui){
-        return dom.p(
-            dom.label(
-                dom.input({
-                    type:'checkbox',
-                    checked:ui.getSetting('pressEnterToSend'),
-                    onchange(e){
-                        ui.setSetting('pressEnterToSend',this.checked)
-                    }
-                }),' Press Enter to send.')
-        )
-    }
-    function showTexButton(ui){
-        return dom.p(
-            dom.label(
-                dom.input({
-                    type:'checkbox',
-                    checked:ui.getSetting('showTexButton'),
-                    onchange(e){
-                        ui.setSetting('showTexButton',this.checked)
-                        ui._changeButtonDisplay(
-                            '_bottomTexButton',
-                            this.checked
-                        )
-                    }
-                }),' Show `TeX\' button.')
-        )
-    }
-    function showSendButton(ui){
-        return dom.p(
-            dom.label(
-                dom.input({
-                    type:'checkbox',
-                    checked:ui.getSetting('showSendButton'),
-                    onchange(e){
-                        ui.setSetting('showSendButton',this.checked)
-                        ui._changeButtonDisplay(
-                            '_bottomSendButton',
-                            this.checked
-                        )
-                    }
-                }),' Show `Send\' button.')
-        )
-    }
-    return setupSettingsButton
-})()
+            }),' Press Enter to send.')
+    )
+}
+function showTexButton(ui){
+    return dom.p(
+        dom.label(
+            dom.input({
+                type:'checkbox',
+                checked:ui.getSetting('showTexButton'),
+                onchange(e){
+                    ui.setSetting('showTexButton',this.checked)
+                    ui._changeButtonDisplay(
+                        '_bottomTexButton',
+                        this.checked
+                    )
+                }
+            }),' Show `TeX\' button.')
+    )
+}
+function showSendButton(ui){
+    return dom.p(
+        dom.label(
+            dom.input({
+                type:'checkbox',
+                checked:ui.getSetting('showSendButton'),
+                onchange(e){
+                    ui.setSetting('showSendButton',this.checked)
+                    ui._changeButtonDisplay(
+                        '_bottomSendButton',
+                        this.checked
+                    )
+                }
+            }),' Show `Send\' button.')
+    )
+}
+export default setupSettingsButton

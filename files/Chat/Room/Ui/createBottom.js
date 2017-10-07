@@ -7,7 +7,7 @@
     ]=await Promise.all([
         module.repository.althea.arg,
         module.repository.althea.dom,
-        module.shareImport('setupSettingsButton.js'),
+        module.module('setupSettingsButton.js'),
         module.shareImport('createBottom/setUpVim.js'),
     ])
     function createTextarea(ui){

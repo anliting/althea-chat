@@ -1,3 +1,16 @@
+/*
+    To support the math typesetting function, one may
+        . implement it from scratch,
+        . use the KaTeX library, or
+        . use the MathJax library.
+    2017-05-05:
+        I chosed the KaTeX approach, because I don't want to implement it
+        myself, and with KaTeX, I know how to solve the problem in a much
+        proper way by the comparison of MathJax.
+*/
+import dom from '/lib/tools/dom.js'
+import uri from '/lib/tools/uri.js'
+import loadKatex from './compile/loadKatex.js'
 let whitelist={
     a:{
         href:/^https?:\/\//,
@@ -37,99 +50,62 @@ let whitelist={
         style:0,
     },
 }
-/*
-    To support the math typesetting function, one may
-        . implement it from scratch,
-        . use the KaTeX library, or
-        . use the MathJax library.
-    2017-05-05:
-        I chosed the KaTeX approach, because I don't want to implement it
-        myself, and with KaTeX, I know how to solve the problem in a much
-        proper way by the comparison of MathJax.
-*/
-;(async()=>{
-    let[
-        dom,
-        uri,
-    ]=await Promise.all([
-        module.repository.althea.dom,
-        module.repository.althea.uri,
-    ]),dynamic={
-        katex:{
-            async load(){
-                let katex=await module.shareImport('compile/katex.js')
-                // pollution
-                dom.head(
-                    dom.link({
-                        rel:'stylesheet',
-                        href:katex.styleSheet
-                    })
-                )
-                return katex
-            }
-        }
-    }
-    function load(name){
-        let o=dynamic[name]
-        return o.value||(o.value=o.load())
-    }
-    async function compile(s){
-        let body=(new DOMParser).parseFromString(
-            `<!docytpe html><title>0</title><body>${s}`,'text/html'
-        ).body
-        await traverse(body)
-        return[...body.childNodes]
-    }
-    async function traverse(m){
-        await Promise.all([...m.childNodes].map(async n=>{
-            if(!test(n))
-                return m.removeChild(n)
-            if(n.nodeType==1){
-                if(n.className=='tex'){
-                    let s=n.textContent
-                    n.textContent=''
-                    try{
-                        let katex=await load('katex')
-                        katex.katex.render(s,n)
-                    }catch(e){
-                        n.textContent=s
-                    }
-                }else
-                    traverse(n)
-            }else if(n.nodeType==3){
-                for(let o of renderUrl(n.wholeText))
-                    m.insertBefore(o,n)
-                m.removeChild(n)
-            }
-        }))
-    }
-    function test(n){
+async function compile(s){
+    let body=(new DOMParser).parseFromString(
+        `<!docytpe html><title>0</title><body>${s}`,'text/html'
+    ).body
+    await traverse(body)
+    return[...body.childNodes]
+}
+async function traverse(m){
+    await Promise.all([...m.childNodes].map(async n=>{
+        if(!test(n))
+            return m.removeChild(n)
         if(n.nodeType==1){
-            let name=n.nodeName.toLowerCase()
-            if(!(name in whitelist))
-                return
-            let nodeTest=whitelist[name]
-            return[...n.attributes].every(a=>{
-                if(!(a.name in nodeTest))
-                    return 
-                let attrTest=nodeTest[a.name]
-                if(attrTest==0)
-                    return true
-                return attrTest.test(a.value)
-            })
-        }else if(n.nodeType==3)
-            return 1
-    }
-    function*renderUrl(s){
-        for(let m;m=uri.matchAbsoluteUri(s);){
-            yield dom.tn(s.substring(0,m.index))
-            yield /^https?/.test(m[0])?
-                dom.a(decodeURI(m[0]),{href:m[0]})
-            :
-                dom.tn(m[0])
-            s=s.substring(m.index+m[0].length)
+            if(n.className=='tex'){
+                let s=n.textContent
+                n.textContent=''
+                await loadKatex()
+                try{
+                    katex.render(s,n)
+                }catch(e){
+                    n.textContent=s
+                }
+            }else
+                traverse(n)
+        }else if(n.nodeType==3){
+            for(let o of renderUrl(n.wholeText))
+                m.insertBefore(o,n)
+            m.removeChild(n)
         }
-        yield dom.tn(s)
+    }))
+}
+function test(n){
+    if(n.nodeType==1){
+        let name=n.nodeName.toLowerCase()
+        if(!(name in whitelist))
+            return
+        let nodeTest=whitelist[name]
+        return[...n.attributes].every(a=>{
+            if(!(a.name in nodeTest))
+                return 
+            let attrTest=nodeTest[a.name]
+            if(attrTest==0)
+                return true
+            return attrTest.test(a.value)
+        })
+    }else if(n.nodeType==3)
+        return 1
+}
+function*renderUrl(s){
+    for(let m;m=uri.matchAbsoluteUri(s);){
+        yield dom.tn(s.substring(0,m.index))
+        yield /^https?/.test(m[0])?
+            dom.a(decodeURI(m[0]),{href:m[0]})
+        :
+            dom.tn(m[0])
+        s=s.substring(m.index+m[0].length)
     }
-    return compile
-})()
+    yield dom.tn(s)
+}
+export default compile
