@@ -81,7 +81,7 @@
         })
         function updateTitle(){
             let notiPart=unread==0?'':`${'◯⬤'[notification]} (${unread}) `
-            lazyChangeTitle(`${notiPart} ${target.nickname}`)
+            lazyChangeTitle(`${notiPart}${target.nickname}`)
             notification=1-notification
         }
         function lazyChangeTitle(s){

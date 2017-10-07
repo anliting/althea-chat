@@ -1,4 +1,4 @@
-module.repository.compile=module.shareImport('Ui/compile.js')
+module.repository.compile=module.module('Ui/compile.js')
 ;(async()=>{
     let[
         dom,

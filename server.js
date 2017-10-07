@@ -31,6 +31,9 @@ async function pagemodule(env){
     }
 }
 function get(env){
+    /*
+        global pollution: katex anlitingModule
+    */
     env.headers['content-type']='text/html;charset=utf-8'
     return{
         status:200,
