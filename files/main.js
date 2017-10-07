@@ -1,6 +1,6 @@
 ;(async()=>{
-    ;(await module.importByPath('lib/general.js',{mode:1}))(module)
     module.repository.Chat=module.module('Chat.static.js')
+    ;(await module.importByPath('lib/general.js',{mode:1}))(module)
     ;(async()=>{
         let dom=await module.repository.althea.dom
         dom.head(
