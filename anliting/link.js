@@ -6,7 +6,12 @@ let
         '/lib/tools/uri.js',
         '/lib/arg.js',
         '/lib/tools/browser.js',
-    ]
+    ],
+    skipMap=Object.assign({},...skip.map(s=>{
+        let o={}
+        o[s]=s
+        return o
+    }))
 ;(async()=>{
     let bundle=await rollup.rollup({
         input:'files/Chat.js',
@@ -15,10 +20,6 @@ let
     await bundle.write({
         file:'files/Chat.static.js',
         format:'es',
-        paths:Object.assign({},...skip.map(s=>{
-            let o={}
-            o[s]=s
-            return o
-        })),
+        paths:skipMap,
     })
 })()
