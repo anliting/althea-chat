@@ -1,4 +1,5 @@
-import browser from '/lib/tools/browser.js'
+import core from '/lib/core.static.js'
+let {browser}=core
 let colorScheme={
     'default':{
         name:'Default',

@@ -1,8 +1,5 @@
+import core from '/lib/core.static.js';
 import EventEmmiter from 'https://gitcdn.link/cdn/anliting/simple.js/99b7ab1b872bc2da746dd648dd0c078b3bc6961e/src/simple/EventEmmiter.js';
-import dom from '/lib/tools/dom.js';
-import uri from '/lib/tools/uri.js';
-import arg from '/lib/arg.js';
-import browser from '/lib/tools/browser.js';
 
 let loadPromise;
 async function load(){
@@ -41,6 +38,7 @@ var loadKatex = ()=>{
         myself, and with KaTeX, I know how to solve the problem in a much
         proper way by the comparison of MathJax.
 */
+let {dom: dom$1,uri}=core;
 let whitelist={
     a:{
         href:/^https?:\/\//,
@@ -129,16 +127,17 @@ function test(n){
 }
 function*renderUrl(s){
     for(let m;m=uri.matchAbsoluteUri(s);){
-        yield dom.tn(s.substring(0,m.index));
+        yield dom$1.tn(s.substring(0,m.index));
         yield /^https?/.test(m[0])?
-            dom.a(decodeURI(m[0]),{href:m[0]})
+            dom$1.a(decodeURI(m[0]),{href:m[0]})
         :
-            dom.tn(m[0]);
+            dom$1.tn(m[0]);
         s=s.substring(m.index+m[0].length);
     }
-    yield dom.tn(s);
+    yield dom$1.tn(s);
 }
 
+let {dom: dom$2}=core;
 function createMessageDiv(ui){
     function syncDivScroll(){
         if(ui.atBottom)
@@ -149,7 +148,7 @@ function createMessageDiv(ui){
             div.scrollTop+div.clientHeight-div.scrollHeight
         )<=1;
     }
-    let div=dom.div(
+    let div=dom$2.div(
         {
             className:'message',
             onscroll:updateAtBottom,
@@ -158,25 +157,26 @@ function createMessageDiv(ui){
             },
         },
         ui._topDiv=createTopDiv(ui),
-        ui._previewNode=dom.div({className:'preview'})
+        ui._previewNode=dom$2.div({className:'preview'})
     );
     updateAtBottom();
     ui.syncInnerMessageDivScroll=syncDivScroll;
     return ui._innerMessageDiv=div
 }
 function createTopDiv(ui){
-    return dom.div(
+    return dom$2.div(
         {className:'top'},
         createShowOlderMessagesButton(ui)
     )
 }
 function createShowOlderMessagesButton(ui){
-    return dom.button({onclick(e){
+    return dom$2.button({onclick(e){
         e.stopPropagation();
         ui._queryOlder();
     }},'Show Older Messages')
 }
 
+let {browser: browser$1}=core;
 let colorScheme={
     'default':{
         name:'Default',
@@ -184,7 +184,7 @@ let colorScheme={
 div.chat>div.message>div.preview{
     color:gray;
 }
-${!browser.isMobile?`
+${!browser$1.isMobile?`
 div.chat>div.message::-webkit-scrollbar{
     width:12px;
 }
@@ -222,7 +222,7 @@ div.chat>div.bottom textarea{
     background-color:black;
     color:lightgray;
 }
-${!browser.isMobile?`
+${!browser$1.isMobile?`
 div.chat>div.message::-webkit-scrollbar{
     width:12px;
 }
@@ -239,11 +239,12 @@ div.chat>div.message::-webkit-scrollbar-thumb{
     }
 };
 
+let {dom: dom$4}=core;
 function setupSettingsButton(ui){
-    ui._settingsButton=dom.button('Settings',{onclick(e){
+    ui._settingsButton=dom$4.button('Settings',{onclick(e){
         ui._push();
-        let bF=dom.createBF();
-        dom(ui.node,bF.node);
+        let bF=dom$4.createBF();
+        dom$4(ui.node,bF.node);
         bF.appendChild(createSettingsDiv(ui));
         bF.on('backClick',e=>{
             ui.node.removeChild(bF.node);
@@ -252,9 +253,9 @@ function setupSettingsButton(ui){
     }});
 }
 function createSettingsDiv(ui){
-    return dom.div(
+    return dom$4.div(
         n=>{
-            dom(n.style,{
+            dom$4(n.style,{
                 margin:'16px 24px',
                 width:'280px',
             });
@@ -267,9 +268,9 @@ function createSettingsDiv(ui){
     )
 }
 function notificationSound(ui){
-    return dom.p(
+    return dom$4.p(
         'Notification Sound: ',
-        dom.input({
+        dom$4.input({
             type:'range',
             max:1,
             step:0.01,
@@ -283,11 +284,11 @@ function notificationSound(ui){
 }
 function colorSchemeP(ui){
     let s=ui.getSetting('colorScheme');
-    return dom.p(
+    return dom$4.p(
         'Color Scheme: ',
-        dom.select(
+        dom$4.select(
             ...Object.keys(colorScheme).map(i=>
-                dom.option({value:i},colorScheme[i].name,n=>{
+                dom$4.option({value:i},colorScheme[i].name,n=>{
                     if(s==i)
                         n.selected=true;
                 })
@@ -299,9 +300,9 @@ function colorSchemeP(ui){
     )
 }
 function pressEnterToSendP(ui){
-    return dom.p(
-        dom.label(
-            dom.input({
+    return dom$4.p(
+        dom$4.label(
+            dom$4.input({
                 type:'checkbox',
                 checked:ui.getSetting('pressEnterToSend'),
                 onchange(e){
@@ -311,9 +312,9 @@ function pressEnterToSendP(ui){
     )
 }
 function showTexButton(ui){
-    return dom.p(
-        dom.label(
-            dom.input({
+    return dom$4.p(
+        dom$4.label(
+            dom$4.input({
                 type:'checkbox',
                 checked:ui.getSetting('showTexButton'),
                 onchange(e){
@@ -327,9 +328,9 @@ function showTexButton(ui){
     )
 }
 function showSendButton(ui){
-    return dom.p(
-        dom.label(
-            dom.input({
+    return dom$4.p(
+        dom$4.label(
+            dom$4.input({
                 type:'checkbox',
                 checked:ui.getSetting('showSendButton'),
                 onchange(e){
@@ -343,6 +344,7 @@ function showSendButton(ui){
     )
 }
 
+let {dom: dom$5}=core;
 let loadVim=()=>anlitingModule.importByPath(`${
         'https://gitcdn.link/cdn/anliting/webvim'
     }/${
@@ -359,8 +361,8 @@ async function load$1(ui,textarea){
     }),viewDiv=createViewDiv(vim);
     vim.text=textarea.value;
     vim._cursor.moveTo(textarea.selectionStart);
-    dom.head(vim.style);
-    dom.body(viewDiv);
+    dom$5.head(vim.style);
+    dom$5.body(viewDiv);
     vim.polluteCopy;
     vim.focus();
     vim.on('quit',e=>{
@@ -381,12 +383,12 @@ async function load$1(ui,textarea){
 function createViewDiv(vim){
     vim.width=80;
     vim.height=24;
-    return dom.div(
+    return dom$5.div(
         vim.node,
         {onclick(){
             vim.focus();
         }},
-        n=>{dom(n.style,{
+        n=>{dom$5(n.style,{
             position:'fixed',
             left:'50%',
             top:'50%',
@@ -397,8 +399,9 @@ function createViewDiv(vim){
     )
 }
 
+let {arg,dom: dom$3}=core;
 function createTextarea(ui){
-    let textarea=dom.textarea({
+    let textarea=dom$3.textarea({
         rows:2,
         title:'Alt+V: Open the Web Vim editor.',
         oninput(e){
@@ -428,7 +431,7 @@ function createTextarea(ui){
     return textarea
 }
 function setupFileButton(ui){
-    ui._fileButton=dom.createFileButton('Image');
+    ui._fileButton=dom$3.createFileButton('Image');
     ui._fileButton.on('file',async a=>{
         ui._fileButton.n.disabled=true;
         let imageIds=await ui.imageUploader.uploadImages(a);
@@ -441,10 +444,10 @@ function setupFileButton(ui){
     });
 }
 function setupStatusNode(ui){
-    ui._statusNode=dom.span();
+    ui._statusNode=dom$3.span();
 }
 function createSendButton(ui){
-    return dom.button('Send',{onclick(){
+    return dom$3.button('Send',{onclick(){
         ui._send();
     }})
 }
@@ -453,7 +456,7 @@ function createBottom(ui){
     setupSettingsButton(ui);
     setupFindButton(ui);
     setupStatusNode(ui);
-    return dom.div(
+    return dom$3.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
         arg.h&&[ui._findButton,' '],
@@ -465,7 +468,7 @@ function createBottom(ui){
     )
 }
 function createTexButton(ui){
-    return dom.button('TeX',{
+    return dom$3.button('TeX',{
         title:`
 When you click this button, it places \`<span class=tex>' and \`</span>' around your selection in the input.
 `,
@@ -486,7 +489,7 @@ When you click this button, it places \`<span class=tex>' and \`</span>' around 
     })
 }
 function setupFindButton(ui){
-    ui._findButton=dom.button('Find');
+    ui._findButton=dom$3.button('Find');
 }
 
 function StyleManager(){
@@ -527,13 +530,14 @@ function loadSettings(){
     );
 }
 
+let {dom: dom$6}=core;
 function createSingleMessageNode(ui,message){
     let
-        n=dom.p(),
+        n=dom$6.p(),
         p=(async()=>{
             let a=await(ui.users[message.fromUser]).finalA;
             let span=await createSpan(message);
-            dom(n,a,': ',span.span);
+            dom$6(n,a,': ',span.span);
             ui.syncInnerMessageDivScroll();
             await span.promise;
             ui.syncInnerMessageDivScroll();
@@ -541,7 +545,7 @@ function createSingleMessageNode(ui,message){
     return{n,p}
 }
 async function createSpan(message){
-    let span=dom.span(
+    let span=dom$6.span(
         {title:(new Date(message.timestamp)).toLocaleString()},
         await compile(message.message)
     );
@@ -573,6 +577,7 @@ async function uiAddMessages(messages,mode){
     this.syncInnerMessageDivScroll();
 }
 
+let {dom}=core;
 function Ui(currentUser,getSetting,setSetting){
     this._currentUser=currentUser;
     this._styleManager=new StyleManager;
@@ -740,6 +745,7 @@ var mobileStyle = ``;
 
 var desktopStyle = ``;
 
+let {browser}=core;
 let deviceSpecificStyle=browser.isMobile?mobileStyle:desktopStyle;
 let blockSize=16;
 function Room(

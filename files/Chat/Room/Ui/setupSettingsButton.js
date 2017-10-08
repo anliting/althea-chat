@@ -1,4 +1,5 @@
-import dom from '/lib/tools/dom.js'
+import core from '/lib/core.static.js'
+let {dom}=core
 import colorScheme from './colorScheme.js'
 function setupSettingsButton(ui){
     ui._settingsButton=dom.button('Settings',{onclick(e){

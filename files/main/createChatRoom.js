@@ -1,3 +1,6 @@
+import Chat from '../Chat.static.js'
+import core from '/lib/core.static.js'
+let {ImageUploader}=core
 async function getTwoMenConversation(s,target){
     let site=await s
     let id=await site.send({
@@ -6,14 +9,7 @@ async function getTwoMenConversation(s,target){
     })
     return id
 }
-;(async function createChatRoom(target,site){
-    let[
-        Chat,
-        ImageUploader,
-    ]=await Promise.all([
-        module.repository.Chat,
-        module.repository.althea.ImageUploader,
-    ])
+export default async function(target,site){
     site=await site
     let chatRoom=new Chat.Room(
         async d=>site.send(d),
@@ -34,4 +30,4 @@ async function getTwoMenConversation(s,target){
     function update(){
         chatRoom.connectionStatus=navigator.onLine?'online':'offline'
     }
-})
+}

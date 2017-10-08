@@ -1,3 +1,4 @@
+export default`
 html{
     height:100%;
 }
@@ -24,3 +25,4 @@ a:active,a:link,a:hover,a:visited{
 body{
     overflow-y:hidden;
 }
+`

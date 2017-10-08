@@ -1,5 +1,5 @@
-import arg from '/lib/arg.js'
-import dom from '/lib/tools/dom.js'
+import core from '/lib/core.static.js'
+let {arg,dom}=core
 import setupSettingsButton from './setupSettingsButton.js'
 import setUpVim from './createBottom/setUpVim.js'
 function createTextarea(ui){

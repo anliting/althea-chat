@@ -1,4 +1,5 @@
-import dom from '/lib/tools/dom.js'
+import core from '/lib/core.static.js'
+let {dom}=core
 import compile from './Ui/compile.js'
 import createMessage from './Ui/createMessage.js'
 import createBottom from './Ui/createBottom.js'

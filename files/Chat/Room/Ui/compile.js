@@ -8,8 +8,8 @@
         myself, and with KaTeX, I know how to solve the problem in a much
         proper way by the comparison of MathJax.
 */
-import dom from '/lib/tools/dom.js'
-import uri from '/lib/tools/uri.js'
+import core from '/lib/core.static.js'
+let {dom,uri}=core
 import loadKatex from './compile/loadKatex.js'
 let whitelist={
     a:{

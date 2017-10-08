@@ -1,4 +1,5 @@
-import dom from '/lib/tools/dom.js'
+import core from '/lib/core.static.js'
+let {dom}=core
 let
     loadVim=()=>anlitingModule.importByPath(`${
         'https://gitcdn.link/cdn/anliting/webvim'

@@ -1,8 +1,7 @@
 ;(async()=>{
-    module.repository.Chat=module.module('Chat.static.js')
     ;(await module.importByPath('lib/general.js',{mode:1}))(module)
     ;(async()=>{
-        let dom=await module.repository.althea.dom
+        let {dom}=await module.moduleByPath('/lib/core.static.js')
         dom.head(
             dom.link({rel:'icon',href:'plugins/althea-chat/icon.png'})
         )
@@ -10,7 +9,7 @@
     let[
         chatPage,
     ]=await Promise.all([
-        module.shareImport('main/chatPage.js'),
+        module.module('main/chatPage.js'),
     ])
     module.arguments.userId==undefined?
         chatPage.showConversationList()
