@@ -6,8 +6,11 @@ let
         '/lib/tools/uri.js',
         '/lib/arg.js',
         '/lib/tools/browser.js',
+        '/lib/core.static.js',
+        '/lib/site.js',
     ]
 link('files/Chat.js','files/Chat.static.js')
+link('files/main/chatPage.js','files/main/chatPage.static.js')
 async function link(input,file){
     let bundle=await rollup.rollup({
         input,

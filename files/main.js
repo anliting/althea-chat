@@ -1,5 +1,7 @@
 ;(async()=>{
-    ;(await module.importByPath('lib/general.js',{mode:1}))(module)
+    ;(async()=>{
+        ;(await module.moduleByPath('/lib/general.mjs'))
+    })()
     ;(async()=>{
         let {dom}=await module.moduleByPath('/lib/core.static.js')
         dom.head(
@@ -9,7 +11,7 @@
     let[
         chatPage,
     ]=await Promise.all([
-        module.module('main/chatPage.js'),
+        module.module('main/chatPage.static.js'),
     ])
     module.arguments.userId==undefined?
         chatPage.showConversationList()

@@ -1,9 +1,10 @@
 import createChatRoom from './createChatRoom.js'
 import mainStyle from './style.js'
 import showConversationList from './showConversationList.js'
-import site from '/lib/site.js'
 import core from '/lib/core.static.js'
-let {dom}=core
+let
+    {dom,Site}=core,
+    site=new Site
 function ChatPage(){
     this.settings=localStorage.altheaChatSettings?
         JSON.parse(localStorage.altheaChatSettings)
