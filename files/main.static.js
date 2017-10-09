@@ -39,7 +39,7 @@ var loadKatex = ()=>{
         myself, and with KaTeX, I know how to solve the problem in a much
         proper way by the comparison of MathJax.
 */
-let {dom: dom$1,uri}=core;
+let {dom: dom$1$1,uri}=core;
 let whitelist={
     a:{
         href:/^https?:\/\//,
@@ -128,14 +128,14 @@ function test(n){
 }
 function*renderUrl(s){
     for(let m;m=uri.matchAbsoluteUri(s);){
-        yield dom$1.tn(s.substring(0,m.index));
+        yield dom$1$1.tn(s.substring(0,m.index));
         yield /^https?/.test(m[0])?
-            dom$1.a(decodeURI(m[0]),{href:m[0]})
+            dom$1$1.a(decodeURI(m[0]),{href:m[0]})
         :
-            dom$1.tn(m[0]);
+            dom$1$1.tn(m[0]);
         s=s.substring(m.index+m[0].length);
     }
-    yield dom$1.tn(s);
+    yield dom$1$1.tn(s);
 }
 
 let {dom: dom$2}=core;
@@ -403,7 +403,7 @@ function createViewDiv(vim){
     )
 }
 
-let {arg,dom: dom$3}=core;
+let {arg: arg$1,dom: dom$3}=core;
 function createTextarea(ui){
     let textarea=dom$3.textarea({
         rows:2,
@@ -463,7 +463,7 @@ function createBottom(ui){
     return dom$3.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
-        arg.h&&[ui._findButton,' '],
+        arg$1.h&&[ui._findButton,' '],
         ui._bottomTexButton=createTexButton(ui),' ',
         ui._fileButton.n,' ',
         ui._bottomSendButton=createSendButton(ui),' ',
@@ -581,14 +581,14 @@ async function uiAddMessages(messages,mode){
     this.syncInnerMessageDivScroll();
 }
 
-let {dom: dom$1$1}=core;
+let {dom: dom$2$1}=core;
 function Ui(currentUser,getSetting,setSetting){
     this._currentUser=currentUser;
     this._styleManager=new StyleManager;
     this.getSetting=getSetting;
     this.setSetting=setSetting;
     this.users={};
-    this.node=dom$1$1.div(
+    this.node=dom$2$1.div(
         {className:'chat'},
         this.messageDiv=createMessageDiv(this),
         this.bottomDiv=createBottom(this)
@@ -610,7 +610,7 @@ Ui.prototype._changeTextareaValue=function(v){
     this.updateTextareaHeight();
 };
 Ui.prototype._updatePreview=async function(){
-    dom$1$1(this._previewNode,
+    dom$2$1(this._previewNode,
         {innerHTML:''},
         await compile(this.textarea.value)
     );
@@ -916,13 +916,13 @@ body{
 }
 `;
 
-let {dom: dom$2$1}=core;
+let {dom: dom$3$1}=core;
 function createConversation(site,id){
     let
         user=site.getUser(id),
         tc=textContent(id);
     return{
-        n:dom$2$1.div(createLink(id)),
+        n:dom$3$1.div(createLink(id)),
         order:tc,
     }
     async function textContent(id){
@@ -931,7 +931,7 @@ function createConversation(site,id){
         return u.nickname||u.username
     }
     async function createLink(id){
-        return dom$2$1.a(async n=>{
+        return dom$3$1.a(async n=>{
             let u=await user;
             await u.load('username');
             n.href=`chat/${u.username}`;
@@ -941,7 +941,7 @@ function createConversation(site,id){
 }
 var showConversationList = function(){
     document.title='Conversations - Chat';
-    let n=dom$2$1.div('Conversations:',{className:'conversationList'});(async()=>{
+    let n=dom$3$1.div('Conversations:',{className:'conversationList'});(async()=>{
         let[order,site]=await Promise.all([
             module.repository.althea.order,
             module.repository.althea.site,
@@ -955,27 +955,27 @@ var showConversationList = function(){
                 }
             }),
             (a,b)=>n.insertBefore(a.n,b.n),
-            e=>dom$2$1(n,e.n),
+            e=>dom$3$1(n,e.n),
             (a,b)=>a.o.localeCompare(b.o)<0
         );
     })();
-    dom$2$1.body(n);
+    dom$3$1.body(n);
 };
 
-let {dom,Site}=core;
+let {dom: dom$1,Site}=core;
 let site=new Site;
 function ChatPage(){
     this.settings=localStorage.altheaChatSettings?
         JSON.parse(localStorage.altheaChatSettings)
     :
         {notificationSound:0};
-    dom.head(
-        this.style=dom.style(mainStyle),
-        this.themeColor=dom.meta({name:'theme-color'})
+    dom$1.head(
+        this.style=dom$1.style(mainStyle),
+        this.themeColor=dom$1.meta({name:'theme-color'})
     );
 }
 ChatPage.prototype.playSound=function(settings){
-    dom.body(dom.audio({
+    dom$1.body(dom$1.audio({
         autoplay:true,
         src:'plugins/althea-chat/main/notification-a.mp3',
         onended(e){document.body.removeChild(this);},
@@ -1044,10 +1044,10 @@ async function notification(chat,target){
 async function content(chat){
     chat=await chat;
     let ui=chat.ui;
-    dom(this.style,await chat.style);
+    dom$1(this.style,await chat.style);
     ui.style=s=>{
-        let n=dom.tn(s.content);
-        dom(this.style,n);
+        let n=dom$1.tn(s.content);
+        dom$1(this.style,n);
         let color={
             default:'',
             gnulinux:'black',
@@ -1056,10 +1056,18 @@ async function content(chat){
         document.body.style.backgroundColor=color;
         return()=>this.style.removeChild(n)
     };
-    dom.body(ui.node);
+    dom$1.body(ui.node);
     ui.focus();
     ui.beAppended();
 }
 var chatPage = new ChatPage;
 
-export default chatPage;
+let {dom,general}=core;
+dom.head(
+    dom.link({rel:'icon',href:'plugins/althea-chat/icon.png'})
+);
+general();
+arg.userId==undefined?
+    chatPage.showConversationList()
+:
+    chatPage.showChatRoom(arg.userId);

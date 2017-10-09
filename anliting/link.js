@@ -17,8 +17,8 @@ let
         skip
     )
     await link(
-        'files/main/chatPage.js',
-        'files/main/chatPage.static.js',
+        'files/main.js',
+        'files/main.static.js',
         skip
     )
 })()

@@ -44,12 +44,17 @@ function get(env){
 <base href=${env.config.root}>
 <meta name=viewport content='width=device-width,initial-scale=1'>
 <body>
-<script>
-arg=${JSON.stringify({
-    userId:env.userId
-})}
-</script>
-<script type=module src=plugins/althea-chat/main.js></script>
+${env.althea.loadModule(
+    env.envVars,
+    'plugins/althea-chat/main.static.js',
+    {
+        userId:env.userId
+    },
+    {
+        esm:1,
+        sharedWorker:true,
+    },
+)}
 `
     }
 }

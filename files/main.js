@@ -1,5 +1,5 @@
 import core from '/lib/core.static.js'
-import chatPage from './main/chatPage.static.js'
+import chatPage from './main/chatPage.js'
 let {dom,general}=core
 dom.head(
     dom.link({rel:'icon',href:'plugins/althea-chat/icon.png'})
