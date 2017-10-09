@@ -1,17 +1,28 @@
 let
     rollup=require('rollup'),
     skip=[
-        'https://gitcdn.link/cdn/anliting/simple.js/99b7ab1b872bc2da746dd648dd0c078b3bc6961e/src/simple/EventEmmiter.js',
-        '/lib/tools/dom.js',
-        '/lib/tools/uri.js',
         '/lib/arg.js',
-        '/lib/tools/browser.js',
         '/lib/core.static.js',
         '/lib/site.js',
+        '/lib/tools/browser.js',
+        '/lib/tools/dom.js',
+        '/lib/tools/uri.js',
+        'https://cdn.rawgit.com/anliting/module/3d316feea7b5a428cf73252750ba79b4a1f4179f/src/esm/moduleLoader.js',
+        'https://gitcdn.link/cdn/anliting/simple.js/99b7ab1b872bc2da746dd648dd0c078b3bc6961e/src/simple/EventEmmiter.js',
     ]
-link('files/Chat.js','files/Chat.static.js')
-link('files/main/chatPage.js','files/main/chatPage.static.js')
-async function link(input,file){
+;(async()=>{
+    await link(
+        'files/Chat.js',
+        'files/Chat.static.js',
+        skip
+    )
+    await link(
+        'files/main/chatPage.js',
+        'files/main/chatPage.static.js',
+        skip
+    )
+})()
+async function link(input,file,skip=[]){
     let bundle=await rollup.rollup({
         input,
         external:s=>skip.includes(s),

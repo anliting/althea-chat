@@ -1,11 +1,14 @@
 import core from '/lib/core.static.js'
+import moduleLoader from 'https://cdn.rawgit.com/anliting/module/3d316feea7b5a428cf73252750ba79b4a1f4179f/src/esm/moduleLoader.js'
 let {dom}=core
-let
-    loadVim=()=>anlitingModule.importByPath(`${
+async function loadVim(){
+    let module=await moduleLoader()
+    return module.importByPath(`${
         'https://gitcdn.link/cdn/anliting/webvim'
     }/${
         '585df5a6d6daa30dc78af958804f658c163dfe59'
     }/src/Vim.static.js`,{mode:1})
+}
 async function load(ui,textarea){
     if(typeof loadVim=='function')
         loadVim=loadVim()
