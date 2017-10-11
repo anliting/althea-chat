@@ -51,23 +51,14 @@ Ui.prototype._send=function(){
 Ui.prototype._queryOlder=function(){
     this.queryOlder()
 }
-Ui.prototype.beAppended=function(){
-    this.updateMessageDivHeight()
-}
 Ui.prototype.focus=function(){
     this.textarea.focus()
-}
-Ui.prototype.updateMessageDivHeight=function(){
-    this.messageDiv.style.height=`calc(100% - 8px - ${
-        this.bottomDiv.clientHeight+2
-    }px)`
 }
 Ui.prototype.updateTextareaHeight=function(){
     let rows=Math.max(2,Math.min(4,
         this.textarea.value.split('\n').length
     ))
     this.textarea.rows=rows
-    this.updateMessageDivHeight()
     this.syncInnerMessageDivScroll()
 }
 Ui.prototype.prepend=async function(messages){

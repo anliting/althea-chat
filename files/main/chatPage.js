@@ -100,6 +100,5 @@ async function content(chat){
     }
     dom.body(ui.node)
     ui.focus()
-    ui.beAppended()
 }
 export default new ChatPage

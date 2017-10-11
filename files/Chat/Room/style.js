@@ -1,10 +1,14 @@
 export default`
+div.chat{
+    display:flex;
+    flex-direction:column;
+}
 div.chat>div.message{
     margin-bottom:8px;
+    flex:1;
 }
 div.chat>div.message{
     padding-right:8px;
-    height:100%;
     overflow-y:scroll;
     overflow-wrap:break-word;
 /*
