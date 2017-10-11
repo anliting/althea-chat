@@ -851,16 +851,15 @@ var Chat = {
 };
 
 let {ImageUploader}=core;
-async function getTwoMenConversation(s,target){
-    let site=await s;
+async function getTwoMenConversation(site,target){
     let id=await site.send({
         function:'getTwoMenConversation',
         target:(await target).id,
     });
     return id
 }
-var createChatRoom = async function(target,site){
-    site=await site;
+var createChatRoom = async function(target){
+    let site=this._site;
     let chatRoom=new Chat.Room(
         async d=>site.send(d),
         ()=>site.createSession(),
@@ -952,9 +951,8 @@ var showConversationList = async function(){
     dom$9.body(n);
 };
 
-let {dom: dom$1,Site}=core;
-let site=new Site;
-function ChatPage(){
+let {dom: dom$1}=core;
+function ChatPage(site){
     this._site=site;
     this.settings=localStorage.altheaChatSettings?
         JSON.parse(localStorage.altheaChatSettings)
@@ -976,17 +974,10 @@ ChatPage.prototype.playSound=function(settings){
 ChatPage.prototype.showConversationList=showConversationList;
 ChatPage.prototype.showChatRoom=function(id){
     let
-        target=getUser(id),
-        chatRoom=createChatRoom.call(
-            this,
-            target,
-            site
-        );
+        target=this._site.getUser(id),
+        chatRoom=createChatRoom.call(this,target);
     notification.call(this,chatRoom,target);
     content.call(this,chatRoom);
-    async function getUser(id){
-        return site.getUser(id)
-    }
 };
 ChatPage.prototype.setSetting=function(k,v){
     this.settings[k]=v;
@@ -1050,9 +1041,9 @@ async function content(chat){
     dom$1.body(ui.node);
     ui.focus();
 }
-var chatPage = new ChatPage;
 
-let {dom,general}=core;
+let {Site,dom,general}=core;
+let chatPage=new ChatPage(new Site);
 dom.head(
     dom.link({rel:'icon',href:'plugins/althea-chat/icon.png'})
 );
