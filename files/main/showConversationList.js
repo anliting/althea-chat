@@ -1,5 +1,5 @@
 import core from '/lib/core.static.js'
-let {dom}=core
+let{dom,order}=core
 function createConversation(site,id){
     let
         user=site.getUser(id),
@@ -22,26 +22,20 @@ function createConversation(site,id){
         })
     }
 }
-export default function(){
+export default async function(){
     document.title='Conversations - Chat'
     let n=dom.div('Conversations:',{className:'conversationList'})
-    ;(async()=>{
-        let[order,site]=await Promise.all([
-            module.repository.althea.order,
-            module.repository.althea.site,
-        ])
-        order.post(
-            (await site.send('getConversations')).map(async id=>{
-                let c=createConversation(site,id)
-                return{
-                    n:c.n,
-                    o:await c.order
-                }
-            }),
-            (a,b)=>n.insertBefore(a.n,b.n),
-            e=>dom(n,e.n),
-            (a,b)=>a.o.localeCompare(b.o)<0
-        )
-    })()
+    order.post(
+        (await this._site.send('getConversations')).map(async id=>{
+            let c=createConversation(this._site,id)
+            return{
+                n:c.n,
+                o:await c.order
+            }
+        }),
+        (a,b)=>n.insertBefore(a.n,b.n),
+        e=>dom(n,e.n),
+        (a,b)=>a.o.localeCompare(b.o)<0
+    )
     dom.body(n)
 }

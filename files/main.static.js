@@ -916,7 +916,7 @@ body{
 }
 `;
 
-let {dom: dom$3$1}=core;
+let {dom: dom$3$1,order}=core;
 function createConversation(site,id){
     let
         user=site.getUser(id),
@@ -939,32 +939,28 @@ function createConversation(site,id){
         })
     }
 }
-var showConversationList = function(){
+var showConversationList = async function(){
     document.title='Conversations - Chat';
-    let n=dom$3$1.div('Conversations:',{className:'conversationList'});(async()=>{
-        let[order,site]=await Promise.all([
-            module.repository.althea.order,
-            module.repository.althea.site,
-        ]);
-        order.post(
-            (await site.send('getConversations')).map(async id=>{
-                let c=createConversation(site,id);
-                return{
-                    n:c.n,
-                    o:await c.order
-                }
-            }),
-            (a,b)=>n.insertBefore(a.n,b.n),
-            e=>dom$3$1(n,e.n),
-            (a,b)=>a.o.localeCompare(b.o)<0
-        );
-    })();
+    let n=dom$3$1.div('Conversations:',{className:'conversationList'});
+    order.post(
+        (await this._site.send('getConversations')).map(async id=>{
+            let c=createConversation(this._site,id);
+            return{
+                n:c.n,
+                o:await c.order
+            }
+        }),
+        (a,b)=>n.insertBefore(a.n,b.n),
+        e=>dom$3$1(n,e.n),
+        (a,b)=>a.o.localeCompare(b.o)<0
+    );
     dom$3$1.body(n);
 };
 
 let {dom: dom$1,Site}=core;
 let site=new Site;
 function ChatPage(){
+    this._site=site;
     this.settings=localStorage.altheaChatSettings?
         JSON.parse(localStorage.altheaChatSettings)
     :

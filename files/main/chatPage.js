@@ -6,6 +6,7 @@ let
     {dom,Site}=core,
     site=new Site
 function ChatPage(){
+    this._site=site
     this.settings=localStorage.altheaChatSettings?
         JSON.parse(localStorage.altheaChatSettings)
     :
