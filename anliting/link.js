@@ -11,16 +11,7 @@ let
         'https://gitcdn.link/cdn/anliting/simple.js/99b7ab1b872bc2da746dd648dd0c078b3bc6961e/src/simple/EventEmmiter.js',
     ]
 ;(async()=>{
-    await link(
-        'files/Chat.js',
-        'files/Chat.static.js',
-        skip
-    )
-    await link(
-        'files/main.js',
-        'files/main.static.js',
-        skip
-    )
+    await link('files/main.js','files/main.static.js',skip)
 })()
 async function link(input,file,skip=[]){
     let bundle=await rollup.rollup({

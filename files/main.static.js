@@ -39,7 +39,7 @@ var loadKatex = ()=>{
         myself, and with KaTeX, I know how to solve the problem in a much
         proper way by the comparison of MathJax.
 */
-let {dom: dom$1$1,uri}=core;
+let {dom: dom$3,uri}=core;
 let whitelist={
     a:{
         href:/^https?:\/\//,
@@ -128,17 +128,17 @@ function test(n){
 }
 function*renderUrl(s){
     for(let m;m=uri.matchAbsoluteUri(s);){
-        yield dom$1$1.tn(s.substring(0,m.index));
+        yield dom$3.tn(s.substring(0,m.index));
         yield /^https?/.test(m[0])?
-            dom$1$1.a(decodeURI(m[0]),{href:m[0]})
+            dom$3.a(decodeURI(m[0]),{href:m[0]})
         :
-            dom$1$1.tn(m[0]);
+            dom$3.tn(m[0]);
         s=s.substring(m.index+m[0].length);
     }
-    yield dom$1$1.tn(s);
+    yield dom$3.tn(s);
 }
 
-let {dom: dom$2}=core;
+let {dom: dom$4}=core;
 function createMessageDiv(ui){
     function syncDivScroll(){
         if(ui.atBottom)
@@ -149,7 +149,7 @@ function createMessageDiv(ui){
             div.scrollTop+div.clientHeight-div.scrollHeight
         )<=1;
     }
-    let div=dom$2.div(
+    let div=dom$4.div(
         {
             className:'message',
             onscroll:updateAtBottom,
@@ -158,20 +158,20 @@ function createMessageDiv(ui){
             },
         },
         ui._topDiv=createTopDiv(ui),
-        ui._previewNode=dom$2.div({className:'preview'})
+        ui._previewNode=dom$4.div({className:'preview'})
     );
     updateAtBottom();
     ui.syncInnerMessageDivScroll=syncDivScroll;
     return ui._innerMessageDiv=div
 }
 function createTopDiv(ui){
-    return dom$2.div(
+    return dom$4.div(
         {className:'top'},
         createShowOlderMessagesButton(ui)
     )
 }
 function createShowOlderMessagesButton(ui){
-    return dom$2.button({onclick(e){
+    return dom$4.button({onclick(e){
         e.stopPropagation();
         ui._queryOlder();
     }},'Show Older Messages')
@@ -240,12 +240,12 @@ div.chat>div.message::-webkit-scrollbar-thumb{
     }
 };
 
-let {dom: dom$4}=core;
+let {dom: dom$6}=core;
 function setupSettingsButton(ui){
-    ui._settingsButton=dom$4.button('Settings',{onclick(e){
+    ui._settingsButton=dom$6.button('Settings',{onclick(e){
         ui._push();
-        let bF=dom$4.createBF();
-        dom$4(ui.node,bF.node);
+        let bF=dom$6.createBF();
+        dom$6(ui.node,bF.node);
         bF.appendChild(createSettingsDiv(ui));
         bF.on('backClick',e=>{
             ui.node.removeChild(bF.node);
@@ -254,9 +254,9 @@ function setupSettingsButton(ui){
     }});
 }
 function createSettingsDiv(ui){
-    return dom$4.div(
+    return dom$6.div(
         n=>{
-            dom$4(n.style,{
+            dom$6(n.style,{
                 margin:'16px 24px',
                 width:'280px',
             });
@@ -269,9 +269,9 @@ function createSettingsDiv(ui){
     )
 }
 function notificationSound(ui){
-    return dom$4.p(
+    return dom$6.p(
         'Notification Sound: ',
-        dom$4.input({
+        dom$6.input({
             type:'range',
             max:1,
             step:0.01,
@@ -285,11 +285,11 @@ function notificationSound(ui){
 }
 function colorSchemeP(ui){
     let s=ui.getSetting('colorScheme');
-    return dom$4.p(
+    return dom$6.p(
         'Color Scheme: ',
-        dom$4.select(
+        dom$6.select(
             ...Object.keys(colorScheme).map(i=>
-                dom$4.option({value:i},colorScheme[i].name,n=>{
+                dom$6.option({value:i},colorScheme[i].name,n=>{
                     if(s==i)
                         n.selected=true;
                 })
@@ -301,9 +301,9 @@ function colorSchemeP(ui){
     )
 }
 function pressEnterToSendP(ui){
-    return dom$4.p(
-        dom$4.label(
-            dom$4.input({
+    return dom$6.p(
+        dom$6.label(
+            dom$6.input({
                 type:'checkbox',
                 checked:ui.getSetting('pressEnterToSend'),
                 onchange(e){
@@ -313,9 +313,9 @@ function pressEnterToSendP(ui){
     )
 }
 function showTexButton(ui){
-    return dom$4.p(
-        dom$4.label(
-            dom$4.input({
+    return dom$6.p(
+        dom$6.label(
+            dom$6.input({
                 type:'checkbox',
                 checked:ui.getSetting('showTexButton'),
                 onchange(e){
@@ -329,9 +329,9 @@ function showTexButton(ui){
     )
 }
 function showSendButton(ui){
-    return dom$4.p(
-        dom$4.label(
-            dom$4.input({
+    return dom$6.p(
+        dom$6.label(
+            dom$6.input({
                 type:'checkbox',
                 checked:ui.getSetting('showSendButton'),
                 onchange(e){
@@ -345,7 +345,7 @@ function showSendButton(ui){
     )
 }
 
-let {dom: dom$5}=core;
+let {dom: dom$7}=core;
 async function loadVim(){
     let module=await moduleLoader();
     return module.importByPath(`${
@@ -365,8 +365,8 @@ async function load$1(ui,textarea){
     }),viewDiv=createViewDiv(vim);
     vim.text=textarea.value;
     vim._cursor.moveTo(textarea.selectionStart);
-    dom$5.head(vim.style);
-    dom$5.body(viewDiv);
+    dom$7.head(vim.style);
+    dom$7.body(viewDiv);
     vim.polluteCopy;
     vim.focus();
     vim.on('quit',e=>{
@@ -387,12 +387,12 @@ async function load$1(ui,textarea){
 function createViewDiv(vim){
     vim.width=80;
     vim.height=24;
-    return dom$5.div(
+    return dom$7.div(
         vim.node,
         {onclick(){
             vim.focus();
         }},
-        n=>{dom$5(n.style,{
+        n=>{dom$7(n.style,{
             position:'fixed',
             left:'50%',
             top:'50%',
@@ -403,9 +403,9 @@ function createViewDiv(vim){
     )
 }
 
-let {arg: arg$1,dom: dom$3}=core;
+let {arg: arg$1,dom: dom$5}=core;
 function createTextarea(ui){
-    let textarea=dom$3.textarea({
+    let textarea=dom$5.textarea({
         rows:2,
         title:'Alt+V: Open the Web Vim editor.',
         oninput(e){
@@ -435,7 +435,7 @@ function createTextarea(ui){
     return textarea
 }
 function setupFileButton(ui){
-    ui._fileButton=dom$3.createFileButton('Image');
+    ui._fileButton=dom$5.createFileButton('Image');
     ui._fileButton.on('file',async a=>{
         ui._fileButton.n.disabled=true;
         let imageIds=await ui.imageUploader.uploadImages(a);
@@ -448,10 +448,10 @@ function setupFileButton(ui){
     });
 }
 function setupStatusNode(ui){
-    ui._statusNode=dom$3.span();
+    ui._statusNode=dom$5.span();
 }
 function createSendButton(ui){
-    return dom$3.button('Send',{onclick(){
+    return dom$5.button('Send',{onclick(){
         ui._send();
     }})
 }
@@ -460,7 +460,7 @@ function createBottom(ui){
     setupSettingsButton(ui);
     setupFindButton(ui);
     setupStatusNode(ui);
-    return dom$3.div(
+    return dom$5.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
         arg$1.h&&[ui._findButton,' '],
@@ -472,7 +472,7 @@ function createBottom(ui){
     )
 }
 function createTexButton(ui){
-    return dom$3.button('TeX',{
+    return dom$5.button('TeX',{
         title:`
 When you click this button, it places \`<span class=tex>' and \`</span>' around your selection in the input.
 `,
@@ -493,7 +493,7 @@ When you click this button, it places \`<span class=tex>' and \`</span>' around 
     })
 }
 function setupFindButton(ui){
-    ui._findButton=dom$3.button('Find');
+    ui._findButton=dom$5.button('Find');
 }
 
 function StyleManager(){
@@ -534,14 +534,14 @@ function loadSettings(){
     );
 }
 
-let {dom: dom$6}=core;
+let {dom: dom$8}=core;
 function createSingleMessageNode(ui,message){
     let
-        n=dom$6.p(),
+        n=dom$8.p(),
         p=(async()=>{
             let a=await(ui.users[message.fromUser]).finalA;
             let span=await createSpan(message);
-            dom$6(n,a,': ',span.span);
+            dom$8(n,a,': ',span.span);
             ui.syncInnerMessageDivScroll();
             await span.promise;
             ui.syncInnerMessageDivScroll();
@@ -549,7 +549,7 @@ function createSingleMessageNode(ui,message){
     return{n,p}
 }
 async function createSpan(message){
-    let span=dom$6.span(
+    let span=dom$8.span(
         {title:(new Date(message.timestamp)).toLocaleString()},
         await compile(message.message)
     );
@@ -581,14 +581,14 @@ async function uiAddMessages(messages,mode){
     this.syncInnerMessageDivScroll();
 }
 
-let {dom: dom$2$1}=core;
+let {dom: dom$2}=core;
 function Ui(currentUser,getSetting,setSetting){
     this._currentUser=currentUser;
     this._styleManager=new StyleManager;
     this.getSetting=getSetting;
     this.setSetting=setSetting;
     this.users={};
-    this.node=dom$2$1.div(
+    this.node=dom$2.div(
         {className:'chat'},
         this.messageDiv=createMessageDiv(this),
         this.bottomDiv=createBottom(this)
@@ -610,7 +610,7 @@ Ui.prototype._changeTextareaValue=function(v){
     this.updateTextareaHeight();
 };
 Ui.prototype._updatePreview=async function(){
-    dom$2$1(this._previewNode,
+    dom$2(this._previewNode,
         {innerHTML:''},
         await compile(this.textarea.value)
     );
@@ -911,13 +911,13 @@ body{
 }
 `;
 
-let {dom: dom$3$1,order}=core;
+let {dom: dom$9,order}=core;
 function createConversation(site,id){
     let
         user=site.getUser(id),
         tc=textContent(id);
     return{
-        n:dom$3$1.div(createLink(id)),
+        n:dom$9.div(createLink(id)),
         order:tc,
     }
     async function textContent(id){
@@ -926,7 +926,7 @@ function createConversation(site,id){
         return u.nickname||u.username
     }
     async function createLink(id){
-        return dom$3$1.a(async n=>{
+        return dom$9.a(async n=>{
             let u=await user;
             await u.load('username');
             n.href=`chat/${u.username}`;
@@ -936,7 +936,7 @@ function createConversation(site,id){
 }
 var showConversationList = async function(){
     document.title='Conversations - Chat';
-    let n=dom$3$1.div('Conversations:',{className:'conversationList'});
+    let n=dom$9.div('Conversations:',{className:'conversationList'});
     order.post(
         (await this._site.send('getConversations')).map(async id=>{
             let c=createConversation(this._site,id);
@@ -946,10 +946,10 @@ var showConversationList = async function(){
             }
         }),
         (a,b)=>n.insertBefore(a.n,b.n),
-        e=>dom$3$1(n,e.n),
+        e=>dom$9(n,e.n),
         (a,b)=>a.o.localeCompare(b.o)<0
     );
-    dom$3$1.body(n);
+    dom$9.body(n);
 };
 
 let {dom: dom$1,Site}=core;

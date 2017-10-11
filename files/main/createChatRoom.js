@@ -1,16 +1,15 @@
-import Chat from '../Chat.static.js'
+import Chat from '../Chat.js'
 import core from '/lib/core.static.js'
 let {ImageUploader}=core
-async function getTwoMenConversation(s,target){
-    let site=await s
+async function getTwoMenConversation(site,target){
     let id=await site.send({
         function:'getTwoMenConversation',
         target:(await target).id,
     })
     return id
 }
-export default async function(target,site){
-    site=await site
+export default async function(target){
+    let site=this._site
     let chatRoom=new Chat.Room(
         async d=>site.send(d),
         ()=>site.createSession(),

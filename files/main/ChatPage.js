@@ -2,10 +2,8 @@ import createChatRoom from './createChatRoom.js'
 import mainStyle from './style.js'
 import showConversationList from './showConversationList.js'
 import core from '/lib/core.static.js'
-let
-    {dom,Site}=core,
-    site=new Site
-function ChatPage(){
+let{dom}=core
+function ChatPage(site){
     this._site=site
     this.settings=localStorage.altheaChatSettings?
         JSON.parse(localStorage.altheaChatSettings)
@@ -27,17 +25,10 @@ ChatPage.prototype.playSound=function(settings){
 ChatPage.prototype.showConversationList=showConversationList
 ChatPage.prototype.showChatRoom=function(id){
     let
-        target=getUser(id),
-        chatRoom=createChatRoom.call(
-            this,
-            target,
-            site
-        )
+        target=this._site.getUser(id),
+        chatRoom=createChatRoom.call(this,target)
     notification.call(this,chatRoom,target)
     content.call(this,chatRoom)
-    async function getUser(id){
-        return site.getUser(id)
-    }
 }
 ChatPage.prototype.setSetting=function(k,v){
     this.settings[k]=v
@@ -101,4 +92,4 @@ async function content(chat){
     dom.body(ui.node)
     ui.focus()
 }
-export default new ChatPage
+export default ChatPage
