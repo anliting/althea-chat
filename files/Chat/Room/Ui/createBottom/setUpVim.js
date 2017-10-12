@@ -1,6 +1,5 @@
 import core from '/lib/core.static.js'
-import moduleLoader from 'https://cdn.rawgit.com/anliting/module/3d316feea7b5a428cf73252750ba79b4a1f4179f/src/esm/moduleLoader.js'
-let {dom}=core
+let{dom,moduleLoader}=core
 async function loadVim(){
     let module=await moduleLoader()
     return module.importByPath(`${

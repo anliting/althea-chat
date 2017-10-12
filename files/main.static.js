@@ -1,6 +1,5 @@
 import core from '/lib/core.static.js';
 import EventEmmiter from 'https://gitcdn.link/cdn/anliting/simple.js/99b7ab1b872bc2da746dd648dd0c078b3bc6961e/src/simple/EventEmmiter.js';
-import moduleLoader from 'https://cdn.rawgit.com/anliting/module/3d316feea7b5a428cf73252750ba79b4a1f4179f/src/esm/moduleLoader.js';
 
 let loadPromise;
 async function load(){
@@ -345,7 +344,7 @@ function showSendButton(ui){
     )
 }
 
-let {dom: dom$7}=core;
+let {dom: dom$7,moduleLoader}=core;
 async function loadVim(){
     let module=await moduleLoader();
     return module.importByPath(`${
