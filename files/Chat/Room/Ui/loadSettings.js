@@ -1,7 +1,7 @@
 function loadSettings(){
     this._changeButtonDisplay(
         '_bottomTexButton',
-        this.getSetting('showTexButton')
+        this._mode=='html'&&this.getSetting('showTexButton')
     )
     this._changeButtonDisplay(
         '_bottomSendButton',

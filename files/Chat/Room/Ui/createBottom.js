@@ -1,7 +1,7 @@
 import core from '/lib/core.static.js'
-let {arg,dom}=core
 import setupSettingsButton from './setupSettingsButton.js'
 import setUpVim from './createBottom/setUpVim.js'
+let{arg,dom}=core
 function createTextarea(ui){
     let textarea=dom.textarea({
         rows:2,
@@ -9,22 +9,22 @@ function createTextarea(ui){
         oninput(e){
             ui.updateTextareaHeight()
             ui._updatePreview()
-        }
+        },
+        onkeydown(e){
+            let pdsp=_=>{e.stopPropagation(),e.preventDefault()}
+            if(
+                ui.getSetting('pressEnterToSend')&&
+                !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
+            ){
+                pdsp()
+                return ui._send()
+            }
+            if(e.altKey&&e.key.toLowerCase()=='v'){
+                pdsp()
+                return setUpVim(ui,textarea)
+            }
+        },
     })
-    textarea.onkeydown=e=>{
-        let pdsp=_=>{e.stopPropagation(),e.preventDefault()}
-        if(
-            ui.getSetting('pressEnterToSend')&&
-            !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
-        ){
-            pdsp()
-            return ui._send()
-        }
-        if(e.altKey&&e.key.toLowerCase()=='v'){
-            pdsp()
-            return setUpVim(ui,textarea)
-        }
-    }
     ;(async()=>{
         let user=await ui._currentUser
         await user.load('nickname')
@@ -44,6 +44,7 @@ function setupFileButton(ui){
         ui.updateTextareaHeight()
         ui._fileButton.n.disabled=false
     })
+    ui._fileButton.n.style.display='none'
 }
 function setupStatusNode(ui){
     ui._statusNode=dom.span()
@@ -62,11 +63,23 @@ function createBottom(ui){
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
         arg.h&&[ui._findButton,' '],
+        ui._modeSelect=createModeSelect(ui),' ',
         ui._bottomTexButton=createTexButton(ui),' ',
         ui._fileButton.n,' ',
         ui._bottomSendButton=createSendButton(ui),' ',
         ui._settingsButton,' ',
         ui._statusNode
+    )
+}
+function createModeSelect(ui){
+    return dom.select(
+        {
+            onchange(){
+                ui._setMode(this.value)
+            },
+        },
+        dom.option({value:'plainText'},'Plain Text'),
+        dom.option({value:'html'},'HTML'),
     )
 }
 function createTexButton(ui){

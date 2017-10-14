@@ -1,5 +1,5 @@
 import core from '/lib/core.static.js'
-let {browser}=core
+let{browser}=core
 import EventEmmiter from 'https://gitcdn.link/cdn/anliting/simple.js/99b7ab1b872bc2da746dd648dd0c078b3bc6961e/src/simple/EventEmmiter.js'
 import ui from './Room/prototype.ui.js'
 import style from './Room/style.js'

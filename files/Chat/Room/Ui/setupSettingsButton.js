@@ -82,10 +82,10 @@ function showTexButton(ui){
                     ui.setSetting('showTexButton',this.checked)
                     ui._changeButtonDisplay(
                         '_bottomTexButton',
-                        this.checked
+                        ui._mode=='html'&&this.checked
                     )
                 }
-            }),' Show `TeX\' button.')
+            }),' Show `TeX\' button in HTML mode.')
     )
 }
 function showSendButton(ui){

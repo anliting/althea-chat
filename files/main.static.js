@@ -325,10 +325,10 @@ function showTexButton(ui){
                     ui.setSetting('showTexButton',this.checked);
                     ui._changeButtonDisplay(
                         '_bottomTexButton',
-                        this.checked
+                        ui._mode=='html'&&this.checked
                     );
                 }
-            }),' Show `TeX\' button.')
+            }),' Show `TeX\' button in HTML mode.')
     )
 }
 function showSendButton(ui){
@@ -414,23 +414,22 @@ function createTextarea(ui){
         oninput(e){
             ui.updateTextareaHeight();
             ui._updatePreview();
-        }
-    });
-    textarea.onkeydown=e=>{
-        let pdsp=_=>{e.stopPropagation(),e.preventDefault();};
-        if(
-            ui.getSetting('pressEnterToSend')&&
-            !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
-        ){
-            pdsp();
-            return ui._send()
-        }
-        if(e.altKey&&e.key.toLowerCase()=='v'){
-            pdsp();
-            return load$1(ui,textarea)
-        }
-    }
-    ;(async()=>{
+        },
+        onkeydown(e){
+            let pdsp=_=>{e.stopPropagation(),e.preventDefault();};
+            if(
+                ui.getSetting('pressEnterToSend')&&
+                !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
+            ){
+                pdsp();
+                return ui._send()
+            }
+            if(e.altKey&&e.key.toLowerCase()=='v'){
+                pdsp();
+                return load$1(ui,textarea)
+            }
+        },
+    });(async()=>{
         let user=await ui._currentUser;
         await user.load('nickname');
         textarea.placeholder=`${user.nickname}: `;
@@ -449,6 +448,7 @@ function setupFileButton(ui){
         ui.updateTextareaHeight();
         ui._fileButton.n.disabled=false;
     });
+    ui._fileButton.n.style.display='none';
 }
 function setupStatusNode(ui){
     ui._statusNode=dom$6.span();
@@ -467,11 +467,23 @@ function createBottom(ui){
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
         arg$1.h&&[ui._findButton,' '],
+        ui._modeSelect=createModeSelect(ui),' ',
         ui._bottomTexButton=createTexButton(ui),' ',
         ui._fileButton.n,' ',
         ui._bottomSendButton=createSendButton(ui),' ',
         ui._settingsButton,' ',
         ui._statusNode
+    )
+}
+function createModeSelect(ui){
+    return dom$6.select(
+        {
+            onchange(){
+                ui._setMode(this.value);
+            },
+        },
+        dom$6.option({value:'plainText'},'Plain Text'),
+        dom$6.option({value:'html'},'HTML'),
     )
 }
 function createTexButton(ui){
@@ -529,7 +541,7 @@ Object.defineProperty(StyleManager.prototype,'forEach',{set(forEach){
 function loadSettings(){
     this._changeButtonDisplay(
         '_bottomTexButton',
-        this.getSetting('showTexButton')
+        this._mode=='html'&&this.getSetting('showTexButton')
     );
     this._changeButtonDisplay(
         '_bottomSendButton',
@@ -584,10 +596,11 @@ async function uiAddMessages(messages,mode){
     this.syncInnerMessageDivScroll();
 }
 
-let {dom: dom$2}=core;
+let {dom: dom$2,html}=core;
 function Ui(currentUser,getSetting,setSetting){
     this._currentUser=currentUser;
     this._styleManager=new StyleManager;
+    this._mode='plainText';
     this.getSetting=getSetting;
     this.setSetting=setSetting;
     this.users={};
@@ -604,6 +617,15 @@ Ui.prototype._push=function(){
 Ui.prototype._pop=function(){
     this._settingsButton.disabled=false;
 };
+Ui.prototype._setMode=function(mode){
+    this._mode=mode;
+    this._updatePreview();
+    this._changeButtonDisplay(
+        '_bottomTexButton',
+        this._mode=='html'&&this.getSetting('showTexButton')
+    );
+    this._fileButton.n.style.display=this._mode=='html'?'':'none';
+};
 Ui.prototype._changeButtonDisplay=function(button,display){
     this[button].style.display=display?'':'none';
 };
@@ -615,14 +637,22 @@ Ui.prototype._changeTextareaValue=function(v){
 Ui.prototype._updatePreview=async function(){
     dom$2(this._previewNode,
         {innerHTML:''},
-        await compile(this.textarea.value)
+        await compile(this._mode=='html'?
+            this.textarea.value
+        :
+            html.encodeText(this.textarea.value)
+        )
     );
     this.syncInnerMessageDivScroll();
 };
 Ui.prototype._send=function(){
     if(this.textarea.value=='')
         return
-    this.sendMessage(this.textarea.value);
+    this.sendMessage(this._mode=='html'?
+        this.textarea.value
+    :
+        html.encodeText(this.textarea.value)
+    );
     this.textarea.value='';
     this._updatePreview();
 };

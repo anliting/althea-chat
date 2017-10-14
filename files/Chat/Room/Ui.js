@@ -1,15 +1,16 @@
-import core from '/lib/core.static.js'
-let {dom}=core
-import compile from './Ui/compile.js'
-import createMessage from './Ui/createMessage.js'
-import createBottom from './Ui/createBottom.js'
-import StyleManager from './Ui/StyleManager.js'
-import colorScheme from './Ui/colorScheme.js'
-import loadSettings from './Ui/loadSettings.js'
-import uiAddMessages from './Ui/uiAddMessages.js'
+import core from            '/lib/core.static.js'
+import compile from         './Ui/compile.js'
+import createMessage from   './Ui/createMessage.js'
+import createBottom from    './Ui/createBottom.js'
+import StyleManager from    './Ui/StyleManager.js'
+import colorScheme from     './Ui/colorScheme.js'
+import loadSettings from    './Ui/loadSettings.js'
+import uiAddMessages from   './Ui/uiAddMessages.js'
+let{dom,html}=core
 function Ui(currentUser,getSetting,setSetting){
     this._currentUser=currentUser
     this._styleManager=new StyleManager
+    this._mode='plainText'
     this.getSetting=getSetting
     this.setSetting=setSetting
     this.users={}
@@ -26,6 +27,15 @@ Ui.prototype._push=function(){
 Ui.prototype._pop=function(){
     this._settingsButton.disabled=false
 }
+Ui.prototype._setMode=function(mode){
+    this._mode=mode
+    this._updatePreview()
+    this._changeButtonDisplay(
+        '_bottomTexButton',
+        this._mode=='html'&&this.getSetting('showTexButton')
+    )
+    this._fileButton.n.style.display=this._mode=='html'?'':'none'
+}
 Ui.prototype._changeButtonDisplay=function(button,display){
     this[button].style.display=display?'':'none'
 }
@@ -37,14 +47,22 @@ Ui.prototype._changeTextareaValue=function(v){
 Ui.prototype._updatePreview=async function(){
     dom(this._previewNode,
         {innerHTML:''},
-        await compile(this.textarea.value)
+        await compile(this._mode=='html'?
+            this.textarea.value
+        :
+            html.encodeText(this.textarea.value)
+        )
     )
     this.syncInnerMessageDivScroll()
 }
 Ui.prototype._send=function(){
     if(this.textarea.value=='')
         return
-    this.sendMessage(this.textarea.value)
+    this.sendMessage(this._mode=='html'?
+        this.textarea.value
+    :
+        html.encodeText(this.textarea.value)
+    )
     this.textarea.value=''
     this._updatePreview()
 }

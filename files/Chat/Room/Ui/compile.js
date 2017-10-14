@@ -9,7 +9,7 @@
         proper way by the comparison of MathJax.
 */
 import core from '/lib/core.static.js'
-let {dom,uri}=core
+let{dom,uri}=core
 import loadKatex from './compile/loadKatex.js'
 let whitelist={
     a:{
