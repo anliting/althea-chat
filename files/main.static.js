@@ -216,7 +216,9 @@ let colorScheme={
             {
                 color:lightblue;
             }
-            div.chat button,div.chat select{
+            div.chat>.bottom>button,
+            div.chat>.bottom>select
+            {
                 background-color:black;
                 color:lightgray;
             }
