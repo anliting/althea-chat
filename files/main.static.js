@@ -332,17 +332,27 @@ function pressEnterToSendP(ui){
 function showTexButton(ui){
     return dom$7.p(
         dom$7.label(
-            dom$7.input({
-                type:'checkbox',
-                checked:ui.getSetting('showTexButton'),
-                onchange(e){
-                    ui.setSetting('showTexButton',this.checked);
-                    ui._changeButtonDisplay(
-                        '_bottomTexButton',
-                        ui._mode=='html'&&this.checked
-                    );
-                }
-            }),' Show `TeX\' button in HTML mode.')
+            dom$7.input(
+                {
+                    type:'checkbox',
+                    checked:ui.getSetting('showTexButton'),
+                    onchange(e){
+                        ui.setSetting('showTexButton',this.checked);
+                        ui._changeButtonDisplay(
+                            '_bottomTexButton',
+                            ui._mode=='html'&&this.checked
+                        );
+                    }
+                }),
+                ' Show `',
+                dom$7.span(
+                    n=>{n.style.fontFamily='serif';},
+                    'T',
+                    dom$7.span(n=>{n.style.verticalAlign='sub';},'E'),
+                    'X'
+                ),
+                '\' button in HTML mode.',
+            )
     )
 }
 function showSendButton(ui){
@@ -501,25 +511,33 @@ function createModeSelect(ui){
     )
 }
 function createTexButton(ui){
-    return dom$6.button('TeX',{
-        title:`
-When you click this button, it places \`<script type=tex>' and \`</script>' around your selection in the input.
-`,
-        onclick(e){
-            let
-                s=ui.textarea.value,
-                a=ui.textarea.selectionStart,
-                b=ui.textarea.selectionEnd,
-                stepForward='<script type=tex>'.length;
-            ui.textarea.value=`${s.substring(0,a)}<script type=tex>${
-                s.substring(a,b)
-            }</script>${s.substring(b)}`;
-            ui.textarea.selectionStart=a+stepForward;
-            ui.textarea.selectionEnd=b+stepForward;
-            ui.textarea.focus();
-            ui._updatePreview();
-        }
-    })
+    return dom$6.button(
+        {
+            title:`
+    When you click this button, it places \`<script type=tex>' and \`</script>' around your selection in the input.
+    `,
+            onclick(e){
+                let
+                    s=ui.textarea.value,
+                    a=ui.textarea.selectionStart,
+                    b=ui.textarea.selectionEnd,
+                    stepForward='<script type=tex>'.length;
+                ui.textarea.value=`${s.substring(0,a)}<script type=tex>${
+                    s.substring(a,b)
+                }</script>${s.substring(b)}`;
+                ui.textarea.selectionStart=a+stepForward;
+                ui.textarea.selectionEnd=b+stepForward;
+                ui.textarea.focus();
+                ui._updatePreview();
+            }
+        },
+        dom$6.span(
+            n=>{n.style.fontFamily='serif';},
+            'T',
+            dom$6.span(n=>{n.style.verticalAlign='sub';},'E'),
+            'X'
+        )
+    )
 }
 function setupFindButton(ui){
     ui._findButton=dom$6.button('Find');

@@ -83,25 +83,33 @@ function createModeSelect(ui){
     )
 }
 function createTexButton(ui){
-    return dom.button('TeX',{
-        title:`
-When you click this button, it places \`<script type=tex>' and \`</script>' around your selection in the input.
-`,
-        onclick(e){
-            let
-                s=ui.textarea.value,
-                a=ui.textarea.selectionStart,
-                b=ui.textarea.selectionEnd,
-                stepForward='<script type=tex>'.length
-            ui.textarea.value=`${s.substring(0,a)}<script type=tex>${
-                s.substring(a,b)
-            }</script>${s.substring(b)}`
-            ui.textarea.selectionStart=a+stepForward
-            ui.textarea.selectionEnd=b+stepForward
-            ui.textarea.focus()
-            ui._updatePreview()
-        }
-    })
+    return dom.button(
+        {
+            title:`
+    When you click this button, it places \`<script type=tex>' and \`</script>' around your selection in the input.
+    `,
+            onclick(e){
+                let
+                    s=ui.textarea.value,
+                    a=ui.textarea.selectionStart,
+                    b=ui.textarea.selectionEnd,
+                    stepForward='<script type=tex>'.length
+                ui.textarea.value=`${s.substring(0,a)}<script type=tex>${
+                    s.substring(a,b)
+                }</script>${s.substring(b)}`
+                ui.textarea.selectionStart=a+stepForward
+                ui.textarea.selectionEnd=b+stepForward
+                ui.textarea.focus()
+                ui._updatePreview()
+            }
+        },
+        dom.span(
+            n=>{n.style.fontFamily='serif'},
+            'T',
+            dom.span(n=>{n.style.verticalAlign='sub'},'E'),
+            'X'
+        )
+    )
 }
 function setupFindButton(ui){
     ui._findButton=dom.button('Find')

@@ -75,17 +75,27 @@ function pressEnterToSendP(ui){
 function showTexButton(ui){
     return dom.p(
         dom.label(
-            dom.input({
-                type:'checkbox',
-                checked:ui.getSetting('showTexButton'),
-                onchange(e){
-                    ui.setSetting('showTexButton',this.checked)
-                    ui._changeButtonDisplay(
-                        '_bottomTexButton',
-                        ui._mode=='html'&&this.checked
-                    )
-                }
-            }),' Show `TeX\' button in HTML mode.')
+            dom.input(
+                {
+                    type:'checkbox',
+                    checked:ui.getSetting('showTexButton'),
+                    onchange(e){
+                        ui.setSetting('showTexButton',this.checked)
+                        ui._changeButtonDisplay(
+                            '_bottomTexButton',
+                            ui._mode=='html'&&this.checked
+                        )
+                    }
+                }),
+                ' Show `',
+                dom.span(
+                    n=>{n.style.fontFamily='serif'},
+                    'T',
+                    dom.span(n=>{n.style.verticalAlign='sub'},'E'),
+                    'X'
+                ),
+                '\' button in HTML mode.',
+            )
     )
 }
 function showSendButton(ui){
