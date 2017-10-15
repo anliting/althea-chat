@@ -1,6 +1,6 @@
-import createChatRoom from './createChatRoom.js'
+import createChatRoom from './ChatPage/createChatRoom.js'
 import mainStyle from './style.js'
-import showConversationList from './showConversationList.js'
+import showConversationList from './ChatPage/showConversationList.js'
 import core from '/lib/core.static.js'
 let{dom}=core
 function ChatPage(site){

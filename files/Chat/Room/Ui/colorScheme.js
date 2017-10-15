@@ -1,5 +1,5 @@
 import core from '/lib/core.static.js'
-let {browser}=core
+let{browser}=core
 let colorScheme={
     'default':{
         name:'Default',
@@ -35,6 +35,7 @@ let colorScheme={
             {
                 color:lightblue;
             }
+            div.chat>.message>.top>button,
             div.chat>.bottom>button,
             div.chat>.bottom>select
             {
