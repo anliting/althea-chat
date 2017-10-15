@@ -9,8 +9,8 @@
         proper way by the comparison of MathJax.
 */
 import core from '/lib/core.static.js'
-let{dom,uri}=core
 import loadKatex from './compile/loadKatex.js'
+let{dom,uri}=core
 let whitelist={
     a:{
         href:/^https?:\/\//,
@@ -49,6 +49,9 @@ let whitelist={
         class:0,
         style:0,
     },
+    script:{
+        type:/^tex$/,
+    },
 }
 async function compile(s){
     let body=(new DOMParser).parseFromString(
@@ -62,15 +65,18 @@ async function traverse(m){
         if(!test(n))
             return m.removeChild(n)
         if(n.nodeType==1){
-            if(n.className=='tex'){
-                let s=n.textContent
-                n.textContent=''
+            if(n.nodeName.toLowerCase()=='script'&&n.type=='tex'){
                 await loadKatex()
+                let o=document.createElement('span')
                 try{
-                    katex.render(s,n)
+                    katex.render(n.textContent,o)
                 }catch(e){
-                    n.textContent=s
+                    o.style.fontFamily='monospace'
+                    o.title=e
+                    o.textContent=n.textContent
                 }
+                m.insertBefore(o,n)
+                m.removeChild(n)
             }else
                 traverse(n)
         }else if(n.nodeType==3){

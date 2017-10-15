@@ -81,6 +81,9 @@ let whitelist={
         class:0,
         style:0,
     },
+    script:{
+        type:/^tex$/,
+    },
 };
 async function compile(s){
     let body=(new DOMParser).parseFromString(
@@ -94,15 +97,18 @@ async function traverse(m){
         if(!test(n))
             return m.removeChild(n)
         if(n.nodeType==1){
-            if(n.className=='tex'){
-                let s=n.textContent;
-                n.textContent='';
+            if(n.nodeName.toLowerCase()=='script'&&n.type=='tex'){
                 await loadKatex();
+                let o=document.createElement('span');
                 try{
-                    katex.render(s,n);
+                    katex.render(n.textContent,o);
                 }catch(e){
-                    n.textContent=s;
+                    o.style.fontFamily='monospace';
+                    o.title=e;
+                    o.textContent=n.textContent;
                 }
+                m.insertBefore(o,n);
+                m.removeChild(n);
             }else
                 traverse(n);
         }else if(n.nodeType==3){
@@ -497,17 +503,17 @@ function createModeSelect(ui){
 function createTexButton(ui){
     return dom$6.button('TeX',{
         title:`
-When you click this button, it places \`<span class=tex>' and \`</span>' around your selection in the input.
+When you click this button, it places \`<script type=tex>' and \`</script>' around your selection in the input.
 `,
         onclick(e){
             let
                 s=ui.textarea.value,
                 a=ui.textarea.selectionStart,
                 b=ui.textarea.selectionEnd,
-                stepForward='<span class=tex>'.length;
-            ui.textarea.value=`${s.substring(0,a)}<span class=tex>${
+                stepForward='<script type=tex>'.length;
+            ui.textarea.value=`${s.substring(0,a)}<script type=tex>${
                 s.substring(a,b)
-            }</span>${s.substring(b)}`;
+            }</script>${s.substring(b)}`;
             ui.textarea.selectionStart=a+stepForward;
             ui.textarea.selectionEnd=b+stepForward;
             ui.textarea.focus();

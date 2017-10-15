@@ -85,17 +85,17 @@ function createModeSelect(ui){
 function createTexButton(ui){
     return dom.button('TeX',{
         title:`
-When you click this button, it places \`<span class=tex>' and \`</span>' around your selection in the input.
+When you click this button, it places \`<script type=tex>' and \`</script>' around your selection in the input.
 `,
         onclick(e){
             let
                 s=ui.textarea.value,
                 a=ui.textarea.selectionStart,
                 b=ui.textarea.selectionEnd,
-                stepForward='<span class=tex>'.length
-            ui.textarea.value=`${s.substring(0,a)}<span class=tex>${
+                stepForward='<script type=tex>'.length
+            ui.textarea.value=`${s.substring(0,a)}<script type=tex>${
                 s.substring(a,b)
-            }</span>${s.substring(b)}`
+            }</script>${s.substring(b)}`
             ui.textarea.selectionStart=a+stepForward
             ui.textarea.selectionEnd=b+stepForward
             ui.textarea.focus()
