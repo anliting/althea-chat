@@ -75,8 +75,7 @@ async function traverse(m){
                     o.title=e
                     o.textContent=n.textContent
                 }
-                m.insertBefore(o,n)
-                m.removeChild(n)
+                m.replaceChild(o,n)
             }else
                 traverse(n)
         }else if(n.nodeType==3){
