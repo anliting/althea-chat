@@ -1,22 +1,21 @@
-import core from '/lib/core.static.js';
+import { ImageUploader, Site, arg as arg$1, browser, dom, general, html, moduleLoader, order, uri } from '/lib/core.static.js';
 import EventEmmiter from 'https://gitcdn.link/cdn/anliting/simple.js/99b7ab1b872bc2da746dd648dd0c078b3bc6961e/src/simple/EventEmmiter.js';
 
-let {dom: dom$4}=core;
 let loadPromise;
 async function load(){
     let
         root='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3',
         styleSheetUrl=`${root}/katex.min.css`,
         scriptUrl=`${root}/katex.min.js`;
-    dom$4.head(
-        dom$4.link({
+    dom.head(
+        dom.link({
             rel:'stylesheet',
             href:styleSheetUrl,
         })
     );
     await new Promise(rs=>
-        dom$4.body(
-            dom$4.script({
+        dom.body(
+            dom.script({
                 src:scriptUrl,
                 onload(){
                     document.body.removeChild(this);
@@ -42,7 +41,6 @@ var loadKatex = ()=>{
         myself, and with KaTeX, I know how to solve the problem in a much
         proper way by the comparison of MathJax.
 */
-let {dom: dom$3,uri}=core;
 let whitelist={
     a:{
         href:/^https?:\/\//,
@@ -136,17 +134,16 @@ function test(n){
 }
 function*renderUrl(s){
     for(let m;m=uri.matchAbsoluteUri(s);){
-        yield dom$3.tn(s.substring(0,m.index));
+        yield dom.tn(s.substring(0,m.index));
         yield /^https?/.test(m[0])?
-            dom$3.a(decodeURI(m[0]),{href:m[0]})
+            dom.a(decodeURI(m[0]),{href:m[0]})
         :
-            dom$3.tn(m[0]);
+            dom.tn(m[0]);
         s=s.substring(m.index+m[0].length);
     }
-    yield dom$3.tn(s);
+    yield dom.tn(s);
 }
 
-let {dom: dom$5}=core;
 function createMessageDiv(ui){
     function syncDivScroll(){
         if(ui.atBottom)
@@ -157,7 +154,7 @@ function createMessageDiv(ui){
             div.scrollTop+div.clientHeight-div.scrollHeight
         )<=1;
     }
-    let div=dom$5.div(
+    let div=dom.div(
         {
             className:'message',
             onscroll:updateAtBottom,
@@ -166,26 +163,25 @@ function createMessageDiv(ui){
             },
         },
         ui._topDiv=createTopDiv(ui),
-        ui._previewNode=dom$5.div({className:'preview'})
+        ui._previewNode=dom.div({className:'preview'})
     );
     updateAtBottom();
     ui.syncInnerMessageDivScroll=syncDivScroll;
     return ui._innerMessageDiv=div
 }
 function createTopDiv(ui){
-    return dom$5.div(
+    return dom.div(
         {className:'top'},
         createShowOlderMessagesButton(ui)
     )
 }
 function createShowOlderMessagesButton(ui){
-    return dom$5.button({onclick(e){
+    return dom.button({onclick(e){
         e.stopPropagation();
         ui._queryOlder();
     }},'Show Older Messages')
 }
 
-let {browser: browser$1}=core;
 let colorScheme={
     'default':{
         name:'Default',
@@ -193,7 +189,7 @@ let colorScheme={
             div.chat>div.message>div.preview{
                 color:gray;
             }
-            ${!browser$1.isMobile?`
+            ${!browser.isMobile?`
             div.chat>div.message::-webkit-scrollbar{
                 width:12px;
             }
@@ -239,7 +235,7 @@ let colorScheme={
                 background-color:black;
                 color:lightgray;
             }
-            ${!browser$1.isMobile?`
+            ${!browser.isMobile?`
             div.chat>div.message::-webkit-scrollbar{
                 width:12px;
             }
@@ -256,12 +252,11 @@ let colorScheme={
     }
 };
 
-let {dom: dom$7}=core;
 function setupSettingsButton(ui){
-    ui._settingsButton=dom$7.button('Settings',{onclick(e){
+    ui._settingsButton=dom.button('Settings',{onclick(e){
         ui._push();
-        let bF=dom$7.createBF();
-        dom$7(ui.node,bF.node);
+        let bF=dom.createBF();
+        dom(ui.node,bF.node);
         bF.appendChild(createSettingsDiv(ui));
         bF.on('backClick',e=>{
             ui.node.removeChild(bF.node);
@@ -270,9 +265,9 @@ function setupSettingsButton(ui){
     }});
 }
 function createSettingsDiv(ui){
-    return dom$7.div(
+    return dom.div(
         n=>{
-            dom$7(n.style,{
+            dom(n.style,{
                 margin:'16px 24px',
                 width:'280px',
             });
@@ -285,9 +280,9 @@ function createSettingsDiv(ui){
     )
 }
 function notificationSound(ui){
-    return dom$7.p(
+    return dom.p(
         'Notification Sound: ',
-        dom$7.input({
+        dom.input({
             type:'range',
             max:1,
             step:0.01,
@@ -301,11 +296,11 @@ function notificationSound(ui){
 }
 function colorSchemeP(ui){
     let s=ui.getSetting('colorScheme');
-    return dom$7.p(
+    return dom.p(
         'Color Scheme: ',
-        dom$7.select(
+        dom.select(
             ...Object.keys(colorScheme).map(i=>
-                dom$7.option({value:i},colorScheme[i].name,n=>{
+                dom.option({value:i},colorScheme[i].name,n=>{
                     if(s==i)
                         n.selected=true;
                 })
@@ -317,9 +312,9 @@ function colorSchemeP(ui){
     )
 }
 function pressEnterToSendP(ui){
-    return dom$7.p(
-        dom$7.label(
-            dom$7.input({
+    return dom.p(
+        dom.label(
+            dom.input({
                 type:'checkbox',
                 checked:ui.getSetting('pressEnterToSend'),
                 onchange(e){
@@ -329,9 +324,9 @@ function pressEnterToSendP(ui){
     )
 }
 function showTexButton(ui){
-    return dom$7.p(
-        dom$7.label(
-            dom$7.input(
+    return dom.p(
+        dom.label(
+            dom.input(
                 {
                     type:'checkbox',
                     checked:ui.getSetting('showTexButton'),
@@ -344,10 +339,10 @@ function showTexButton(ui){
                     }
                 }),
                 ' Show `',
-                dom$7.span(
+                dom.span(
                     n=>{n.style.fontFamily='serif';},
                     'T',
-                    dom$7.span(n=>{n.style.verticalAlign='sub';},'E'),
+                    dom.span(n=>{n.style.verticalAlign='sub';},'E'),
                     'X'
                 ),
                 '\' button in HTML mode.',
@@ -355,9 +350,9 @@ function showTexButton(ui){
     )
 }
 function showSendButton(ui){
-    return dom$7.p(
-        dom$7.label(
-            dom$7.input({
+    return dom.p(
+        dom.label(
+            dom.input({
                 type:'checkbox',
                 checked:ui.getSetting('showSendButton'),
                 onchange(e){
@@ -371,7 +366,6 @@ function showSendButton(ui){
     )
 }
 
-let {dom: dom$8,moduleLoader}=core;
 async function loadVim(){
     let module=await moduleLoader();
     return module.importByPath(`${
@@ -391,8 +385,8 @@ async function load$1(ui,textarea){
     }),viewDiv=createViewDiv(vim);
     vim.text=textarea.value;
     vim._cursor.moveTo(textarea.selectionStart);
-    dom$8.head(vim.style);
-    dom$8.body(viewDiv);
+    dom.head(vim.style);
+    dom.body(viewDiv);
     vim.polluteCopy;
     vim.focus();
     vim.on('quit',e=>{
@@ -413,12 +407,12 @@ async function load$1(ui,textarea){
 function createViewDiv(vim){
     vim.width=80;
     vim.height=24;
-    return dom$8.div(
+    return dom.div(
         vim.node,
         {onclick(){
             vim.focus();
         }},
-        n=>{dom$8(n.style,{
+        n=>{dom(n.style,{
             position:'fixed',
             left:'50%',
             top:'50%',
@@ -429,9 +423,8 @@ function createViewDiv(vim){
     )
 }
 
-let {arg: arg$1,dom: dom$6}=core;
 function createTextarea(ui){
-    let textarea=dom$6.textarea({
+    let textarea=dom.textarea({
         rows:2,
         title:'Alt+V: Open the Web Vim editor.',
         oninput(e){
@@ -460,7 +453,7 @@ function createTextarea(ui){
     return textarea
 }
 function setupFileButton(ui){
-    ui._fileButton=dom$6.createFileButton('Image');
+    ui._fileButton=dom.createFileButton('Image');
     ui._fileButton.on('file',async a=>{
         ui._fileButton.n.disabled=true;
         let imageIds=await ui.imageUploader.uploadImages(a);
@@ -474,10 +467,10 @@ function setupFileButton(ui){
     ui._fileButton.n.style.display='none';
 }
 function setupStatusNode(ui){
-    ui._statusNode=dom$6.span();
+    ui._statusNode=dom.span();
 }
 function createSendButton(ui){
-    return dom$6.button('Send',{onclick(){
+    return dom.button('Send',{onclick(){
         ui._send();
     }})
 }
@@ -486,7 +479,7 @@ function createBottom(ui){
     setupSettingsButton(ui);
     setupFindButton(ui);
     setupStatusNode(ui);
-    return dom$6.div(
+    return dom.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
         arg$1.h&&[ui._findButton,' '],
@@ -499,18 +492,18 @@ function createBottom(ui){
     )
 }
 function createModeSelect(ui){
-    return dom$6.select(
+    return dom.select(
         {
             onchange(){
                 ui._setMode(this.value);
             },
         },
-        dom$6.option({value:'plainText'},'Plain Text'),
-        dom$6.option({value:'html'},'HTML'),
+        dom.option({value:'plainText'},'Plain Text'),
+        dom.option({value:'html'},'HTML'),
     )
 }
 function createTexButton(ui){
-    return dom$6.button(
+    return dom.button(
         {
             title:`
     When you click this button, it places \`<script type=tex>' and \`</script>' around your selection in the input.
@@ -530,16 +523,16 @@ function createTexButton(ui){
                 ui._updatePreview();
             }
         },
-        dom$6.span(
+        dom.span(
             n=>{n.style.fontFamily='serif';},
             'T',
-            dom$6.span(n=>{n.style.verticalAlign='sub';},'E'),
+            dom.span(n=>{n.style.verticalAlign='sub';},'E'),
             'X'
         )
     )
 }
 function setupFindButton(ui){
-    ui._findButton=dom$6.button('Find');
+    ui._findButton=dom.button('Find');
 }
 
 function StyleManager(){
@@ -580,14 +573,13 @@ function loadSettings(){
     );
 }
 
-let {dom: dom$9}=core;
 function createSingleMessageNode(ui,message){
     let
-        n=dom$9.p(),
+        n=dom.p(),
         p=(async()=>{
             let a=await(ui.users[message.fromUser]).finalA;
             let span=await createSpan(message);
-            dom$9(n,a,': ',span.span);
+            dom(n,a,': ',span.span);
             ui.syncInnerMessageDivScroll();
             await span.promise;
             ui.syncInnerMessageDivScroll();
@@ -595,7 +587,7 @@ function createSingleMessageNode(ui,message){
     return{n,p}
 }
 async function createSpan(message){
-    let span=dom$9.span(
+    let span=dom.span(
         {title:(new Date(message.timestamp)).toLocaleString()},
         await compile(message.message)
     );
@@ -627,7 +619,6 @@ async function uiAddMessages(messages,mode){
     this.syncInnerMessageDivScroll();
 }
 
-let {dom: dom$2,html}=core;
 function Ui(currentUser,getSetting,setSetting){
     this._currentUser=currentUser;
     this._styleManager=new StyleManager;
@@ -635,7 +626,7 @@ function Ui(currentUser,getSetting,setSetting){
     this.getSetting=getSetting;
     this.setSetting=setSetting;
     this.users={};
-    this.node=dom$2.div(
+    this.node=dom.div(
         {className:'chat'},
         this.messageDiv=createMessageDiv(this),
         this.bottomDiv=createBottom(this)
@@ -666,7 +657,7 @@ Ui.prototype._changeTextareaValue=function(v){
     this.updateTextareaHeight();
 };
 Ui.prototype._updatePreview=async function(){
-    dom$2(this._previewNode,
+    dom(this._previewNode,
         {innerHTML:''},
         await compile(this._mode=='html'?
             this.textarea.value
@@ -808,7 +799,6 @@ var mobileStyle = ``;
 
 var desktopStyle = ``;
 
-let {browser}=core;
 let deviceSpecificStyle=browser.isMobile?mobileStyle:desktopStyle;
 let blockSize=16;
 function Room(
@@ -914,7 +904,6 @@ var Chat = {
     Room
 };
 
-let {ImageUploader}=core;
 async function getTwoMenConversation(site,target){
     let id=await site.send({
         function:'getTwoMenConversation',
@@ -974,13 +963,12 @@ body{
 }
 `;
 
-let {dom: dom$10,order}=core;
 function createConversation(site,id){
     let
         user=site.getUser(id),
         tc=textContent(id);
     return{
-        n:dom$10.div(createLink(id)),
+        n:dom.div(createLink(id)),
         order:tc,
     }
     async function textContent(id){
@@ -989,7 +977,7 @@ function createConversation(site,id){
         return u.nickname||u.username
     }
     async function createLink(id){
-        return dom$10.a(async n=>{
+        return dom.a(async n=>{
             let u=await user;
             await u.load('username');
             n.href=`chat/${u.username}`;
@@ -999,7 +987,7 @@ function createConversation(site,id){
 }
 var showConversationList = async function(){
     document.title='Conversations - Chat';
-    let n=dom$10.div('Conversations:',{className:'conversationList'});
+    let n=dom.div('Conversations:',{className:'conversationList'});
     order.post(
         (await this._site.send('getConversations')).map(async id=>{
             let c=createConversation(this._site,id);
@@ -1009,26 +997,25 @@ var showConversationList = async function(){
             }
         }),
         (a,b)=>n.insertBefore(a.n,b.n),
-        e=>dom$10(n,e.n),
+        e=>dom(n,e.n),
         (a,b)=>a.o.localeCompare(b.o)<0
     );
-    dom$10.body(n);
+    dom.body(n);
 };
 
-let {dom: dom$1}=core;
 function ChatPage(site){
     this._site=site;
     this.settings=localStorage.altheaChatSettings?
         JSON.parse(localStorage.altheaChatSettings)
     :
         {notificationSound:0};
-    dom$1.head(
-        this.style=dom$1.style(mainStyle),
-        this.themeColor=dom$1.meta({name:'theme-color'})
+    dom.head(
+        this.style=dom.style(mainStyle),
+        this.themeColor=dom.meta({name:'theme-color'})
     );
 }
 ChatPage.prototype.playSound=function(settings){
-    dom$1.body(dom$1.audio({
+    dom.body(dom.audio({
         autoplay:true,
         src:'plugins/althea-chat/main/notification-a.mp3',
         onended(e){document.body.removeChild(this);},
@@ -1090,10 +1077,10 @@ async function notification(chat,target){
 async function content(chat){
     chat=await chat;
     let ui=chat.ui;
-    dom$1(this.style,await chat.style);
+    dom(this.style,await chat.style);
     ui.style=s=>{
-        let n=dom$1.tn(s.content);
-        dom$1(this.style,n);
+        let n=dom.tn(s.content);
+        dom(this.style,n);
         let color={
             default:'',
             gnulinux:'black',
@@ -1102,11 +1089,10 @@ async function content(chat){
         document.body.style.backgroundColor=color;
         return()=>this.style.removeChild(n)
     };
-    dom$1.body(ui.node);
+    dom.body(ui.node);
     ui.focus();
 }
 
-let {Site,dom,general}=core;
 let chatPage=new ChatPage(new Site);
 dom.head(
     dom.link({rel:'icon',href:'plugins/althea-chat/icon.png'})

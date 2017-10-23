@@ -1,5 +1,4 @@
-import core from '/lib/core.static.js'
-let{dom,moduleLoader}=core
+import{dom,moduleLoader}from '/lib/core.static.js'
 async function loadVim(){
     let module=await moduleLoader()
     return module.importByPath(`${

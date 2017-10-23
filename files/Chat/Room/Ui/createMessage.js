@@ -1,5 +1,4 @@
-import core from '/lib/core.static.js'
-let {dom}=core
+import {dom}from '/lib/core.static.js'
 function createMessageDiv(ui){
     function syncDivScroll(){
         if(ui.atBottom)

@@ -1,4 +1,4 @@
-import core from            '/lib/core.static.js'
+import {dom,html}from       '/lib/core.static.js'
 import compile from         './Ui/compile.js'
 import createMessage from   './Ui/createMessage.js'
 import createBottom from    './Ui/createBottom.js'
@@ -6,7 +6,6 @@ import StyleManager from    './Ui/StyleManager.js'
 import colorScheme from     './Ui/colorScheme.js'
 import loadSettings from    './Ui/loadSettings.js'
 import uiAddMessages from   './Ui/uiAddMessages.js'
-let{dom,html}=core
 function Ui(currentUser,getSetting,setSetting){
     this._currentUser=currentUser
     this._styleManager=new StyleManager

@@ -1,6 +1,5 @@
 import Chat from '../../Chat.js'
-import core from '/lib/core.static.js'
-let{ImageUploader}=core
+import {ImageUploader}from '/lib/core.static.js'
 async function getTwoMenConversation(site,target){
     let id=await site.send({
         function:'getTwoMenConversation',

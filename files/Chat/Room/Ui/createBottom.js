@@ -1,7 +1,6 @@
-import core from '/lib/core.static.js'
+import {arg,dom}from '/lib/core.static.js'
 import setupSettingsButton from './setupSettingsButton.js'
 import setUpVim from './createBottom/setUpVim.js'
-let{arg,dom}=core
 function createTextarea(ui){
     let textarea=dom.textarea({
         rows:2,

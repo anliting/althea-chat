@@ -1,8 +1,7 @@
 import createChatRoom from './ChatPage/createChatRoom.js'
 import mainStyle from './style.js'
 import showConversationList from './ChatPage/showConversationList.js'
-import core from '/lib/core.static.js'
-let{dom}=core
+import {dom}from '/lib/core.static.js'
 function ChatPage(site){
     this._site=site
     this.settings=localStorage.altheaChatSettings?

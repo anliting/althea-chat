@@ -1,6 +1,5 @@
 import compile from '../compile.js'
-import core from '/lib/core.static.js'
-let{dom}=core
+import{dom}from '/lib/core.static.js'
 function createSingleMessageNode(ui,message){
     let
         n=dom.p(),

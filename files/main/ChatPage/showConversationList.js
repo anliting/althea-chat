@@ -1,5 +1,4 @@
-import core from '/lib/core.static.js'
-let{dom,order}=core
+import {dom,order}from '/lib/core.static.js'
 function createConversation(site,id){
     let
         user=site.getUser(id),
