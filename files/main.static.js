@@ -1017,7 +1017,7 @@ function ChatPage(site){
 ChatPage.prototype.playSound=function(settings){
     dom.body(dom.audio({
         autoplay:true,
-        src:'plugins/althea-chat/main/notification-a.mp3',
+        src:'plugins/chat/main/notification-a.mp3',
         onended(e){document.body.removeChild(this);},
         volume:this.settings.notificationSound,
     }));
@@ -1095,7 +1095,7 @@ async function content(chat){
 
 let chatPage=new ChatPage(new Site);
 dom.head(
-    dom.link({rel:'icon',href:'plugins/althea-chat/icon.png'})
+    dom.link({rel:'icon',href:'plugins/chat/icon.png'})
 );
 general();
 arg.userId==undefined?
