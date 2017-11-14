@@ -1,8 +1,8 @@
-import { ImageUploader, Site, arg as arg$1, browser, dom, general, html, moduleLoader, order, uri } from '/lib/core.static.js';
+import { ImageUploader, Site, arg as arg$1, browser, dom, general, html, load, order, uri } from '/lib/core.static.js';
 import EventEmmiter from 'https://gitcdn.link/cdn/anliting/simple.js/99b7ab1b872bc2da746dd648dd0c078b3bc6961e/src/simple/EventEmmiter.js';
 
 let loadPromise;
-async function load(){
+async function load$1(){
     let
         root='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3',
         styleSheetUrl=`${root}/katex.min.css`,
@@ -27,7 +27,7 @@ async function load(){
 }
 var loadKatex = ()=>{
     if(!loadPromise)
-        loadPromise=load();
+        loadPromise=load$1();
     return loadPromise
 };
 
@@ -367,14 +367,14 @@ function showSendButton(ui){
 }
 
 async function loadVim(){
-    let module=await moduleLoader();
+    let module=await load.module();
     return module.importByPath(`${
         'https://gitcdn.link/cdn/anliting/webvim'
     }/${
         '585df5a6d6daa30dc78af958804f658c163dfe59'
     }/src/Vim.static.js`,{mode:1})
 }
-async function load$1(ui,textarea){
+async function load$2(ui,textarea){
     if(typeof loadVim=='function')
         loadVim=loadVim();
     textarea.disabled=true;
@@ -442,7 +442,7 @@ function createTextarea(ui){
             }
             if(e.altKey&&e.key.toLowerCase()=='v'){
                 pdsp();
-                return load$1(ui,textarea)
+                return load$2(ui,textarea)
             }
         },
     });(async()=>{

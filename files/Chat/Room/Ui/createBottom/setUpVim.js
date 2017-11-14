@@ -1,6 +1,6 @@
-import{dom,moduleLoader}from '/lib/core.static.js'
+import{dom,load as coreLoad}from '/lib/core.static.js'
 async function loadVim(){
-    let module=await moduleLoader()
+    let module=await coreLoad.module()
     return module.importByPath(`${
         'https://gitcdn.link/cdn/anliting/webvim'
     }/${
