@@ -1,20 +1,20 @@
-import {browser}from '/lib/core.static.js'
+import{browser}from'/lib/core.static.js'
 let colorScheme={
     'default':{
         name:'Default',
         style:`
-            div.chat>div.message>div.preview{
+            .chat>.message>.preview{
                 color:gray;
             }
             ${!browser.isMobile?`
-            div.chat>div.message::-webkit-scrollbar{
+            .chat>.message::-webkit-scrollbar{
                 width:12px;
             }
-            div.chat>div.message::-webkit-scrollbar-track{
+            .chat>.message::-webkit-scrollbar-track{
                 border-radius:6px;
                 background:#DDD;
             }
-            div.chat>div.message::-webkit-scrollbar-thumb{
+            .chat>.message::-webkit-scrollbar-thumb{
                 border-radius:6px;
                 background:#BBB;
             }
@@ -24,43 +24,43 @@ let colorScheme={
     'gnulinux':{
         name:'GNU/Linux',
         style:`
-            div.chat>div.message>div.preview{
+            .chat>.message>.preview{
                 color:dimgray;
             }
-            div.chat a:active,
-            div.chat a:link,
-            div.chat a:hover,
-            div.chat a:visited
+            .chat a:active,
+            .chat a:link,
+            .chat a:hover,
+            .chat a:visited
             {
                 color:lightblue;
             }
-            div.chat>.message>.top>button,
-            div.chat>.bottom>button,
-            div.chat>.bottom>select
+            .chat>.message>.top>button,
+            .chat>.bottom>button,
+            .chat>.bottom>select
             {
                 background-color:black;
                 color:lightgray;
             }
-            div.chat>div.message{
+            .chat>.message{
                 background-color:black;
                 color:lightgray;
             }
-            div.chat>div.message a.user{
+            .chat>.message a.user{
                 color:lightgray;
             }
-            div.chat>div.bottom textarea{
+            .chat>.bottom textarea{
                 background-color:black;
                 color:lightgray;
             }
             ${!browser.isMobile?`
-            div.chat>div.message::-webkit-scrollbar{
+            .chat>.message::-webkit-scrollbar{
                 width:12px;
             }
-            div.chat>div.message::-webkit-scrollbar-track{
+            .chat>.message::-webkit-scrollbar-track{
                 border-radius:6px;
                 background:#222;
             }
-            div.chat>div.message::-webkit-scrollbar-thumb{
+            .chat>.message::-webkit-scrollbar-thumb{
                 border-radius:6px;
                 background:#444;
             }

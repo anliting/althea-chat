@@ -1,13 +1,13 @@
 export default`
-div.chat{
+.chat{
     display:flex;
     flex-direction:column;
 }
-div.chat>div.message{
+.chat>.message{
     margin-bottom:8px;
     flex:1;
 }
-div.chat>div.message{
+.chat>.message{
     padding-right:8px;
     overflow-y:scroll;
     overflow-wrap:break-word;
@@ -21,17 +21,17 @@ div.chat>div.message{
     /*word-break:break-all;*/
     /*text-align:justify;*/
 }
-div.chat>div.message>div.top{
-    text-align:center;
-}
-div.chat>div.message a.user{
+.chat>.message a.user{
     color:black;
     text-decoration:none;
 }
-div.chat>div.message img{
+.chat>.message img{
     max-width:60%;
 }
-div.chat>div.bottom>textarea{
+.chat>.message>.top{
+    text-align:center;
+}
+.chat>.bottom>textarea{
     width:calc(100% - 6px);
     resize:none;
 }
