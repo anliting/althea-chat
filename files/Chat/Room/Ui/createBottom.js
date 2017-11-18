@@ -61,13 +61,14 @@ function createBottom(ui){
     return dom.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
+        dom.a({href:'/chat'},'Conversations'),' ',
         arg.h&&[ui._findButton,' '],
         ui._modeSelect=createModeSelect(ui),' ',
         ui._bottomTexButton=createTexButton(ui),' ',
         ui._fileButton.n,' ',
         ui._bottomSendButton=createSendButton(ui),' ',
         ui._settingsButton,' ',
-        ui._statusNode
+        ui._statusNode,
     )
 }
 function createModeSelect(ui){

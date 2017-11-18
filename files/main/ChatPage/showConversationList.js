@@ -1,4 +1,4 @@
-import {dom,order}from '/lib/core.static.js'
+import{dom,order}from '/lib/core.static.js'
 function createConversation(site,id){
     let
         user=site.getUser(id),
@@ -21,20 +21,24 @@ function createConversation(site,id){
         })
     }
 }
-export default async function(){
+export default function(){
     document.title='Conversations - Chat'
-    let n=dom.div('Conversations:',{className:'conversationList'})
-    order.post(
-        (await this._site.send('getConversations')).map(async id=>{
-            let c=createConversation(this._site,id)
-            return{
-                n:c.n,
-                o:await c.order
-            }
-        }),
-        (a,b)=>n.insertBefore(a.n,b.n),
-        e=>dom(n,e.n),
-        (a,b)=>a.o.localeCompare(b.o)<0
-    )
-    dom.body(n)
+    dom.body(dom.div(
+        {className:'conversationList'},
+        'Conversations:',
+        async n=>{
+            order.post(
+                (await this._site.send('getConversations')).map(async id=>{
+                    let c=createConversation(this._site,id)
+                    return{
+                        n:c.n,
+                        o:await c.order
+                    }
+                }),
+                (a,b)=>n.insertBefore(a.n,b.n),
+                e=>dom(n,e.n),
+                (a,b)=>a.o.localeCompare(b.o)<0
+            )
+        }
+    ))
 }

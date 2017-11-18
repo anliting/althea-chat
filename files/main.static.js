@@ -387,7 +387,6 @@ async function load$2(ui,textarea){
     vim._cursor.moveTo(textarea.selectionStart);
     dom.head(vim.style);
     dom.body(viewDiv);
-    vim.polluteCopy;
     vim.focus();
     vim.on('quit',e=>{
         document.head.removeChild(vim.style);
@@ -432,7 +431,7 @@ function createTextarea(ui){
             ui._updatePreview();
         },
         onkeydown(e){
-            let pdsp=_=>{e.stopPropagation(),e.preventDefault();};
+            let pdsp=_=>{e.stopPropagation(), e.preventDefault();};
             if(
                 ui.getSetting('pressEnterToSend')&&
                 !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
@@ -482,13 +481,14 @@ function createBottom(ui){
     return dom.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
+        dom.a({href:'/chat'},'Conversations'),' ',
         arg$1.h&&[ui._findButton,' '],
         ui._modeSelect=createModeSelect(ui),' ',
         ui._bottomTexButton=createTexButton(ui),' ',
         ui._fileButton.n,' ',
         ui._bottomSendButton=createSendButton(ui),' ',
         ui._settingsButton,' ',
-        ui._statusNode
+        ui._statusNode,
     )
 }
 function createModeSelect(ui){
@@ -985,22 +985,26 @@ function createConversation(site,id){
         })
     }
 }
-var showConversationList = async function(){
+var showConversationList = function(){
     document.title='Conversations - Chat';
-    let n=dom.div('Conversations:',{className:'conversationList'});
-    order.post(
-        (await this._site.send('getConversations')).map(async id=>{
-            let c=createConversation(this._site,id);
-            return{
-                n:c.n,
-                o:await c.order
-            }
-        }),
-        (a,b)=>n.insertBefore(a.n,b.n),
-        e=>dom(n,e.n),
-        (a,b)=>a.o.localeCompare(b.o)<0
-    );
-    dom.body(n);
+    dom.body(dom.div(
+        {className:'conversationList'},
+        'Conversations:',
+        async n=>{
+            order.post(
+                (await this._site.send('getConversations')).map(async id=>{
+                    let c=createConversation(this._site,id);
+                    return{
+                        n:c.n,
+                        o:await c.order
+                    }
+                }),
+                (a,b)=>n.insertBefore(a.n,b.n),
+                e=>dom(n,e.n),
+                (a,b)=>a.o.localeCompare(b.o)<0
+            );
+        }
+    ));
 };
 
 function ChatPage(site){
