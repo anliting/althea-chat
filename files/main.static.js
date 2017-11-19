@@ -1,6 +1,35 @@
 import { ImageUploader, Site, arg as arg$1, browser, dom, general, html, load, order, uri } from '/lib/core.static.js';
 import EventEmmiter from 'https://gitcdn.link/cdn/anliting/simple.js/eae977ecf2a856ecb072259aa63b003d186ba618/src/simple/EventEmmiter.js';
 
+var mainStyle = `
+html{
+    height:100%;
+}
+body{
+    height:calc(100% - 16px);
+}
+a:active,a:link,a:hover,a:visited{
+    color:blue;
+}
+.chat{
+    height:100%;
+    max-width:600px;
+    margin:0 auto;
+}
+.conversationList{
+    height:100%;
+    max-width:600px;
+    margin:0 auto;
+}
+/*
+    I don't know why the KaTeX makes the scroll bar appear; but this fixes
+    it on desktop version; and the mobile version does still.
+*/
+body{
+    overflow-y:hidden;
+}
+`;
+
 let loadPromise;
 async function load$1(){
     let
@@ -922,8 +951,8 @@ var createChatRoom = async function(target){
         site.currentUser,
         target
     );
-    chatRoom.getSetting=k=>this.settings[k];
-    chatRoom.setSetting=(k,v)=>this.setSetting(k,v);
+    chatRoom.getSetting=k=>this._settings[k];
+    chatRoom.setSetting=(k,v)=>this._setSetting(k,v);
     chatRoom.playNotificationSound=()=>this.playSound();
     update();
     addEventListener('offline',update);
@@ -934,34 +963,71 @@ var createChatRoom = async function(target){
     }
 };
 
-var mainStyle = `
-html{
-    height:100%;
+function showChatRoom(id){
+    let
+        target=this._site.getUser(id),
+        chatRoom=createChatRoom.call(this,target);
+    notification.call(this,chatRoom,target);
+    content.call(this,chatRoom);
 }
-body{
-    height:calc(100% - 16px);
+async function notification(chat,target){
+    await Promise.all([
+        (async()=>{
+            chat=await chat;
+        })(),
+        (async()=>{
+            target=await target;
+            await target.load('nickname');
+        })(),
+    ]);
+    let
+        tabIsFocused=true,
+        notification=0,
+        unread=0;
+    updateTitle();
+    setInterval(updateTitle,1000);
+    chat.on('append',()=>{
+        if(tabIsFocused)
+            return
+        if(unread==0)
+            notification=1;
+        unread++;
+        this._playSound();
+    });
+    addEventListener('focusin',e=>{
+        tabIsFocused=true;
+        unread=0;
+    });
+    addEventListener('focusout',e=>{
+        tabIsFocused=false;
+    });
+    function updateTitle(){
+        let notiPart=unread==0?'':`${'◯⬤'[notification]} (${unread}) `;
+        lazyChangeTitle(`${notiPart}${target.nickname}`);
+        notification=1-notification;
+    }
+    function lazyChangeTitle(s){
+        document.title==s||(document.title=s);
+    }
 }
-a:active,a:link,a:hover,a:visited{
-    color:blue;
+async function content(chat){
+    chat=await chat;
+    let ui=chat.ui;
+    dom(this.style,await chat.style);
+    ui.style=s=>{
+        let n=dom.tn(s.content);
+        dom(this.style,n);
+        let color={
+            default:'',
+            gnulinux:'black',
+        }[s.id];
+        this.themeColor.content=color;
+        document.body.style.backgroundColor=color;
+        return()=>this.style.removeChild(n)
+    };
+    dom.body(ui.node);
+    ui.focus();
 }
-.chat{
-    height:100%;
-    max-width:600px;
-    margin:0 auto;
-}
-.conversationList{
-    height:100%;
-    max-width:600px;
-    margin:0 auto;
-}
-/*
-    I don't know why the KaTeX makes the scroll bar appear; but this fixes
-    it on desktop version; and the mobile version does still.
-*/
-body{
-    overflow-y:hidden;
-}
-`;
 
 function createConversation(site,id){
     let
@@ -1009,7 +1075,7 @@ var showConversationList = function(){
 
 function ChatPage(site){
     this._site=site;
-    this.settings=localStorage.altheaChatSettings?
+    this._settings=localStorage.altheaChatSettings?
         JSON.parse(localStorage.altheaChatSettings)
     :
         {notificationSound:0};
@@ -1018,90 +1084,26 @@ function ChatPage(site){
         this.themeColor=dom.meta({name:'theme-color'})
     );
 }
-ChatPage.prototype.playSound=function(settings){
+ChatPage.prototype._playSound=function(){
     dom.body(dom.audio({
         autoplay:true,
-        src:'plugins/chat/main/notification-a.mp3',
+        src:'plugins/chat/main/ChatPage/notification-a.mp3',
         onended(e){document.body.removeChild(this);},
-        volume:this.settings.notificationSound,
+        volume:this._settings.notificationSound,
     }));
 };
+ChatPage.prototype._setSetting=function(k,v){
+    this._settings[k]=v;
+    localStorage.altheaChatSettings=JSON.stringify(this._settings);
+};
+ChatPage.prototype.showChatRoom=showChatRoom;
 ChatPage.prototype.showConversationList=showConversationList;
-ChatPage.prototype.showChatRoom=function(id){
-    let
-        target=this._site.getUser(id),
-        chatRoom=createChatRoom.call(this,target);
-    notification.call(this,chatRoom,target);
-    content.call(this,chatRoom);
-};
-ChatPage.prototype.setSetting=function(k,v){
-    this.settings[k]=v;
-    localStorage.altheaChatSettings=JSON.stringify(this.settings);
-};
-async function notification(chat,target){
-    await Promise.all([
-        (async()=>{
-            chat=await chat;
-        })(),
-        (async()=>{
-            target=await target;
-            await target.load('nickname');
-        })(),
-    ]);
-    let
-        tabIsFocused=true,
-        notification=0,
-        unread=0;
-    updateTitle();
-    setInterval(updateTitle,1000);
-    chat.on('append',()=>{
-        if(tabIsFocused)
-            return
-        if(unread==0)
-            notification=1;
-        unread++;
-        this.playSound();
-    });
-    addEventListener('focusin',e=>{
-        tabIsFocused=true;
-        unread=0;
-    });
-    addEventListener('focusout',e=>{
-        tabIsFocused=false;
-    });
-    function updateTitle(){
-        let notiPart=unread==0?'':`${'◯⬤'[notification]} (${unread}) `;
-        lazyChangeTitle(`${notiPart}${target.nickname}`);
-        notification=1-notification;
-    }
-    function lazyChangeTitle(s){
-        document.title==s||(document.title=s);
-    }
-}
-async function content(chat){
-    chat=await chat;
-    let ui=chat.ui;
-    dom(this.style,await chat.style);
-    ui.style=s=>{
-        let n=dom.tn(s.content);
-        dom(this.style,n);
-        let color={
-            default:'',
-            gnulinux:'black',
-        }[s.id];
-        this.themeColor.content=color;
-        document.body.style.backgroundColor=color;
-        return()=>this.style.removeChild(n)
-    };
-    dom.body(ui.node);
-    ui.focus();
-}
 
+general();
 let chatPage=new ChatPage(new Site);
 dom.head(
     dom.link({rel:'icon',href:'plugins/chat/icon.png'})
 );
-general();
 arg.userId==undefined?
     chatPage.showConversationList()
 :

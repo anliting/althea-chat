@@ -25,6 +25,6 @@ ChatPage.prototype._setSetting=function(k,v){
     this._settings[k]=v
     localStorage.altheaChatSettings=JSON.stringify(this._settings)
 }
-ChatPage.prototype.showConversationList=showConversationList
 ChatPage.prototype.showChatRoom=showChatRoom
+ChatPage.prototype.showConversationList=showConversationList
 export default ChatPage
