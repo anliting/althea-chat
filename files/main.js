@@ -6,6 +6,6 @@ dom.head(
     dom.link({rel:'icon',href:'plugins/chat/icon.png'})
 )
 arg.userId==undefined?
-    chatPage.showConversationList()
+    chatPage.goConversationList()
 :
-    chatPage.showChatRoom(arg.userId)
+    chatPage.goChatRoom(arg.userId)

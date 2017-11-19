@@ -23,5 +23,8 @@ export default{get(){
     ui.imageUploader=this._imageUploader
     ui.connectionStatus=this._connectionStatus
     ui.changeStyle(this.getSetting('colorScheme'))
+    ui.goConversations=()=>{
+        this.emit('goConversations')
+    }
     return this._ui=ui
 }}

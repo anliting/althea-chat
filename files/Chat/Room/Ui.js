@@ -68,6 +68,10 @@ Ui.prototype._send=function(){
 Ui.prototype._queryOlder=function(){
     this.queryOlder()
 }
+Ui.prototype._goConversations=function(){
+    if(this.goConversations)
+        this.goConversations()
+}
 Ui.prototype.focus=function(){
     this.textarea.focus()
 }

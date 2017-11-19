@@ -510,7 +510,22 @@ function createBottom(ui){
     return dom.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
-        dom.a({href:'/chat'},'Conversations'),' ',
+        dom.a({
+            href:'/chat',
+            onclick(e){
+                if(!(
+                    !e.altKey&&
+                    !e.ctrlKey&&
+                    !e.metaKey&&
+                    !e.shiftKey&&
+                    e.button==0
+                ))
+                    return
+                e.preventDefault();
+                e.stopPropagation();
+                ui._goConversations();
+            },
+        },'Conversations'),' ',
         arg$1.h&&[ui._findButton,' '],
         ui._modeSelect=createModeSelect(ui),' ',
         ui._bottomTexButton=createTexButton(ui),' ',
@@ -710,6 +725,10 @@ Ui.prototype._send=function(){
 Ui.prototype._queryOlder=function(){
     this.queryOlder();
 };
+Ui.prototype._goConversations=function(){
+    if(this.goConversations)
+        this.goConversations();
+};
 Ui.prototype.focus=function(){
     this.textarea.focus();
 };
@@ -768,6 +787,9 @@ var ui = {get(){
     ui.imageUploader=this._imageUploader;
     ui.connectionStatus=this._connectionStatus;
     ui.changeStyle(this.getSetting('colorScheme'));
+    ui.goConversations=()=>{
+        this.emit('goConversations');
+    };
     return this._ui=ui
 }};
 
@@ -954,6 +976,9 @@ var createChatRoom = async function(target){
     chatRoom.getSetting=k=>this._settings[k];
     chatRoom.setSetting=(k,v)=>this._setSetting(k,v);
     chatRoom.playNotificationSound=()=>this.playSound();
+    chatRoom.on('goConversations',e=>{
+        this.goConversationList();
+    });
     update();
     addEventListener('offline',update);
     addEventListener('online',update);
@@ -967,10 +992,9 @@ function showChatRoom(id){
     let
         target=this._site.getUser(id),
         chatRoom=createChatRoom.call(this,target);
-    notification.call(this,chatRoom,target);
-    content.call(this,chatRoom);
+    content.call(this,chatRoom,target);
 }
-async function notification(chat,target){
+async function notification(out,chat,target){
     await Promise.all([
         (async()=>{
             chat=await chat;
@@ -985,7 +1009,7 @@ async function notification(chat,target){
         notification=0,
         unread=0;
     updateTitle();
-    setInterval(updateTitle,1000);
+    out.setInterval(updateTitle,1000);
     chat.on('append',()=>{
         if(tabIsFocused)
             return
@@ -1010,7 +1034,7 @@ async function notification(chat,target){
         document.title==s||(document.title=s);
     }
 }
-async function content(chat){
+async function content(chat,target){
     chat=await chat;
     let ui=chat.ui;
     dom(this.style,await chat.style);
@@ -1025,41 +1049,55 @@ async function content(chat){
         document.body.style.backgroundColor=color;
         return()=>this.style.removeChild(n)
     };
-    dom.body(ui.node);
+    let out=this._setMainOut(ui.node);
+    notification.call(this,out,chat,target);
     ui.focus();
 }
 
-function createConversation(site,id){
+function createConversation(chatPage,site,id){
     let
         user=site.getUser(id),
-        tc=textContent(id);
+        tc=textContent();
     return{
-        n:dom.div(createLink(id)),
+        n:dom.div(createLink()),
         order:tc,
     }
-    async function textContent(id){
+    async function textContent(){
         let u=await user;
         await u.load(['username','nickname']);
         return u.nickname||u.username
     }
-    async function createLink(id){
+    async function createLink(){
         return dom.a(async n=>{
             let u=await user;
             await u.load('username');
             n.href=`chat/${u.username}`;
+            n.onclick=e=>{
+                if(
+                    e.altKey||
+                    e.ctrlKey||
+                    e.metaKey||
+                    e.shiftKey||
+                    e.button!=0
+                )
+                    return
+                e.preventDefault();
+                e.stopPropagation();
+                chatPage.goChatRoom(id);
+            };
             return tc
         })
     }
 }
-var showConversationList = function(){
+var goConversationList = function(){
     document.title='Conversations - Chat';
-    dom.body(dom.div(
+    this._setMainOut(dom.div(
         {className:'conversationList'},
         'Conversations:',
         async n=>{
             order.post(
                 (await this._site.send('getConversations')).map(async id=>{
-                    let c=createConversation(this._site,id);
+                    let c=createConversation(this,this._site,id);
                     return{
                         n:c.n,
                         o:await c.order
@@ -1074,11 +1112,19 @@ var showConversationList = function(){
 };
 
 function ChatPage(site){
+/*
+    properties:
+        _mainOut
+        _status
+*/
     this._site=site;
     this._settings=localStorage.altheaChatSettings?
         JSON.parse(localStorage.altheaChatSettings)
     :
         {notificationSound:0};
+    onpopstate=e=>{
+        this._go(e.state);
+    };
     dom.head(
         this.style=dom.style(mainStyle),
         this.themeColor=dom.meta({name:'theme-color'})
@@ -1096,8 +1142,60 @@ ChatPage.prototype._setSetting=function(k,v){
     this._settings[k]=v;
     localStorage.altheaChatSettings=JSON.stringify(this._settings);
 };
-ChatPage.prototype.showChatRoom=showChatRoom;
-ChatPage.prototype.showConversationList=showConversationList;
+ChatPage.prototype._setMainOut=function(node){
+    if(this._mainOut){
+        this._mainOut.intervals.forEach(clearInterval);
+        document.body.removeChild(this._mainOut.node);
+    }
+    dom.body(node);
+    let out={
+        intervals:new Set,
+        node,
+    };
+    this._mainOut=out;
+    return{
+        setInterval(){
+            let id=setInterval(...arguments);
+            out.intervals.add(id);
+            return id
+        },
+    }
+};
+ChatPage.prototype._go=async function(status,internal=1){
+    let setState=url=>{
+        if(internal)
+            return
+        history[this._status?'pushState':'replaceState'](
+            status,
+            '',
+            url
+        );
+    };
+    if(status.name=='chatRoom'){
+        let u=await this._site.getUser(status.id);
+        await u.load('username');
+        setState(`/chat/${encodeURIComponent(u.username)}`);
+        showChatRoom.call(this,status.id);
+    }else if(status.name='conversationList'){
+        setState(`/chat`);
+        goConversationList.call(this);
+    }
+    this._status=status;
+};
+ChatPage.prototype.go=async function(status){
+    this._go(status,0);
+};
+ChatPage.prototype.goChatRoom=function(id){
+    return this.go({
+        name:'chatRoom',
+        id,
+    })
+};
+ChatPage.prototype.goConversationList=function(){
+    return this.go({
+        name:'conversationList',
+    })
+};
 
 general();
 let chatPage=new ChatPage(new Site);
@@ -1105,6 +1203,6 @@ dom.head(
     dom.link({rel:'icon',href:'plugins/chat/icon.png'})
 );
 arg.userId==undefined?
-    chatPage.showConversationList()
+    chatPage.goConversationList()
 :
-    chatPage.showChatRoom(arg.userId);
+    chatPage.goChatRoom(arg.userId);

@@ -61,7 +61,22 @@ function createBottom(ui){
     return dom.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
-        dom.a({href:'/chat'},'Conversations'),' ',
+        dom.a({
+            href:'/chat',
+            onclick(e){
+                if(!(
+                    !e.altKey&&
+                    !e.ctrlKey&&
+                    !e.metaKey&&
+                    !e.shiftKey&&
+                    e.button==0
+                ))
+                    return
+                e.preventDefault()
+                e.stopPropagation()
+                ui._goConversations()
+            },
+        },'Conversations'),' ',
         arg.h&&[ui._findButton,' '],
         ui._modeSelect=createModeSelect(ui),' ',
         ui._bottomTexButton=createTexButton(ui),' ',

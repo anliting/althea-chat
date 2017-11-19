@@ -1,35 +1,48 @@
 import{dom,order}from '/lib/core.static.js'
-function createConversation(site,id){
+function createConversation(chatPage,site,id){
     let
         user=site.getUser(id),
-        tc=textContent(id)
+        tc=textContent()
     return{
-        n:dom.div(createLink(id)),
+        n:dom.div(createLink()),
         order:tc,
     }
-    async function textContent(id){
+    async function textContent(){
         let u=await user
         await u.load(['username','nickname'])
         return u.nickname||u.username
     }
-    async function createLink(id){
+    async function createLink(){
         return dom.a(async n=>{
             let u=await user
             await u.load('username')
             n.href=`chat/${u.username}`
+            n.onclick=e=>{
+                if(
+                    e.altKey||
+                    e.ctrlKey||
+                    e.metaKey||
+                    e.shiftKey||
+                    e.button!=0
+                )
+                    return
+                e.preventDefault()
+                e.stopPropagation()
+                chatPage.goChatRoom(id)
+            }
             return tc
         })
     }
 }
 export default function(){
     document.title='Conversations - Chat'
-    dom.body(dom.div(
+    this._setMainOut(dom.div(
         {className:'conversationList'},
         'Conversations:',
         async n=>{
             order.post(
                 (await this._site.send('getConversations')).map(async id=>{
-                    let c=createConversation(this._site,id)
+                    let c=createConversation(this,this._site,id)
                     return{
                         n:c.n,
                         o:await c.order

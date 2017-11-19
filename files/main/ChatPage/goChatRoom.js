@@ -1,13 +1,12 @@
 import{dom}from                     '/lib/core.static.js'
-import createChatRoom from          './showChatRoom/createChatRoom.js'
+import createChatRoom from          './goChatRoom/createChatRoom.js'
 function showChatRoom(id){
     let
         target=this._site.getUser(id),
         chatRoom=createChatRoom.call(this,target)
-    notification.call(this,chatRoom,target)
-    content.call(this,chatRoom)
+    content.call(this,chatRoom,target)
 }
-async function notification(chat,target){
+async function notification(out,chat,target){
     await Promise.all([
         (async()=>{
             chat=await chat
@@ -22,7 +21,7 @@ async function notification(chat,target){
         notification=0,
         unread=0
     updateTitle()
-    setInterval(updateTitle,1000)
+    out.setInterval(updateTitle,1000)
     chat.on('append',()=>{
         if(tabIsFocused)
             return
@@ -47,7 +46,7 @@ async function notification(chat,target){
         document.title==s||(document.title=s)
     }
 }
-async function content(chat){
+async function content(chat,target){
     chat=await chat
     let ui=chat.ui
     dom(this.style,await chat.style)
@@ -62,7 +61,8 @@ async function content(chat){
         document.body.style.backgroundColor=color
         return()=>this.style.removeChild(n)
     }
-    dom.body(ui.node)
+    let out=this._setMainOut(ui.node)
+    notification.call(this,out,chat,target)
     ui.focus()
 }
 export default showChatRoom
