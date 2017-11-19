@@ -45,13 +45,13 @@ function get(env){
 <meta name=viewport content='width=device-width,initial-scale=1'>
 <body>
 ${env.althea.loadModule(
-    //'plugins/chat/main.js',
-    'plugins/chat/main.static.js',
+    'plugins/chat/main.js',
+    //'plugins/chat/main.static.js',
     {
         userId:env.userId
     },
     {
-        sharedWorker:true,
+        sharedWorker:1,
     },
 )}
 `

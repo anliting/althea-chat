@@ -1,5 +1,5 @@
-import Chat from '../../Chat.js'
-import {ImageUploader}from '/lib/core.static.js'
+import{ImageUploader}from '/lib/core.static.js'
+import Chat from '../../../Chat.js'
 async function getTwoMenConversation(site,target){
     let id=await site.send({
         function:'getTwoMenConversation',
@@ -18,8 +18,8 @@ export default async function(target){
         site.currentUser,
         target
     )
-    chatRoom.getSetting=k=>this.settings[k]
-    chatRoom.setSetting=(k,v)=>this.setSetting(k,v)
+    chatRoom.getSetting=k=>this._settings[k]
+    chatRoom.setSetting=(k,v)=>this._setSetting(k,v)
     chatRoom.playNotificationSound=()=>this.playSound()
     update()
     addEventListener('offline',update)
