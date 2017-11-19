@@ -34,17 +34,30 @@ ChatPage.prototype._setSetting=function(k,v){
     localStorage.altheaChatSettings=JSON.stringify(this._settings)
 }
 ChatPage.prototype._setMainOut=function(node){
+    let chatPage=this
     if(this._mainOut){
         this._mainOut.intervals.forEach(clearInterval)
+        this._mainOut.styleSheets.forEach(e=>{
+            this.style.removeChild(e)
+        })
         document.body.removeChild(this._mainOut.node)
     }
     dom.body(node)
     let out={
+        styleSheets:new Set,
         intervals:new Set,
         node,
     }
     this._mainOut=out
     return{
+        inStyle(n){
+            out.styleSheets.add(n)
+            chatPage.style.appendChild(n)
+        },
+        outStyle(n){
+            out.styleSheets.remove(n)
+            chatPage.style.removeChild(n)
+        },
         setInterval(){
             let id=setInterval(...arguments)
             out.intervals.add(id)

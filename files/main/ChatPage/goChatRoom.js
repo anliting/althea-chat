@@ -1,11 +1,5 @@
 import{dom}from                     '/lib/core.static.js'
 import createChatRoom from          './goChatRoom/createChatRoom.js'
-function showChatRoom(id){
-    let
-        target=this._site.getUser(id),
-        chatRoom=createChatRoom.call(this,target)
-    content.call(this,chatRoom,target)
-}
 async function notification(out,chat,target){
     await Promise.all([
         (async()=>{
@@ -50,19 +44,24 @@ async function content(chat,target){
     chat=await chat
     let ui=chat.ui
     dom(this.style,await chat.style)
+    let out=this._setMainOut(ui.node)
     ui.style=s=>{
-        let n=dom.tn(s.content)
-        dom(this.style,n)
         let color={
             default:'',
             gnulinux:'black',
         }[s.id]
+        let n=dom.tn(s.content+`body{background-color:${color}}`)
+        out.inStyle(n)
         this.themeColor.content=color
-        document.body.style.backgroundColor=color
-        return()=>this.style.removeChild(n)
+        return()=>out.outStyle(n)
     }
-    let out=this._setMainOut(ui.node)
     notification.call(this,out,chat,target)
     ui.focus()
+}
+function showChatRoom(id){
+    let
+        target=this._site.getUser(id),
+        chatRoom=createChatRoom.call(this,target)
+    content.call(this,chatRoom,target)
 }
 export default showChatRoom
