@@ -1163,7 +1163,7 @@ ChatPage.prototype._setMainOut=function(node){
             chatPage.style.appendChild(n);
         },
         outStyle(n){
-            out.styleSheets.remove(n);
+            out.styleSheets.delete(n);
             chatPage.style.removeChild(n);
         },
         setInterval(){
