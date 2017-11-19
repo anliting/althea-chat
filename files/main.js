@@ -1,4 +1,4 @@
-import {Site,dom,general}from '/lib/core.static.js'
+import{Site,dom,general}from '/lib/core.static.js'
 import ChatPage from './main/ChatPage.js'
 let chatPage=new ChatPage(new Site)
 dom.head(
