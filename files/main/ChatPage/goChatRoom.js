@@ -43,8 +43,8 @@ async function notification(out,chat,target){
 async function content(chat,target){
     chat=await chat
     let ui=chat.ui
-    dom(this.style,await chat.style)
     let out=this._setMainOut(ui.node)
+    out.inStyle(dom.tn(await chat.style))
     ui.style=s=>{
         let color={
             default:'',
@@ -52,7 +52,7 @@ async function content(chat,target){
         }[s.id]
         let n=dom.tn(s.content+`body{background-color:${color}}`)
         out.inStyle(n)
-        this.themeColor.content=color
+        out.inThemeColor(color)
         return()=>out.outStyle(n)
     }
     notification.call(this,out,chat,target)

@@ -17,8 +17,8 @@ function ChatPage(site){
         this._go(e.state)
     }
     dom.head(
-        this.style=dom.style(mainStyle),
-        this.themeColor=dom.meta({name:'theme-color'})
+        this._style=         dom.style(mainStyle),
+        this._themeColor=    dom.meta({name:'theme-color'}),
     )
 }
 ChatPage.prototype._playSound=function(){
@@ -38,8 +38,9 @@ ChatPage.prototype._setMainOut=function(node){
     if(this._mainOut){
         this._mainOut.intervals.forEach(clearInterval)
         this._mainOut.styleSheets.forEach(e=>{
-            this.style.removeChild(e)
+            this._style.removeChild(e)
         })
+        this._themeColor.content=''
         document.body.removeChild(this._mainOut.node)
     }
     dom.body(node)
@@ -52,16 +53,23 @@ ChatPage.prototype._setMainOut=function(node){
     return{
         inStyle(n){
             out.styleSheets.add(n)
-            chatPage.style.appendChild(n)
+            chatPage._style.appendChild(n)
         },
         outStyle(n){
             out.styleSheets.delete(n)
-            chatPage.style.removeChild(n)
+            chatPage._style.removeChild(n)
+        },
+        inThemeColor(c){
+            chatPage._themeColor.content=c
         },
         setInterval(){
             let id=setInterval(...arguments)
             out.intervals.add(id)
             return id
+        },
+        clearInterval(id){
+            out.intervals.delete(id)
+            clearInterval(id)
         },
     }
 }

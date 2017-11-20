@@ -1031,8 +1031,8 @@ async function notification(out,chat,target){
 async function content(chat,target){
     chat=await chat;
     let ui=chat.ui;
-    dom(this.style,await chat.style);
     let out=this._setMainOut(ui.node);
+    out.inStyle(dom.tn(await chat.style));
     ui.style=s=>{
         let color={
             default:'',
@@ -1040,7 +1040,7 @@ async function content(chat,target){
         }[s.id];
         let n=dom.tn(s.content+`body{background-color:${color}}`);
         out.inStyle(n);
-        this.themeColor.content=color;
+        out.inThemeColor(color);
         return()=>out.outStyle(n)
     };
     notification.call(this,out,chat,target);
@@ -1125,8 +1125,8 @@ function ChatPage(site){
         this._go(e.state);
     };
     dom.head(
-        this.style=dom.style(mainStyle),
-        this.themeColor=dom.meta({name:'theme-color'})
+        this._style=         dom.style(mainStyle),
+        this._themeColor=    dom.meta({name:'theme-color'}),
     );
 }
 ChatPage.prototype._playSound=function(){
@@ -1146,8 +1146,9 @@ ChatPage.prototype._setMainOut=function(node){
     if(this._mainOut){
         this._mainOut.intervals.forEach(clearInterval);
         this._mainOut.styleSheets.forEach(e=>{
-            this.style.removeChild(e);
+            this._style.removeChild(e);
         });
+        this._themeColor.content='';
         document.body.removeChild(this._mainOut.node);
     }
     dom.body(node);
@@ -1160,16 +1161,23 @@ ChatPage.prototype._setMainOut=function(node){
     return{
         inStyle(n){
             out.styleSheets.add(n);
-            chatPage.style.appendChild(n);
+            chatPage._style.appendChild(n);
         },
         outStyle(n){
             out.styleSheets.delete(n);
-            chatPage.style.removeChild(n);
+            chatPage._style.removeChild(n);
+        },
+        inThemeColor(c){
+            chatPage._themeColor.content=c;
         },
         setInterval(){
             let id=setInterval(...arguments);
             out.intervals.add(id);
             return id
+        },
+        clearInterval(id){
+            out.intervals.delete(id);
+            clearInterval(id);
         },
     }
 };
