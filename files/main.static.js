@@ -397,11 +397,11 @@ function showSendButton(ui){
 
 async function loadVim(){
     let module=await load.module();
-    return module.importByPath(`${
+    return module.moduleByPath(`${
         'https://gitcdn.link/cdn/anliting/webvim'
     }/${
-        '585df5a6d6daa30dc78af958804f658c163dfe59'
-    }/src/Vim.static.js`,{mode:1})
+        '849313f416b610e64dde75f1f80cfb2114004990'
+    }/src/Vim.static.js`)
 }
 async function load$2(ui,textarea){
     if(typeof loadVim=='function')
