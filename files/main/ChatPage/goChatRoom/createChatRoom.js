@@ -20,7 +20,7 @@ export default async function(target){
     )
     chatRoom.getSetting=k=>this._settings[k]
     chatRoom.setSetting=(k,v)=>this._setSetting(k,v)
-    chatRoom.playNotificationSound=()=>this.playSound()
+    chatRoom.playNotificationSound=()=>this._playSound()
     chatRoom.on('goConversations',e=>{
         this.goConversationList()
     })
