@@ -8,7 +8,7 @@
         myself, and with KaTeX, I know how to solve the problem in a much
         proper way by the comparison of MathJax.
 */
-import {dom,uri}from '/lib/core.static.js'
+import{dom,uri}from '/lib/core.static.js'
 import loadKatex from './compile/loadKatex.js'
 let whitelist={
     a:{

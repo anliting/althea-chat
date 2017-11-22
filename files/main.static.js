@@ -414,12 +414,15 @@ async function load$2(ui,textarea){
     }),viewDiv=createViewDiv(vim);
     vim.text=textarea.value;
     vim._cursor.moveTo(textarea.selectionStart);
-    dom.head(vim.style);
-    dom.body(viewDiv);
+    let
+        headStyle={type:'head',node:vim.style},
+        bodyUi={type:'body',node:viewDiv};
+    ui.out.in(headStyle);
+    ui.out.in(bodyUi);
     vim.focus();
     vim.on('quit',e=>{
-        document.head.removeChild(vim.style);
-        document.body.removeChild(viewDiv);
+        ui.out.out(headStyle);
+        ui.out.out(bodyUi);
         textarea.disabled=false;
         textarea.focus();
     });
@@ -989,34 +992,24 @@ var createChatRoom = async function(out,target){
 };
 
 function Out(){
-    this._status='on';
     this.set=new Set;
 }
 Out.prototype.in=function(doc){
     this.set.add(doc);
-    if(this._status=='on'&&this._forEach)
+    if(this._forEach)
         this._forEach.in(doc);
 };
 Out.prototype.out=function(doc){
     this.set.delete(doc);
-    if(this._status=='on'&&this._forEach)
+    if(this._forEach)
         this._forEach.out(doc);
 };
-Out.prototype.on=function(){
-    this._status='on';
-    if(this._forEach)
-        this.set.forEach(this._forEach.in);
-};
-Out.prototype.off=function(){
-    this._status='off';
-    if(this._forEach)
-        this.set.forEach(this._forEach.out);
-};
-Out.prototype.setForEach=function(doc){
+Out.prototype.forEach=function(doc){
     if(this._forEach)
         this.set.forEach(this._forEach.out);
     this._forEach=doc;
-    this.set.forEach(this._forEach.in);
+    if(this._forEach)
+        this.set.forEach(this._forEach.in);
 };
 
 async function notification(out,chat,target){
@@ -1062,6 +1055,7 @@ async function notification(out,chat,target){
 async function content(out,chat,target){
     chat=await chat;
     let ui=chat.ui;
+    ui.out=out;
     this._setMainOut(out);
     out.in({type:'body',node:ui.node});
     out.in({type:'style',node:dom.tn(await chat.style)});
@@ -1178,10 +1172,13 @@ ChatPage.prototype._setSetting=function(k,v){
 };
 ChatPage.prototype._setMainOut=function(out){
     if(this._mainOut)
-        this._mainOut.off();
-    out.setForEach({
+        this._mainOut.forEach();
+    out.forEach({
         in:doc=>{
             switch(doc.type){
+                case'head':
+                    document.head.appendChild(doc.node);
+                break
                 case'body':
                     document.body.appendChild(doc.node);
                 break
@@ -1202,6 +1199,9 @@ ChatPage.prototype._setMainOut=function(out){
         },
         out:doc=>{
             switch(doc.type){
+                case'head':
+                    document.head.removeChild(doc.node);
+                break
                 case'body':
                     document.body.removeChild(doc.node);
                 break

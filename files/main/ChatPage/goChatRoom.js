@@ -44,6 +44,7 @@ async function notification(out,chat,target){
 async function content(out,chat,target){
     chat=await chat
     let ui=chat.ui
+    ui.out=out
     this._setMainOut(out)
     out.in({type:'body',node:ui.node})
     out.in({type:'style',node:dom.tn(await chat.style)})

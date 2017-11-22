@@ -35,10 +35,13 @@ ChatPage.prototype._setSetting=function(k,v){
 }
 ChatPage.prototype._setMainOut=function(out){
     if(this._mainOut)
-        this._mainOut.off()
-    out.setForEach({
+        this._mainOut.forEach()
+    out.forEach({
         in:doc=>{
             switch(doc.type){
+                case'head':
+                    document.head.appendChild(doc.node)
+                break
                 case'body':
                     document.body.appendChild(doc.node)
                 break
@@ -59,6 +62,9 @@ ChatPage.prototype._setMainOut=function(out){
         },
         out:doc=>{
             switch(doc.type){
+                case'head':
+                    document.head.removeChild(doc.node)
+                break
                 case'body':
                     document.body.removeChild(doc.node)
                 break

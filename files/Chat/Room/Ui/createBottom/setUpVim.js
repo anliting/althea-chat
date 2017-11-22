@@ -18,13 +18,16 @@ async function load(ui,textarea){
     }),viewDiv=createViewDiv(vim)
     vim.text=textarea.value
     vim._cursor.moveTo(textarea.selectionStart)
-    dom.head(vim.style)
-    dom.body(viewDiv)
+    let
+        headStyle={type:'head',node:vim.style},
+        bodyUi={type:'body',node:viewDiv}
+    ui.out.in(headStyle)
+    ui.out.in(bodyUi)
     vim.polluteCopy
     vim.focus()
     vim.on('quit',e=>{
-        document.head.removeChild(vim.style)
-        document.body.removeChild(viewDiv)
+        ui.out.out(headStyle)
+        ui.out.out(bodyUi)
         textarea.disabled=false
         textarea.focus()
     })
