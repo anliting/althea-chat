@@ -2,7 +2,6 @@ import{dom}from                     '/lib/core.static.js'
 import mainStyle from               './style.js'
 import goChatRoom from              './ChatPage/goChatRoom.js'
 import goConversationList from      './ChatPage/goConversationList.js'
-import ChatPageOut from             './ChatPage/ChatPageOut.js'
 function ChatPage(site){
 /*
     properties:
@@ -34,13 +33,48 @@ ChatPage.prototype._setSetting=function(k,v){
     this._settings[k]=v
     localStorage.altheaChatSettings=JSON.stringify(this._settings)
 }
-ChatPage.prototype._setMainOut=function(node){
+ChatPage.prototype._setMainOut=function(out){
     if(this._mainOut)
-        this._mainOut.end()
-    let out=new ChatPageOut(this)
-    out.in({type:'body',node})
+        this._mainOut.off()
+    out.setForEach({
+        in:doc=>{
+            switch(doc.type){
+                case'body':
+                    document.body.appendChild(doc.node)
+                break
+                case'interval':
+                    doc.id=setInterval(...doc.arguments)
+                break
+                case'style':
+                    this._style.appendChild(doc.node)
+                break
+                case'themeColor':
+                    this._themeColor.content=doc.color
+                break
+                case'playSound':
+                    this._playSound()
+                    out.out(doc)
+                break
+            }
+        },
+        out:doc=>{
+            switch(doc.type){
+                case'body':
+                    document.body.removeChild(doc.node)
+                break
+                case'interval':
+                    clearInterval(doc.id)
+                break
+                case'style':
+                    this._style.removeChild(doc.node)
+                break
+                case'themeColor':
+                    this._themeColor.content=''
+                break
+            }
+        },
+    })
     this._mainOut=out
-    return out
 }
 ChatPage.prototype._go=async function(status,internal=1){
     let setState=url=>{

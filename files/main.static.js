@@ -962,7 +962,7 @@ async function getTwoMenConversation(site,target){
     });
     return id
 }
-var createChatRoom = async function(target){
+var createChatRoom = async function(out,target){
     let site=this._site;
     let chatRoom=new Chat.Room(
         async d=>site.send(d),
@@ -975,7 +975,7 @@ var createChatRoom = async function(target){
     );
     chatRoom.getSetting=k=>this._settings[k];
     chatRoom.setSetting=(k,v)=>this._setSetting(k,v);
-    chatRoom.playNotificationSound=()=>this._playSound();
+    chatRoom.playNotificationSound=()=>out.in({'type':'playSound'});
     chatRoom.on('goConversations',e=>{
         this.goConversationList();
     });
@@ -986,6 +986,37 @@ var createChatRoom = async function(target){
     function update(){
         chatRoom.connectionStatus=navigator.onLine?'online':'offline';
     }
+};
+
+function Out(){
+    this._status='on';
+    this.set=new Set;
+}
+Out.prototype.in=function(doc){
+    this.set.add(doc);
+    if(this._status=='on'&&this._forEach)
+        this._forEach.in(doc);
+};
+Out.prototype.out=function(doc){
+    this.set.delete(doc);
+    if(this._status=='on'&&this._forEach)
+        this._forEach.out(doc);
+};
+Out.prototype.on=function(){
+    this._status='on';
+    if(this._forEach)
+        this.set.forEach(this._forEach.in);
+};
+Out.prototype.off=function(){
+    this._status='off';
+    if(this._forEach)
+        this.set.forEach(this._forEach.out);
+};
+Out.prototype.setForEach=function(doc){
+    if(this._forEach)
+        this.set.forEach(this._forEach.out);
+    this._forEach=doc;
+    this.set.forEach(this._forEach.in);
 };
 
 async function notification(out,chat,target){
@@ -1010,7 +1041,7 @@ async function notification(out,chat,target){
         if(unread==0)
             notification=1;
         unread++;
-        this._playSound();
+        out.in({'type':'playSound'});
     });
     addEventListener('focusin',e=>{
         tabIsFocused=true;
@@ -1028,10 +1059,11 @@ async function notification(out,chat,target){
         document.title==s||(document.title=s);
     }
 }
-async function content(chat,target){
+async function content(out,chat,target){
     chat=await chat;
     let ui=chat.ui;
-    let out=this._setMainOut(ui.node);
+    this._setMainOut(out);
+    out.in({type:'body',node:ui.node});
     out.in({type:'style',node:dom.tn(await chat.style)});
     ui.style=s=>{
         let color={
@@ -1048,9 +1080,10 @@ async function content(chat,target){
 }
 function showChatRoom(id){
     let
+        out=new Out,
         target=this._site.getUser(id),
-        chatRoom=createChatRoom.call(this,target);
-    content.call(this,chatRoom,target);
+        chatRoom=createChatRoom.call(this,out,target);
+    content.call(this,out,chatRoom,target);
 }
 
 function createConversation(chatPage,site,id){
@@ -1090,7 +1123,9 @@ function createConversation(chatPage,site,id){
 }
 var goConversationList = function(){
     document.title='Conversations - Chat';
-    this._setMainOut(dom.div(
+    let out=new Out;
+    this._setMainOut(out);
+    out.in({type:'body',node:dom.div(
         {className:'conversationList'},
         'Conversations:',
         async n=>{
@@ -1107,60 +1142,7 @@ var goConversationList = function(){
                 (a,b)=>a.o.localeCompare(b.o)<0
             );
         }
-    ));
-};
-
-function Out(){
-    this.set=new Set;
-}
-Out.prototype.in=function(doc){
-    this.set.add(doc);
-};
-Out.prototype.out=function(doc){
-    this.set.delete(doc);
-};
-Out.prototype.end=function(){
-    this.set.forEach(e=>this.out(e));
-};
-
-function ChatPageOut(chatPage){
-    Out.call(this);
-    this._chatPage=chatPage;
-}
-Object.setPrototypeOf(ChatPageOut.prototype,Out.prototype);
-ChatPageOut.prototype.in=function(doc){
-    Out.prototype.in.call(this,doc);
-    switch(doc.type){
-        case'body':
-            document.body.appendChild(doc.node);
-        break
-        case'interval':
-            doc.id=setInterval(...doc.arguments);
-        break
-        case'style':
-            this._chatPage._style.appendChild(doc.node);
-        break
-        case'themeColor':
-            this._chatPage._themeColor.content=doc.color;
-        break
-    }
-};
-ChatPageOut.prototype.out=function(doc){
-    Out.prototype.out.call(this,doc);
-    switch(doc.type){
-        case'body':
-            document.body.removeChild(doc.node);
-        break
-        case'interval':
-            clearInterval(doc.id);
-        break
-        case'style':
-            this._chatPage._style.removeChild(doc.node);
-        break
-        case'themeColor':
-            this._chatPage._themeColor.content='';
-        break
-    }
+    )});
 };
 
 function ChatPage(site){
@@ -1194,13 +1176,48 @@ ChatPage.prototype._setSetting=function(k,v){
     this._settings[k]=v;
     localStorage.altheaChatSettings=JSON.stringify(this._settings);
 };
-ChatPage.prototype._setMainOut=function(node){
+ChatPage.prototype._setMainOut=function(out){
     if(this._mainOut)
-        this._mainOut.end();
-    let out=new ChatPageOut(this);
-    out.in({type:'body',node});
+        this._mainOut.off();
+    out.setForEach({
+        in:doc=>{
+            switch(doc.type){
+                case'body':
+                    document.body.appendChild(doc.node);
+                break
+                case'interval':
+                    doc.id=setInterval(...doc.arguments);
+                break
+                case'style':
+                    this._style.appendChild(doc.node);
+                break
+                case'themeColor':
+                    this._themeColor.content=doc.color;
+                break
+                case'playSound':
+                    this._playSound();
+                    out.out(doc);
+                break
+            }
+        },
+        out:doc=>{
+            switch(doc.type){
+                case'body':
+                    document.body.removeChild(doc.node);
+                break
+                case'interval':
+                    clearInterval(doc.id);
+                break
+                case'style':
+                    this._style.removeChild(doc.node);
+                break
+                case'themeColor':
+                    this._themeColor.content='';
+                break
+            }
+        },
+    });
     this._mainOut=out;
-    return out
 };
 ChatPage.prototype._go=async function(status,internal=1){
     let setState=url=>{

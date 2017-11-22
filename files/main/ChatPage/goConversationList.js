@@ -1,4 +1,5 @@
 import{dom,order}from '/lib/core.static.js'
+import Out from       './Out.js'
 function createConversation(chatPage,site,id){
     let
         user=site.getUser(id),
@@ -36,7 +37,9 @@ function createConversation(chatPage,site,id){
 }
 export default function(){
     document.title='Conversations - Chat'
-    this._setMainOut(dom.div(
+    let out=new Out
+    this._setMainOut(out)
+    out.in({type:'body',node:dom.div(
         {className:'conversationList'},
         'Conversations:',
         async n=>{
@@ -53,5 +56,5 @@ export default function(){
                 (a,b)=>a.o.localeCompare(b.o)<0
             )
         }
-    ))
+    )})
 }

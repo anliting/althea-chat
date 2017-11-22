@@ -7,7 +7,7 @@ async function getTwoMenConversation(site,target){
     })
     return id
 }
-export default async function(target){
+export default async function(out,target){
     let site=this._site
     let chatRoom=new Chat.Room(
         async d=>site.send(d),
@@ -20,7 +20,7 @@ export default async function(target){
     )
     chatRoom.getSetting=k=>this._settings[k]
     chatRoom.setSetting=(k,v)=>this._setSetting(k,v)
-    chatRoom.playNotificationSound=()=>this._playSound()
+    chatRoom.playNotificationSound=()=>out.in({'type':'playSound'})
     chatRoom.on('goConversations',e=>{
         this.goConversationList()
     })
