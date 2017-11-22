@@ -2,6 +2,7 @@ import{dom}from                     '/lib/core.static.js'
 import mainStyle from               './style.js'
 import goChatRoom from              './ChatPage/goChatRoom.js'
 import goConversationList from      './ChatPage/goConversationList.js'
+import ChatPageOut from             './ChatPage/ChatPageOut.js'
 function ChatPage(site){
 /*
     properties:
@@ -34,44 +35,12 @@ ChatPage.prototype._setSetting=function(k,v){
     localStorage.altheaChatSettings=JSON.stringify(this._settings)
 }
 ChatPage.prototype._setMainOut=function(node){
-    let chatPage=this
-    if(this._mainOut){
-        this._mainOut.intervals.forEach(clearInterval)
-        this._mainOut.styleSheets.forEach(e=>{
-            this._style.removeChild(e)
-        })
-        this._themeColor.content=''
-        document.body.removeChild(this._mainOut.node)
-    }
-    dom.body(node)
-    let out={
-        styleSheets:new Set,
-        intervals:new Set,
-        node,
-    }
+    if(this._mainOut)
+        this._mainOut.end()
+    let out=new ChatPageOut(this)
+    out.in({type:'body',node})
     this._mainOut=out
-    return{
-        inStyle(n){
-            out.styleSheets.add(n)
-            chatPage._style.appendChild(n)
-        },
-        outStyle(n){
-            out.styleSheets.delete(n)
-            chatPage._style.removeChild(n)
-        },
-        inThemeColor(c){
-            chatPage._themeColor.content=c
-        },
-        setInterval(){
-            let id=setInterval(...arguments)
-            out.intervals.add(id)
-            return id
-        },
-        clearInterval(id){
-            out.intervals.delete(id)
-            clearInterval(id)
-        },
-    }
+    return out
 }
 ChatPage.prototype._go=async function(status,internal=1){
     let setState=url=>{

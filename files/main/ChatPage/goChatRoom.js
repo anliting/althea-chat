@@ -15,7 +15,7 @@ async function notification(out,chat,target){
         notification=0,
         unread=0
     updateTitle()
-    out.setInterval(updateTitle,1000)
+    out.in({type:'interval',arguments:[updateTitle,1000]})
     chat.on('append',()=>{
         if(tabIsFocused)
             return
@@ -44,15 +44,15 @@ async function content(chat,target){
     chat=await chat
     let ui=chat.ui
     let out=this._setMainOut(ui.node)
-    out.inStyle(dom.tn(await chat.style))
+    out.in({type:'style',node:dom.tn(await chat.style)})
     ui.style=s=>{
         let color={
             default:'',
             gnulinux:'black',
         }[s.id]
         let n=dom.tn(s.content+`body{background-color:${color}}`)
-        out.inStyle(n)
-        out.inThemeColor(color)
+        out.in({type:'style',node:n})
+        out.in({type:'themeColor',color})
         return()=>out.outStyle(n)
     }
     notification.call(this,out,chat,target)

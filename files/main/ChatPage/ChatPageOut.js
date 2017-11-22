@@ -1,0 +1,41 @@
+import Out from                     './ChatPageOut/Out.js'
+function ChatPageOut(chatPage){
+    Out.call(this)
+    this._chatPage=chatPage
+}
+Object.setPrototypeOf(ChatPageOut.prototype,Out.prototype)
+ChatPageOut.prototype.in=function(doc){
+    Out.prototype.in.call(this,doc)
+    switch(doc.type){
+        case'body':
+            document.body.appendChild(doc.node)
+        break
+        case'interval':
+            doc.id=setInterval(...doc.arguments)
+        break
+        case'style':
+            this._chatPage._style.appendChild(doc.node)
+        break
+        case'themeColor':
+            this._chatPage._themeColor.content=doc.color
+        break
+    }
+}
+ChatPageOut.prototype.out=function(doc){
+    Out.prototype.out.call(this,doc)
+    switch(doc.type){
+        case'body':
+            document.body.removeChild(doc.node)
+        break
+        case'interval':
+            clearInterval(doc.id)
+        break
+        case'style':
+            this._chatPage._style.removeChild(doc.node)
+        break
+        case'themeColor':
+            this._chatPage._themeColor.content=''
+        break
+    }
+}
+export default ChatPageOut
