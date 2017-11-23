@@ -1,6 +1,6 @@
 import{dom}from                     '/lib/core.static.js'
 import createChatRoom from          './goChatRoom/createChatRoom.js'
-import Out from                     './Out.js'
+import DecalarativeSet from         './DecalarativeSet.js'
 async function notification(out,chat,target){
     await Promise.all([
         (async()=>{
@@ -63,7 +63,7 @@ async function content(out,chat,target){
 }
 function showChatRoom(id){
     let
-        out=new Out,
+        out=new DecalarativeSet,
         target=this._site.getUser(id),
         chatRoom=createChatRoom.call(this,out,target)
     content.call(this,out,chatRoom,target)

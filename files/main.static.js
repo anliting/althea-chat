@@ -991,20 +991,20 @@ var createChatRoom = async function(out,target){
     }
 };
 
-function Out(){
+function DecalarativeSet(){
     this.set=new Set;
 }
-Out.prototype.in=function(doc){
+DecalarativeSet.prototype.in=function(doc){
     this.set.add(doc);
     if(this._forEach)
         this._forEach.in(doc);
 };
-Out.prototype.out=function(doc){
+DecalarativeSet.prototype.out=function(doc){
     this.set.delete(doc);
     if(this._forEach)
         this._forEach.out(doc);
 };
-Out.prototype.forEach=function(doc){
+DecalarativeSet.prototype.forEach=function(doc){
     if(this._forEach)
         this.set.forEach(this._forEach.out);
     this._forEach=doc;
@@ -1074,7 +1074,7 @@ async function content(out,chat,target){
 }
 function showChatRoom(id){
     let
-        out=new Out,
+        out=new DecalarativeSet,
         target=this._site.getUser(id),
         chatRoom=createChatRoom.call(this,out,target);
     content.call(this,out,chatRoom,target);
@@ -1117,7 +1117,7 @@ function createConversation(chatPage,site,id){
 }
 var goConversationList = function(){
     document.title='Conversations - Chat';
-    let out=new Out;
+    let out=new DecalarativeSet;
     this._setMainOut(out);
     out.in({type:'body',node:dom.div(
         {className:'conversationList'},

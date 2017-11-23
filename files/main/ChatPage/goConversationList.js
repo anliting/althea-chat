@@ -1,5 +1,5 @@
 import{dom,order}from '/lib/core.static.js'
-import Out from       './Out.js'
+import DecalarativeSet from       './DecalarativeSet.js'
 function createConversation(chatPage,site,id){
     let
         user=site.getUser(id),
@@ -37,7 +37,7 @@ function createConversation(chatPage,site,id){
 }
 export default function(){
     document.title='Conversations - Chat'
-    let out=new Out
+    let out=new DecalarativeSet
     this._setMainOut(out)
     out.in({type:'body',node:dom.div(
         {className:'conversationList'},
