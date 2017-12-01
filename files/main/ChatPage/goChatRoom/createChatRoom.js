@@ -13,7 +13,10 @@ export default async function(out,target){
         async d=>site.send(d),
         ()=>site.createSession(),
         async i=>site.getUser(i),
-        new ImageUploader(site),
+        new ImageUploader({
+            post:a=>site.post(a),
+            send:a=>site.send(a),
+        }),
         getTwoMenConversation(site,target),
         site.currentUser,
         target
