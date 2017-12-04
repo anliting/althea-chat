@@ -44,22 +44,13 @@ function Room(
 }
 Object.setPrototypeOf(Room.prototype,EventEmmiter.prototype)
 Room.prototype._getMessagesData=async function(){
-    let
-        chat=this
-    let doc={
+    return this._send({
         function:       'getMessages',
         conversation:   (await this._conversationId),
-    }
-    doc.after=0
-    doc.before=calcBefore()
-    doc.last=blockSize
-    return this._send(doc)
-    function calcBefore(){
-        return chat._messages.length==0?
-            0
-        :
-            chat._messages[0].id
-    }
+        after:0,
+        before:this._messages.length==0?0:this._messages[0].id,
+        last:blockSize,
+    })
 }
 function roomCalcAfter(){
     return this._messages.length==0?

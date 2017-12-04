@@ -12,7 +12,7 @@ export default{get(){
         this.setSetting('showTexButton',false)
     if(this.getSetting('showSendButton')==undefined)
         this.setSetting('showSendButton',true)
-    let ui=new Ui(this._currentUser,this.getSetting,(k,v)=>{
+    let ui=new Ui(this.getSetting,(k,v)=>{
         this.setSetting(k,v)
         if(k=='colorScheme')
             ui.changeStyle(v)
@@ -26,5 +26,10 @@ export default{get(){
     ui.goConversations=()=>{
         this.emit('goConversations')
     }
+    ;(async()=>{
+        let user=await this._currentUser
+        await user.load('nickname')
+        ui.currentUserNickname=user.nickname
+    })()
     return this._ui=ui
 }}

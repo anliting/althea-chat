@@ -2,7 +2,7 @@ import {arg,dom}from '/lib/core.static.js'
 import setupSettingsButton from './setupSettingsButton.js'
 import setUpVim from './createBottom/setUpVim.js'
 function createTextarea(ui){
-    let textarea=dom.textarea({
+    return dom.textarea({
         rows:2,
         title:'Alt+V: Open the Web Vim editor.',
         oninput(e){
@@ -20,16 +20,10 @@ function createTextarea(ui){
             }
             if(e.altKey&&e.key.toLowerCase()=='v'){
                 pdsp()
-                return setUpVim(ui,textarea)
+                return setUpVim(ui,this)
             }
         },
     })
-    ;(async()=>{
-        let user=await ui._currentUser
-        await user.load('nickname')
-        textarea.placeholder=`${user.nickname}: `
-    })()
-    return textarea
 }
 function setupFileButton(ui){
     ui._fileButton=dom.createFileButton('Image')

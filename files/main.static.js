@@ -461,7 +461,7 @@ function createViewDiv(vim){
 }
 
 function createTextarea(ui){
-    let textarea=dom.textarea({
+    return dom.textarea({
         rows:2,
         title:'Alt+V: Open the Web Vim editor.',
         oninput(e){
@@ -479,15 +479,10 @@ function createTextarea(ui){
             }
             if(e.altKey&&e.key.toLowerCase()=='v'){
                 pdsp();
-                return load$2(ui,textarea)
+                return load$2(ui,this)
             }
         },
-    });(async()=>{
-        let user=await ui._currentUser;
-        await user.load('nickname');
-        textarea.placeholder=`${user.nickname}: `;
-    })();
-    return textarea
+    })
 }
 function setupFileButton(ui){
     ui._fileButton=dom.createFileButton('Image');
@@ -672,8 +667,7 @@ async function uiAddMessages(messages,mode){
     this.syncInnerMessageDivScroll();
 }
 
-function Ui(currentUser,getSetting,setSetting){
-    this._currentUser=currentUser;
+function Ui(getSetting,setSetting){
     this._styleManager=new StyleManager;
     this._mode='plainText';
     this.getSetting=getSetting;
@@ -771,6 +765,9 @@ Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
     this._connectionStatus=val;
     this._statusNode.textContent=val=='online'?'':'offline';
 }});
+Object.defineProperty(Ui.prototype,'currentUserNickname',{set(val){
+    this.textarea.placeholder=`${val}: `;
+}});
 
 var ui = {get(){
     if(this._ui)
@@ -785,7 +782,7 @@ var ui = {get(){
         this.setSetting('showTexButton',false);
     if(this.getSetting('showSendButton')==undefined)
         this.setSetting('showSendButton',true);
-    let ui=new Ui(this._currentUser,this.getSetting,(k,v)=>{
+    let ui=new Ui(this.getSetting,(k,v)=>{
         this.setSetting(k,v);
         if(k=='colorScheme')
             ui.changeStyle(v);
@@ -798,7 +795,12 @@ var ui = {get(){
     ui.changeStyle(this.getSetting('colorScheme'));
     ui.goConversations=()=>{
         this.emit('goConversations');
-    };
+    }
+    ;(async()=>{
+        let user=await this._currentUser;
+        await user.load('nickname');
+        ui.currentUserNickname=user.nickname;
+    })();
     return this._ui=ui
 }};
 
@@ -899,22 +901,13 @@ function Room(
 }
 Object.setPrototypeOf(Room.prototype,EventEmmiter.prototype);
 Room.prototype._getMessagesData=async function(){
-    let
-        chat=this;
-    let doc={
+    return this._send({
         function:       'getMessages',
         conversation:   (await this._conversationId),
-    };
-    doc.after=0;
-    doc.before=calcBefore();
-    doc.last=blockSize;
-    return this._send(doc)
-    function calcBefore(){
-        return chat._messages.length==0?
-            0
-        :
-            chat._messages[0].id
-    }
+        after:0,
+        before:this._messages.length==0?0:this._messages[0].id,
+        last:blockSize,
+    })
 };
 function roomCalcAfter(){
     return this._messages.length==0?

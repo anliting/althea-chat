@@ -6,8 +6,7 @@ import StyleManager from    './Ui/StyleManager.js'
 import colorScheme from     './Ui/colorScheme.js'
 import loadSettings from    './Ui/loadSettings.js'
 import uiAddMessages from   './Ui/uiAddMessages.js'
-function Ui(currentUser,getSetting,setSetting){
-    this._currentUser=currentUser
+function Ui(getSetting,setSetting){
     this._styleManager=new StyleManager
     this._mode='plainText'
     this.getSetting=getSetting
@@ -104,5 +103,8 @@ Object.defineProperty(Ui.prototype,'style',{set(val){
 Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
     this._connectionStatus=val
     this._statusNode.textContent=val=='online'?'':'offline'
+}})
+Object.defineProperty(Ui.prototype,'currentUserNickname',{set(val){
+    this.textarea.placeholder=`${val}: `
 }})
 export default Ui
