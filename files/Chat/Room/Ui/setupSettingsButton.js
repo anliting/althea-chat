@@ -34,16 +34,16 @@ function notificationSound(ui){
             type:'range',
             max:1,
             step:0.01,
-            value:ui.getSetting('notificationSound'),
+            value:ui.notificationSound,
             onchange(e){
-                ui.setSetting('notificationSound',this.value)
+                ui.set('notificationSound',this.value)
                 ui.playNotificationSound()
             }
         })
     )
 }
 function colorSchemeP(ui){
-    let s=ui.getSetting('colorScheme')
+    let s=ui._colorScheme
     return dom.p(
         'Color Scheme: ',
         dom.select(
@@ -54,7 +54,7 @@ function colorSchemeP(ui){
                 })
             ),
             {onchange(e){
-                ui.setSetting('colorScheme',this.value)
+                ui.set('colorScheme',this.value)
             }}
         )
     )
@@ -64,10 +64,10 @@ function pressEnterToSendP(ui){
         dom.label(
             dom.input({
                 type:'checkbox',
-                checked:ui.getSetting('pressEnterToSend'),
+                checked:ui.pressEnterToSend,
                 onchange(e){
-                    ui.setSetting('pressEnterToSend',this.checked)
-                }
+                    ui.set('pressEnterToSend',this.checked)
+                },
             }),' Press Enter to send.')
     )
 }
@@ -77,13 +77,9 @@ function showTexButton(ui){
             dom.input(
                 {
                     type:'checkbox',
-                    checked:ui.getSetting('showTexButton'),
+                    checked:ui._showTexButton,
                     onchange(e){
-                        ui.setSetting('showTexButton',this.checked)
-                        ui._changeButtonDisplay(
-                            '_bottomTexButton',
-                            ui._mode=='html'&&this.checked
-                        )
+                        ui.set('showTexButton',this.checked)
                     }
                 }),
                 ' Show `',
@@ -102,13 +98,9 @@ function showSendButton(ui){
         dom.label(
             dom.input({
                 type:'checkbox',
-                checked:ui.getSetting('showSendButton'),
+                checked:ui._showSendButton,
                 onchange(e){
-                    ui.setSetting('showSendButton',this.checked)
-                    ui._changeButtonDisplay(
-                        '_bottomSendButton',
-                        this.checked
-                    )
+                    ui.set('showSendButton',this.checked)
                 }
             }),' Show `Send\' button.')
     )

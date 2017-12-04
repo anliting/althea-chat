@@ -12,7 +12,7 @@ function createTextarea(ui){
         onkeydown(e){
             let pdsp=_=>{e.stopPropagation(),e.preventDefault()}
             if(
-                ui.getSetting('pressEnterToSend')&&
+                ui.pressEnterToSend&&
                 !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
             ){
                 pdsp()

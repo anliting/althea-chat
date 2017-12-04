@@ -53,10 +53,12 @@ async function content(out,chat,target){
             default:'',
             gnulinux:'black',
         }[s.id]
-        let n=dom.tn(s.content+`body{background-color:${color}}`)
-        out.in({type:'style',node:n})
+        let
+            n=dom.tn(s.content+`body{background-color:${color}}`),
+            style={type:'style',node:n}
+        out.in(style)
         out.in({type:'themeColor',color})
-        return()=>out.outStyle(n)
+        return()=>out.out(style)
     }
     notification.call(this,out,chat,target)
     ui.focus()

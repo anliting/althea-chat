@@ -6,11 +6,9 @@ import StyleManager from    './Ui/StyleManager.js'
 import colorScheme from     './Ui/colorScheme.js'
 import loadSettings from    './Ui/loadSettings.js'
 import uiAddMessages from   './Ui/uiAddMessages.js'
-function Ui(getSetting,setSetting){
+function Ui(){
     this._styleManager=new StyleManager
     this._mode='plainText'
-    this.getSetting=getSetting
-    this.setSetting=setSetting
     this.users={}
     this.node=dom.div(
         {className:'chat'},
@@ -30,7 +28,7 @@ Ui.prototype._setMode=function(mode){
     this._updatePreview()
     this._changeButtonDisplay(
         '_bottomTexButton',
-        this._mode=='html'&&this.getSetting('showTexButton')
+        this._mode=='html'&&this._showTexButton
     )
     this._fileButton.n.style.display=this._mode=='html'?'':'none'
 }
@@ -71,6 +69,19 @@ Ui.prototype._goConversations=function(){
     if(this.goConversations)
         this.goConversations()
 }
+Ui.prototype._colorScheme='default'
+Ui.prototype._changeStyle=function(id){
+    if(this._style!=undefined)
+        this._styleManager.remove(this._style)
+    this._style=this._styleManager.insert({
+        id,
+        content:colorScheme[id].style,
+    })
+}
+Ui.prototype._showSendButton=true
+Ui.prototype._showTexButton=false
+Ui.prototype.notificationSound=0
+Ui.prototype.pressEnterToSend=false
 Ui.prototype.focus=function(){
     this.textarea.focus()
 }
@@ -87,14 +98,10 @@ Ui.prototype.prepend=async function(messages){
 Ui.prototype.append=async function(messages){
     return uiAddMessages.call(this,messages,'append')
 }
-Ui.prototype.changeStyle=function(id){
-    if(this._style!=undefined)
-        this._styleManager.remove(this._style)
-    this._style=this._styleManager.insert({
-        id,
-        content:colorScheme[id].style,
-    })
-}
+Object.defineProperty(Ui.prototype,'colorScheme',{set(val){
+    this._changeStyle(val)
+    this._colorScheme=val
+}})
 Object.defineProperty(Ui.prototype,'style',{set(val){
     this._styleManager.forEach=val
 },get(){
@@ -106,5 +113,19 @@ Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
 }})
 Object.defineProperty(Ui.prototype,'currentUserNickname',{set(val){
     this.textarea.placeholder=`${val}: `
+}})
+Object.defineProperty(Ui.prototype,'showSendButton',{set(val){
+    this._changeButtonDisplay(
+        '_bottomSendButton',
+        val
+    )
+    this._showSendButton=val
+}})
+Object.defineProperty(Ui.prototype,'showTexButton',{set(val){
+    this._changeButtonDisplay(
+        '_bottomTexButton',
+        this._mode=='html'&&val
+    )
+    this._showTexButton=val
 }})
 export default Ui

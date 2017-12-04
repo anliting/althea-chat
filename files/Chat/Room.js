@@ -1,5 +1,5 @@
 import {browser}from '/lib/core.static.js'
-import{EventEmmiter}from 'https://gitcdn.link/cdn/anliting/simple.js/3b5e122ded93bb9a5a7d5099ac645f1e1614a89b/src/simple.static.js'
+import{EventEmmiter}from 'https://gitcdn.link/cdn/anliting/simple.js/821a5b576b20ce78e464e85aec512b30b7d1f3fa/src/simple.static.js'
 import ui from './Room/prototype.ui.js'
 import style from './Room/style.js'
 import mobileStyle from './Room/style.mobile.js'

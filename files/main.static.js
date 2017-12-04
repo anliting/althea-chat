@@ -1,5 +1,5 @@
 import { ImageUploader, Site, arg as arg$1, browser, dom, general, html, load, order, uri } from '/lib/core.static.js';
-import { EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/3b5e122ded93bb9a5a7d5099ac645f1e1614a89b/src/simple.static.js';
+import { EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/821a5b576b20ce78e464e85aec512b30b7d1f3fa/src/simple.static.js';
 
 var mainStyle = `
 html{
@@ -321,16 +321,16 @@ function notificationSound(ui){
             type:'range',
             max:1,
             step:0.01,
-            value:ui.getSetting('notificationSound'),
+            value:ui.notificationSound,
             onchange(e){
-                ui.setSetting('notificationSound',this.value);
+                ui.set('notificationSound',this.value);
                 ui.playNotificationSound();
             }
         })
     )
 }
 function colorSchemeP(ui){
-    let s=ui.getSetting('colorScheme');
+    let s=ui._colorScheme;
     return dom.p(
         'Color Scheme: ',
         dom.select(
@@ -341,7 +341,7 @@ function colorSchemeP(ui){
                 })
             ),
             {onchange(e){
-                ui.setSetting('colorScheme',this.value);
+                ui.set('colorScheme',this.value);
             }}
         )
     )
@@ -351,10 +351,10 @@ function pressEnterToSendP(ui){
         dom.label(
             dom.input({
                 type:'checkbox',
-                checked:ui.getSetting('pressEnterToSend'),
+                checked:ui.pressEnterToSend,
                 onchange(e){
-                    ui.setSetting('pressEnterToSend',this.checked);
-                }
+                    ui.set('pressEnterToSend',this.checked);
+                },
             }),' Press Enter to send.')
     )
 }
@@ -364,13 +364,9 @@ function showTexButton(ui){
             dom.input(
                 {
                     type:'checkbox',
-                    checked:ui.getSetting('showTexButton'),
+                    checked:ui._showTexButton,
                     onchange(e){
-                        ui.setSetting('showTexButton',this.checked);
-                        ui._changeButtonDisplay(
-                            '_bottomTexButton',
-                            ui._mode=='html'&&this.checked
-                        );
+                        ui.set('showTexButton',this.checked);
                     }
                 }),
                 ' Show `',
@@ -389,13 +385,9 @@ function showSendButton(ui){
         dom.label(
             dom.input({
                 type:'checkbox',
-                checked:ui.getSetting('showSendButton'),
+                checked:ui._showSendButton,
                 onchange(e){
-                    ui.setSetting('showSendButton',this.checked);
-                    ui._changeButtonDisplay(
-                        '_bottomSendButton',
-                        this.checked
-                    );
+                    ui.set('showSendButton',this.checked);
                 }
             }),' Show `Send\' button.')
     )
@@ -471,7 +463,7 @@ function createTextarea(ui){
         onkeydown(e){
             let pdsp=_=>{e.stopPropagation(), e.preventDefault();};
             if(
-                ui.getSetting('pressEnterToSend')&&
+                ui.pressEnterToSend&&
                 !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
             ){
                 pdsp();
@@ -613,11 +605,11 @@ Object.defineProperty(StyleManager.prototype,'forEach',{set(forEach){
 function loadSettings(){
     this._changeButtonDisplay(
         '_bottomTexButton',
-        this._mode=='html'&&this.getSetting('showTexButton')
+        this._mode=='html'&&this._showTexButton
     );
     this._changeButtonDisplay(
         '_bottomSendButton',
-        this.getSetting('showSendButton')
+        this._showSendButton
     );
 }
 
@@ -667,11 +659,9 @@ async function uiAddMessages(messages,mode){
     this.syncInnerMessageDivScroll();
 }
 
-function Ui(getSetting,setSetting){
+function Ui(){
     this._styleManager=new StyleManager;
     this._mode='plainText';
-    this.getSetting=getSetting;
-    this.setSetting=setSetting;
     this.users={};
     this.node=dom.div(
         {className:'chat'},
@@ -691,7 +681,7 @@ Ui.prototype._setMode=function(mode){
     this._updatePreview();
     this._changeButtonDisplay(
         '_bottomTexButton',
-        this._mode=='html'&&this.getSetting('showTexButton')
+        this._mode=='html'&&this._showTexButton
     );
     this._fileButton.n.style.display=this._mode=='html'?'':'none';
 };
@@ -732,6 +722,19 @@ Ui.prototype._goConversations=function(){
     if(this.goConversations)
         this.goConversations();
 };
+Ui.prototype._colorScheme='default';
+Ui.prototype._changeStyle=function(id){
+    if(this._style!=undefined)
+        this._styleManager.remove(this._style);
+    this._style=this._styleManager.insert({
+        id,
+        content:colorScheme[id].style,
+    });
+};
+Ui.prototype._showSendButton=true;
+Ui.prototype._showTexButton=false;
+Ui.prototype.notificationSound=0;
+Ui.prototype.pressEnterToSend=false;
 Ui.prototype.focus=function(){
     this.textarea.focus();
 };
@@ -748,14 +751,10 @@ Ui.prototype.prepend=async function(messages){
 Ui.prototype.append=async function(messages){
     return uiAddMessages.call(this,messages,'append')
 };
-Ui.prototype.changeStyle=function(id){
-    if(this._style!=undefined)
-        this._styleManager.remove(this._style);
-    this._style=this._styleManager.insert({
-        id,
-        content:colorScheme[id].style,
-    });
-};
+Object.defineProperty(Ui.prototype,'colorScheme',{set(val){
+    this._changeStyle(val);
+    this._colorScheme=val;
+}});
 Object.defineProperty(Ui.prototype,'style',{set(val){
     this._styleManager.forEach=val;
 },get(){
@@ -768,33 +767,50 @@ Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
 Object.defineProperty(Ui.prototype,'currentUserNickname',{set(val){
     this.textarea.placeholder=`${val}: `;
 }});
+Object.defineProperty(Ui.prototype,'showSendButton',{set(val){
+    this._changeButtonDisplay(
+        '_bottomSendButton',
+        val
+    );
+    this._showSendButton=val;
+}});
+Object.defineProperty(Ui.prototype,'showTexButton',{set(val){
+    this._changeButtonDisplay(
+        '_bottomTexButton',
+        this._mode=='html'&&val
+    );
+    this._showTexButton=val;
+}});
 
+let bind=[
+    'colorScheme',
+    'notificationSound',
+    'pressEnterToSend',
+    'showSendButton',
+    'showTexButton',
+];
 var ui = {get(){
     if(this._ui)
         return this._ui
-    if(this.getSetting('colorScheme')==undefined)
-        this.setSetting('colorScheme','default');
-    if(this.getSetting('notificationSound')==undefined)
-        this.setSetting('notificationSound',0);
-    if(this.getSetting('pressEnterToSend')==undefined)
-        this.setSetting('pressEnterToSend',false);
-    if(this.getSetting('showTexButton')==undefined)
-        this.setSetting('showTexButton',false);
-    if(this.getSetting('showSendButton')==undefined)
-        this.setSetting('showSendButton',true);
-    let ui=new Ui(this.getSetting,(k,v)=>{
-        this.setSetting(k,v);
-        if(k=='colorScheme')
-            ui.changeStyle(v);
-    });
+    let ui=new Ui;
     ui.queryOlder=()=>this._getMessages('before');
     ui.sendMessage=m=>this._sendMessage(m);
     ui.playNotificationSound=this.playNotificationSound;
     ui.imageUploader=this._imageUploader;
     ui.connectionStatus=this._connectionStatus;
-    ui.changeStyle(this.getSetting('colorScheme'));
     ui.goConversations=()=>{
         this.emit('goConversations');
+    };
+    bind.forEach(k=>{
+        let v=this.getSetting(k);
+        if(v!==undefined)
+            ui[k]=v;
+    });
+    ui.set=(k,v)=>{
+        if(!bind.includes(k))
+            return
+        this.setSetting(k,v);
+        ui[k]=v;
     }
     ;(async()=>{
         let user=await this._currentUser;
@@ -1067,10 +1083,12 @@ async function content(out,chat,target){
             default:'',
             gnulinux:'black',
         }[s.id];
-        let n=dom.tn(s.content+`body{background-color:${color}}`);
-        out.in({type:'style',node:n});
+        let
+            n=dom.tn(s.content+`body{background-color:${color}}`),
+            style={type:'style',node:n};
+        out.in(style);
         out.in({type:'themeColor',color});
-        return()=>out.outStyle(n)
+        return()=>out.out(style)
     };
     notification.call(this,out,chat,target);
     ui.focus();
