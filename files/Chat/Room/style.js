@@ -26,7 +26,8 @@ export default`
     text-decoration:none;
 }
 .chat>.message img{
-    max-width:60%;
+    max-width:100%;
+    max-height:16em;
 }
 .chat>.message>.top{
     text-align:center;

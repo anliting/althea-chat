@@ -11,9 +11,14 @@
 import{dom,uri}from '/lib/core.static.js'
 import loadKatex from './compile/loadKatex.js'
 let whitelist={
-    a:{
-        href:/^https?:\/\//,
-    },
+    a:[
+        {
+            href:/^img\//,
+        },
+        {
+            href:/^https?:\/\//,
+        },
+    ],
     blockquote:{
         style:0,
     },
@@ -90,14 +95,15 @@ function test(n){
         if(!(name in whitelist))
             return
         let nodeTest=whitelist[name]
-        return[...n.attributes].every(a=>{
-            if(!(a.name in nodeTest))
-                return 
-            let attrTest=nodeTest[a.name]
-            if(attrTest==0)
-                return true
-            return attrTest.test(a.value)
-        })
+        return nodeTest instanceof Array?nodeTest.some(test):test(nodeTest)
+        function test(nodeTest){
+            return[...n.attributes].every(a=>{
+                if(!(a.name in nodeTest))
+                    return 
+                let attrTest=nodeTest[a.name]
+                return attrTest==0||attrTest.test(a.value)
+            })
+        }
     }else if(n.nodeType==3)
         return 1
 }

@@ -71,9 +71,14 @@ var loadKatex = ()=>{
         proper way by the comparison of MathJax.
 */
 let whitelist={
-    a:{
-        href:/^https?:\/\//,
-    },
+    a:[
+        {
+            href:/^img\//,
+        },
+        {
+            href:/^https?:\/\//,
+        },
+    ],
     blockquote:{
         style:0,
     },
@@ -150,14 +155,15 @@ function test(n){
         if(!(name in whitelist))
             return
         let nodeTest=whitelist[name];
-        return[...n.attributes].every(a=>{
-            if(!(a.name in nodeTest))
-                return 
-            let attrTest=nodeTest[a.name];
-            if(attrTest==0)
-                return true
-            return attrTest.test(a.value)
-        })
+        return nodeTest instanceof Array?nodeTest.some(test):test(nodeTest)
+        function test(nodeTest){
+            return[...n.attributes].every(a=>{
+                if(!(a.name in nodeTest))
+                    return 
+                let attrTest=nodeTest[a.name];
+                return attrTest==0||attrTest.test(a.value)
+            })
+        }
     }else if(n.nodeType==3)
         return 1
 }
@@ -489,7 +495,7 @@ function setupFileButton(ui){
         ui._fileButton.n.disabled=true;
         let imageIds=await ui.imageUploader.uploadImages(a);
         ui.textarea.value+=imageIds.map(id=>
-            `<img src=img/${id}c800x600.jpg>\n`
+            `<a href=img/${id}.jpg><img src=img/${id}c800x600.jpg></a>`
         ).join('');
         ui._updatePreview();
         ui.updateTextareaHeight();
@@ -824,7 +830,8 @@ var style = `
     text-decoration:none;
 }
 .chat>.message img{
-    max-width:60%;
+    max-width:100%;
+    max-height:16em;
 }
 .chat>.message>.top{
     text-align:center;
