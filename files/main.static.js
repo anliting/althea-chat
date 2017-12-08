@@ -323,7 +323,8 @@ function notificationSound(ui){
             step:0.01,
             value:ui.notificationSound,
             onchange(e){
-                ui.set('notificationSound',this.value);
+                ui.notificationSound=this.value;
+                ui.set('notificationSound');
                 ui.playNotificationSound();
             }
         })
@@ -341,7 +342,8 @@ function colorSchemeP(ui){
                 })
             ),
             {onchange(e){
-                ui.set('colorScheme',this.value);
+                ui.colorScheme=this.value;
+                ui.set('colorScheme');
             }}
         )
     )
@@ -353,7 +355,8 @@ function pressEnterToSendP(ui){
                 type:'checkbox',
                 checked:ui.pressEnterToSend,
                 onchange(e){
-                    ui.set('pressEnterToSend',this.checked);
+                    ui.pressEnterToSend=this.value;
+                    ui.set('pressEnterToSend');
                 },
             }),' Press Enter to send.')
     )
@@ -366,7 +369,8 @@ function showTexButton(ui){
                     type:'checkbox',
                     checked:ui._showTexButton,
                     onchange(e){
-                        ui.set('showTexButton',this.checked);
+                        ui.showTexButton=this.checked;
+                        ui.set('showTexButton');
                     }
                 }),
                 ' Show `',
@@ -387,25 +391,26 @@ function showSendButton(ui){
                 type:'checkbox',
                 checked:ui._showSendButton,
                 onchange(e){
-                    ui.set('showSendButton',this.checked);
+                    ui.showSendButton=this.checked;
+                    ui.set('showSendButton');
                 }
             }),' Show `Send\' button.')
     )
 }
 
+let Vim;
 async function loadVim(){
     let module=await load.module();
     return module.moduleByPath(`${
         'https://gitcdn.link/cdn/anliting/webvim'
     }/${
-        '849313f416b610e64dde75f1f80cfb2114004990'
+        'b3e769a34f699755b7f7585231e11778390e5034'
     }/src/Vim.static.js`)
 }
-async function load$2(ui,textarea){
-    if(typeof loadVim=='function')
-        loadVim=loadVim();
+async function setUpVim(ui,textarea){
     textarea.disabled=true;
-    let Vim=await loadVim;
+    if(!Vim)
+        Vim=await loadVim();
     let vim=new Vim(p=>{
         if(p=='~/.vimrc')
             return localStorage.webvimVimrc
@@ -471,7 +476,7 @@ function createTextarea(ui){
             }
             if(e.altKey&&e.key.toLowerCase()=='v'){
                 pdsp();
-                return load$2(ui,this)
+                return setUpVim(ui,this)
             }
         },
     })
@@ -754,6 +759,8 @@ Ui.prototype.append=async function(messages){
 Object.defineProperty(Ui.prototype,'colorScheme',{set(val){
     this._changeStyle(val);
     this._colorScheme=val;
+},get(){
+    return this._colorScheme
 }});
 Object.defineProperty(Ui.prototype,'style',{set(val){
     this._styleManager.forEach=val;
@@ -773,6 +780,8 @@ Object.defineProperty(Ui.prototype,'showSendButton',{set(val){
         val
     );
     this._showSendButton=val;
+},get(){
+    return this._showSendButton
 }});
 Object.defineProperty(Ui.prototype,'showTexButton',{set(val){
     this._changeButtonDisplay(
@@ -780,6 +789,8 @@ Object.defineProperty(Ui.prototype,'showTexButton',{set(val){
         this._mode=='html'&&val
     );
     this._showTexButton=val;
+},get(){
+    return this._showTexButton
 }});
 
 let bind=[
@@ -792,6 +803,8 @@ let bind=[
 var ui = {get(){
     if(this._ui)
         return this._ui
+    if(this.getSetting('colorScheme')==undefined)
+        this.setSetting('colorScheme','default');
     let ui=new Ui;
     ui.queryOlder=()=>this._getMessages('before');
     ui.sendMessage=m=>this._sendMessage(m);
@@ -806,12 +819,7 @@ var ui = {get(){
         if(v!==undefined)
             ui[k]=v;
     });
-    ui.set=(k,v)=>{
-        if(!bind.includes(k))
-            return
-        this.setSetting(k,v);
-        ui[k]=v;
-    }
+    ui.set=k=>bind.includes(k)&&this.setSetting(k,ui[k])
     ;(async()=>{
         let user=await this._currentUser;
         await user.load('nickname');

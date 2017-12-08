@@ -9,6 +9,8 @@ let bind=[
 export default{get(){
     if(this._ui)
         return this._ui
+    if(this.getSetting('colorScheme')==undefined)
+        this.setSetting('colorScheme','default')
     let ui=new Ui
     ui.queryOlder=()=>this._getMessages('before')
     ui.sendMessage=m=>this._sendMessage(m)
@@ -23,12 +25,7 @@ export default{get(){
         if(v!==undefined)
             ui[k]=v
     })
-    ui.set=(k,v)=>{
-        if(!bind.includes(k))
-            return
-        this.setSetting(k,v)
-        ui[k]=v
-    }
+    ui.set=k=>bind.includes(k)&&this.setSetting(k,ui[k])
     ;(async()=>{
         let user=await this._currentUser
         await user.load('nickname')

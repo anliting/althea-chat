@@ -101,6 +101,8 @@ Ui.prototype.append=async function(messages){
 Object.defineProperty(Ui.prototype,'colorScheme',{set(val){
     this._changeStyle(val)
     this._colorScheme=val
+},get(){
+    return this._colorScheme
 }})
 Object.defineProperty(Ui.prototype,'style',{set(val){
     this._styleManager.forEach=val
@@ -120,6 +122,8 @@ Object.defineProperty(Ui.prototype,'showSendButton',{set(val){
         val
     )
     this._showSendButton=val
+},get(){
+    return this._showSendButton
 }})
 Object.defineProperty(Ui.prototype,'showTexButton',{set(val){
     this._changeButtonDisplay(
@@ -127,5 +131,7 @@ Object.defineProperty(Ui.prototype,'showTexButton',{set(val){
         this._mode=='html'&&val
     )
     this._showTexButton=val
+},get(){
+    return this._showTexButton
 }})
 export default Ui

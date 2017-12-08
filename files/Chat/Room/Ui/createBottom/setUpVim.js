@@ -1,17 +1,17 @@
-import{dom,load as coreLoad}from '/lib/core.static.js'
+import{dom,load}from '/lib/core.static.js'
+let Vim
 async function loadVim(){
-    let module=await coreLoad.module()
+    let module=await load.module()
     return module.moduleByPath(`${
         'https://gitcdn.link/cdn/anliting/webvim'
     }/${
-        '849313f416b610e64dde75f1f80cfb2114004990'
+        'b3e769a34f699755b7f7585231e11778390e5034'
     }/src/Vim.static.js`)
 }
-async function load(ui,textarea){
-    if(typeof loadVim=='function')
-        loadVim=loadVim()
+async function setUpVim(ui,textarea){
     textarea.disabled=true
-    let Vim=await loadVim
+    if(!Vim)
+        Vim=await loadVim()
     let vim=new Vim(p=>{
         if(p=='~/.vimrc')
             return localStorage.webvimVimrc
@@ -58,4 +58,4 @@ function createViewDiv(vim){
         })}
     )
 }
-export default load
+export default setUpVim

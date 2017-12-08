@@ -36,7 +36,8 @@ function notificationSound(ui){
             step:0.01,
             value:ui.notificationSound,
             onchange(e){
-                ui.set('notificationSound',this.value)
+                ui.notificationSound=this.value
+                ui.set('notificationSound')
                 ui.playNotificationSound()
             }
         })
@@ -54,7 +55,8 @@ function colorSchemeP(ui){
                 })
             ),
             {onchange(e){
-                ui.set('colorScheme',this.value)
+                ui.colorScheme=this.value
+                ui.set('colorScheme')
             }}
         )
     )
@@ -66,7 +68,8 @@ function pressEnterToSendP(ui){
                 type:'checkbox',
                 checked:ui.pressEnterToSend,
                 onchange(e){
-                    ui.set('pressEnterToSend',this.checked)
+                    ui.pressEnterToSend=this.value
+                    ui.set('pressEnterToSend')
                 },
             }),' Press Enter to send.')
     )
@@ -79,7 +82,8 @@ function showTexButton(ui){
                     type:'checkbox',
                     checked:ui._showTexButton,
                     onchange(e){
-                        ui.set('showTexButton',this.checked)
+                        ui.showTexButton=this.checked
+                        ui.set('showTexButton')
                     }
                 }),
                 ' Show `',
@@ -100,7 +104,8 @@ function showSendButton(ui){
                 type:'checkbox',
                 checked:ui._showSendButton,
                 onchange(e){
-                    ui.set('showSendButton',this.checked)
+                    ui.showSendButton=this.checked
+                    ui.set('showSendButton')
                 }
             }),' Show `Send\' button.')
     )
