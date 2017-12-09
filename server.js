@@ -55,9 +55,11 @@ ${env.althea.loadModule(
     },
 )}
 <script type=module>
-import core from '/lib/core.static.js'
-import simple from 'https://gitcdn.link/cdn/anliting/simple.js/821a5b576b20ce78e464e85aec512b30b7d1f3fa/src/simple.static.js'
-window.altheaPreload=[core,simple]
+let a=[
+    '/lib/core.static.js',
+    'https://gitcdn.link/cdn/anliting/simple.js/821a5b576b20ce78e464e85aec512b30b7d1f3fa/src/simple.static.js',
+]
+window.altheaDontGarbageCollect=Promise.all(a.map(v=>import(v)))
 </script>
 `
     }
