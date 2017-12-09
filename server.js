@@ -54,8 +54,11 @@ ${env.althea.loadModule(
         sharedWorker:1,
     },
 )}
-<script type=module src=/lib/core.static.js>
-<script type=module src=https://gitcdn.link/cdn/anliting/simple.js/821a5b576b20ce78e464e85aec512b30b7d1f3fa/src/simple.static.js>
+<script type=module>
+import core from '/lib/core.static.js'
+import simple from 'https://gitcdn.link/cdn/anliting/simple.js/821a5b576b20ce78e464e85aec512b30b7d1f3fa/src/simple.static.js'
+window.altheaPreload=[core,simple]
+</script>
 `
     }
 }
