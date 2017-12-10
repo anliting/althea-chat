@@ -1,12 +1,10 @@
-import{dom,load}from '/lib/core.static.js'
+import{dom}from '/lib/core.static.js'
 let Vim
+function evalImport(s){
+    return eval(`import(${JSON.stringify(s)})`)
+}
 async function loadVim(){
-    let module=await load.module()
-    return module.moduleByPath(`${
-        'https://gitcdn.link/cdn/anliting/webvim'
-    }/${
-        'b3e769a34f699755b7f7585231e11778390e5034'
-    }/src/Vim.static.js`)
+    return(await evalImport('https://gitcdn.link/cdn/anliting/webvim/b3e769a34f699755b7f7585231e11778390e5034/src/Vim.static.js')).default
 }
 async function setUpVim(ui,textarea){
     textarea.disabled=true

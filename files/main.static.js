@@ -1,4 +1,4 @@
-import { ImageUploader, Site, arg as arg$1, browser, dom, general, html, load, order, uri } from '/lib/core.static.js';
+import { ImageUploader, Site, arg as arg$1, browser, dom, general, html, order, uri } from '/lib/core.static.js';
 import { DecalarativeSet, EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js';
 
 var mainStyle = `
@@ -31,7 +31,7 @@ body{
 `;
 
 let loadPromise;
-async function load$1(){
+async function load(){
     let
         root='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3',
         styleSheetUrl=`${root}/katex.min.css`,
@@ -56,7 +56,7 @@ async function load$1(){
 }
 var loadKatex = ()=>{
     if(!loadPromise)
-        loadPromise=load$1();
+        loadPromise=load();
     return loadPromise
 };
 
@@ -399,13 +399,11 @@ function showSendButton(ui){
 }
 
 let Vim;
+function evalImport(s){
+    return eval(`import(${JSON.stringify(s)})`)
+}
 async function loadVim(){
-    let module=await load.module();
-    return module.moduleByPath(`${
-        'https://gitcdn.link/cdn/anliting/webvim'
-    }/${
-        'b3e769a34f699755b7f7585231e11778390e5034'
-    }/src/Vim.static.js`)
+    return(await evalImport('https://gitcdn.link/cdn/anliting/webvim/b3e769a34f699755b7f7585231e11778390e5034/src/Vim.static.js')).default
 }
 async function setUpVim(ui,textarea){
     textarea.disabled=true;
