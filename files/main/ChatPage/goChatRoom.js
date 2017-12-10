@@ -1,11 +1,7 @@
 import{dom}from                     '/lib/core.static.js'
 import createChatRoom from          './goChatRoom/createChatRoom.js'
-import DecalarativeSet from         './DecalarativeSet.js'
 async function notification(out,chat,target){
     await Promise.all([
-        (async()=>{
-            chat=await chat
-        })(),
         (async()=>{
             target=await target
             await target.load('nickname')
@@ -41,12 +37,10 @@ async function notification(out,chat,target){
         document.title==s||(document.title=s)
     }
 }
-async function content(out,chat,target){
+function content(chat,target){
     let ui=chat.ui
-    ui.out=out
+    let out=ui.out
     this._setMainOut(out)
-    out.in({type:'body',node:ui.node})
-    out.in({type:'style',node:dom.tn(await chat.style)})
     ui.style=s=>{
         let color={
             default:'initial',
@@ -54,19 +48,22 @@ async function content(out,chat,target){
         }[s.id]
         let
             n=dom.tn(s.content+`body{background-color:${color}}`),
-            style={type:'style',node:n}
+            style={type:'style',node:n},
+            themeColor={type:'themeColor',color}
         out.in(style)
-        out.in({type:'themeColor',color})
-        return()=>out.out(style)
+        out.in(themeColor)
+        return()=>{
+            out.out(style)
+            out.out(themeColor)
+        }
     }
     notification.call(this,out,chat,target)
     ui.focus()
 }
 function showChatRoom(id){
     let
-        out=new DecalarativeSet,
         target=this._site.getUser(id),
-        chatRoom=createChatRoom.call(this,out,target)
-    content.call(this,out,chatRoom,target)
+        chatRoom=createChatRoom.call(this,target)
+    content.call(this,chatRoom,target)
 }
 export default showChatRoom

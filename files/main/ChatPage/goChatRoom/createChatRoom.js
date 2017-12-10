@@ -6,7 +6,7 @@ async function getTwoMenConversation(site,target){
         target:(await target).id,
     })
 }
-export default function(out,target){
+export default function(target){
     let chatRoom=new Chat.Room(
         async d=>this._site.send(d),
         ()=>this._site.createSession(),
@@ -22,11 +22,9 @@ export default function(out,target){
     chatRoom.settings=JSON.parse(JSON.stringify(this._settings))
     chatRoom.set=k=>{
         if(k=='settings'){
-            for(let k in chatRoom.settings)
-                this._setSetting(k,chatRoom.settings[k])
+            this._setSetting(chatRoom.settings)
         }
     }
-    chatRoom.playNotificationSound=()=>out.in({'type':'playSound'})
     chatRoom.on('goConversations',e=>{
         this.goConversationList()
     })

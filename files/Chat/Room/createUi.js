@@ -1,4 +1,5 @@
-import Ui from './Ui.js'
+import{dom}from'/lib/core.static.js'
+import Ui from './createUi/Ui.js'
 let pull=[
     'colorScheme',
     'notificationSound',
@@ -17,7 +18,6 @@ export default function(){
     }
     ui.queryOlder=()=>this._getMessages('before')
     ui.sendMessage=m=>this._sendMessage(m)
-    ui.playNotificationSound=this.playNotificationSound
     ui.imageUploader=this._imageUploader
     ui.connectionStatus=this._connectionStatus
     ui.goConversations=()=>{
@@ -28,5 +28,6 @@ export default function(){
         await user.load('nickname')
         ui.currentUserNickname=user.nickname
     })()
+    ui.out.in({type:'style',node:dom.tn(this.style)})
     return ui
 }

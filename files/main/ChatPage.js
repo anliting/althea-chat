@@ -29,14 +29,14 @@ ChatPage.prototype._playSound=function(){
         volume:this._settings.notificationSound,
     }))
 }
-ChatPage.prototype._setSetting=function(k,v){
-    this._settings[k]=v
+ChatPage.prototype._setSetting=function(settings){
+    this._settings=settings
     localStorage.altheaChatSettings=JSON.stringify(this._settings)
 }
 ChatPage.prototype._setMainOut=function(out){
     if(this._mainOut)
-        this._mainOut.forEach()
-    out.forEach({
+        this._mainOut.forEach=null
+    out.forEach={
         in:doc=>{
             switch(doc.type){
                 case'head':
@@ -79,7 +79,7 @@ ChatPage.prototype._setMainOut=function(out){
                 break
             }
         },
-    })
+    }
     this._mainOut=out
 }
 ChatPage.prototype._go=async function(status,internal=1){

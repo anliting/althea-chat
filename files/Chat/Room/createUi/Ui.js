@@ -5,24 +5,33 @@ import createBottom from    './Ui/createBottom.js'
 import StyleManager from    './Ui/StyleManager.js'
 import colorScheme from     './Ui/colorScheme.js'
 import uiAddMessages from   './Ui/uiAddMessages.js'
+import loadInterface from   './Ui/loadInterface.js'
+import{DecalarativeSet}from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js'
 function Ui(){
     this._styleManager=new StyleManager
     this._mode='plainText'
     this.users={}
+    this._changeStyle(this._colorScheme)
     this.node=dom.div(
         {className:'chat'},
         this.messageDiv=createMessage(this),
-        this.bottomDiv=createBottom(this)
+        this.bottomDiv=createBottom(this),
+        ()=>{
+            this._changeButtonDisplay(
+                '_bottomTexButton',
+                this._mode=='html'&&this._showTexButton
+            )
+            this._changeButtonDisplay(
+                '_bottomSendButton',
+                this._showSendButton
+            )
+        },
     )
-    this._changeButtonDisplay(
-        '_bottomTexButton',
-        this._mode=='html'&&this._showTexButton
-    )
-    this._changeButtonDisplay(
-        '_bottomSendButton',
-        this._showSendButton
-    )
-    this._changeStyle(this._colorScheme)
+    this.out=new DecalarativeSet
+    this.out.in({
+        type:'body',
+        node:this.node,
+    })
 }
 Ui.prototype._push=function(){
     this._settingsButton.disabled=true
@@ -116,29 +125,8 @@ Object.defineProperty(Ui.prototype,'style',{set(val){
 },get(){
     return this._styleManager.forEach
 }})
-Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
-    this._connectionStatus=val
-    this._statusNode.textContent=val=='online'?'':'offline'
-}})
-Object.defineProperty(Ui.prototype,'currentUserNickname',{set(val){
-    this.textarea.placeholder=`${val}: `
-}})
-Object.defineProperty(Ui.prototype,'showSendButton',{set(val){
-    this._changeButtonDisplay(
-        '_bottomSendButton',
-        val
-    )
-    this._showSendButton=val
-},get(){
-    return this._showSendButton
-}})
-Object.defineProperty(Ui.prototype,'showTexButton',{set(val){
-    this._changeButtonDisplay(
-        '_bottomTexButton',
-        this._mode=='html'&&val
-    )
-    this._showTexButton=val
-},get(){
-    return this._showTexButton
-}})
+Ui.prototype.playNotificationSound=function(){
+    this.out.in({'type':'playSound'})
+}
+loadInterface(Ui.prototype)
 export default Ui

@@ -1,5 +1,5 @@
 import { ImageUploader, Site, arg as arg$1, browser, dom, general, html, load, order, uri } from '/lib/core.static.js';
-import { EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/821a5b576b20ce78e464e85aec512b30b7d1f3fa/src/simple.static.js';
+import { DecalarativeSet, EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js';
 
 var mainStyle = `
 html{
@@ -653,24 +653,59 @@ async function uiAddMessages(messages,mode){
     this.syncInnerMessageDivScroll();
 }
 
+function loadInterface(o){
+    Object.defineProperty(o,'connectionStatus',{set(val){
+        this._connectionStatus=val;
+        this._statusNode.textContent=val=='online'?'':'offline';
+    }});
+    Object.defineProperty(o,'currentUserNickname',{set(val){
+        this.textarea.placeholder=`${val}: `;
+    }});
+    Object.defineProperty(o,'showSendButton',{set(val){
+        this._changeButtonDisplay(
+            '_bottomSendButton',
+            val
+        );
+        this._showSendButton=val;
+    },get(){
+        return this._showSendButton
+    }});
+    Object.defineProperty(o,'showTexButton',{set(val){
+        this._changeButtonDisplay(
+            '_bottomTexButton',
+            this._mode=='html'&&val
+        );
+        this._showTexButton=val;
+    },get(){
+        return this._showTexButton
+    }});
+}
+
 function Ui(){
     this._styleManager=new StyleManager;
     this._mode='plainText';
     this.users={};
+    this._changeStyle(this._colorScheme);
     this.node=dom.div(
         {className:'chat'},
         this.messageDiv=createMessageDiv(this),
-        this.bottomDiv=createBottom(this)
+        this.bottomDiv=createBottom(this),
+        ()=>{
+            this._changeButtonDisplay(
+                '_bottomTexButton',
+                this._mode=='html'&&this._showTexButton
+            );
+            this._changeButtonDisplay(
+                '_bottomSendButton',
+                this._showSendButton
+            );
+        },
     );
-    this._changeButtonDisplay(
-        '_bottomTexButton',
-        this._mode=='html'&&this._showTexButton
-    );
-    this._changeButtonDisplay(
-        '_bottomSendButton',
-        this._showSendButton
-    );
-    this._changeStyle(this._colorScheme);
+    this.out=new DecalarativeSet;
+    this.out.in({
+        type:'body',
+        node:this.node,
+    });
 }
 Ui.prototype._push=function(){
     this._settingsButton.disabled=true;
@@ -764,31 +799,10 @@ Object.defineProperty(Ui.prototype,'style',{set(val){
 },get(){
     return this._styleManager.forEach
 }});
-Object.defineProperty(Ui.prototype,'connectionStatus',{set(val){
-    this._connectionStatus=val;
-    this._statusNode.textContent=val=='online'?'':'offline';
-}});
-Object.defineProperty(Ui.prototype,'currentUserNickname',{set(val){
-    this.textarea.placeholder=`${val}: `;
-}});
-Object.defineProperty(Ui.prototype,'showSendButton',{set(val){
-    this._changeButtonDisplay(
-        '_bottomSendButton',
-        val
-    );
-    this._showSendButton=val;
-},get(){
-    return this._showSendButton
-}});
-Object.defineProperty(Ui.prototype,'showTexButton',{set(val){
-    this._changeButtonDisplay(
-        '_bottomTexButton',
-        this._mode=='html'&&val
-    );
-    this._showTexButton=val;
-},get(){
-    return this._showTexButton
-}});
+Ui.prototype.playNotificationSound=function(){
+    this.out.in({'type':'playSound'});
+};
+loadInterface(Ui.prototype);
 
 let pull=[
     'colorScheme',
@@ -808,7 +822,6 @@ var createUi = function(){
     };
     ui.queryOlder=()=>this._getMessages('before');
     ui.sendMessage=m=>this._sendMessage(m);
-    ui.playNotificationSound=this.playNotificationSound;
     ui.imageUploader=this._imageUploader;
     ui.connectionStatus=this._connectionStatus;
     ui.goConversations=()=>{
@@ -819,6 +832,7 @@ var createUi = function(){
         await user.load('nickname');
         ui.currentUserNickname=user.nickname;
     })();
+    ui.out.in({type:'style',node:dom.tn(this.style)});
     return ui
 };
 
@@ -898,7 +912,8 @@ function Room(
     this._imageUploader=imageUploader;
     this._conversationId=conversationId;
     this._currentUser=currentUser;
-    this._messages=[]
+    this._messages=[];
+    this.ui=createUi.call(this)
     ;(async()=>{
         await this._getMessages('before');
         let session=this._createSession();
@@ -909,8 +924,7 @@ function Room(
         });
         session.onMessage=doc=>{
             let res=doc.value;
-            if(this._ui)
-                roomAddMessagesToUi.call(this,'append',res);
+            roomAddMessagesToUi.call(this,'append',res);
             this._messages=this._messages.concat(res);
             if(res.length)
                 this.emit('append');
@@ -941,8 +955,7 @@ Room.prototype._getMessages=async function(){
         let res=await this._getMessagesPromise;
         if(res.length){
             res.sort((a,b)=>a.id-b.id);
-            if(this._ui)
-                roomAddMessagesToUi.call(this,'prepend',res);
+            roomAddMessagesToUi.call(this,'prepend',res);
             this._messages=res.concat(this._messages);
         }
     }catch(e){}
@@ -958,20 +971,23 @@ Room.prototype._sendMessage=async function(message){
 Room.prototype._send=async function(doc){
     return this._sendFunction(doc)
 };
+Room.prototype._settings={};
 Object.defineProperty(Room.prototype,'connectionStatus',{set(val){
     this._connectionStatus=val;
-    if(this._ui)
-        this._ui.connectionStatus=val;
+    this.ui.connectionStatus=val;
 }});
-Object.defineProperty(Room.prototype,'ui',{get(){
-    return this._ui||(this._ui=createUi.call(this))
+Object.defineProperty(Room.prototype,'settings',{set(val){
+    this._settings=val;
+    Object.assign(this.ui,val);
+},get(){
+    return this._settings
 }});
 Room.prototype.style=style+deviceSpecificStyle;
 async function roomAddMessagesToUi(mode,messages){
     await Promise.all(messages.map(async row=>{
-        this._ui.users[row.fromUser]=await this._getUser(row.fromUser);
+        this.ui.users[row.fromUser]=await this._getUser(row.fromUser);
     }));
-    this._ui[mode](messages);
+    this.ui[mode](messages);
 }
 
 var Chat = {
@@ -984,7 +1000,7 @@ async function getTwoMenConversation(site,target){
         target:(await target).id,
     })
 }
-var createChatRoom = function(out,target){
+var createChatRoom = function(target){
     let chatRoom=new Chat.Room(
         async d=>this._site.send(d),
         ()=>this._site.createSession(),
@@ -1000,11 +1016,9 @@ var createChatRoom = function(out,target){
     chatRoom.settings=JSON.parse(JSON.stringify(this._settings));
     chatRoom.set=k=>{
         if(k=='settings'){
-            for(let k in chatRoom.settings)
-                this._setSetting(k,chatRoom.settings[k]);
+            this._setSetting(chatRoom.settings);
         }
     };
-    chatRoom.playNotificationSound=()=>out.in({'type':'playSound'});
     chatRoom.on('goConversations',e=>{
         this.goConversationList();
     });
@@ -1017,32 +1031,8 @@ var createChatRoom = function(out,target){
     }
 };
 
-function DecalarativeSet(){
-    this.set=new Set;
-}
-DecalarativeSet.prototype.in=function(doc){
-    this.set.add(doc);
-    if(this._forEach)
-        this._forEach.in(doc);
-};
-DecalarativeSet.prototype.out=function(doc){
-    this.set.delete(doc);
-    if(this._forEach)
-        this._forEach.out(doc);
-};
-DecalarativeSet.prototype.forEach=function(doc){
-    if(this._forEach)
-        this.set.forEach(this._forEach.out);
-    this._forEach=doc;
-    if(this._forEach)
-        this.set.forEach(this._forEach.in);
-};
-
 async function notification(out,chat,target){
     await Promise.all([
-        (async()=>{
-            chat=await chat;
-        })(),
         (async()=>{
             target=await target;
             await target.load('nickname');
@@ -1078,12 +1068,10 @@ async function notification(out,chat,target){
         document.title==s||(document.title=s);
     }
 }
-async function content(out,chat,target){
+function content(chat,target){
     let ui=chat.ui;
-    ui.out=out;
+    let out=ui.out;
     this._setMainOut(out);
-    out.in({type:'body',node:ui.node});
-    out.in({type:'style',node:dom.tn(await chat.style)});
     ui.style=s=>{
         let color={
             default:'initial',
@@ -1091,20 +1079,23 @@ async function content(out,chat,target){
         }[s.id];
         let
             n=dom.tn(s.content+`body{background-color:${color}}`),
-            style={type:'style',node:n};
+            style={type:'style',node:n},
+            themeColor={type:'themeColor',color};
         out.in(style);
-        out.in({type:'themeColor',color});
-        return()=>out.out(style)
+        out.in(themeColor);
+        return()=>{
+            out.out(style);
+            out.out(themeColor);
+        }
     };
     notification.call(this,out,chat,target);
     ui.focus();
 }
 function showChatRoom(id){
     let
-        out=new DecalarativeSet,
         target=this._site.getUser(id),
-        chatRoom=createChatRoom.call(this,out,target);
-    content.call(this,out,chatRoom,target);
+        chatRoom=createChatRoom.call(this,target);
+    content.call(this,chatRoom,target);
 }
 
 function createConversation(chatPage,site,id){
@@ -1193,14 +1184,14 @@ ChatPage.prototype._playSound=function(){
         volume:this._settings.notificationSound,
     }));
 };
-ChatPage.prototype._setSetting=function(k,v){
-    this._settings[k]=v;
+ChatPage.prototype._setSetting=function(settings){
+    this._settings=settings;
     localStorage.altheaChatSettings=JSON.stringify(this._settings);
 };
 ChatPage.prototype._setMainOut=function(out){
     if(this._mainOut)
-        this._mainOut.forEach();
-    out.forEach({
+        this._mainOut.forEach=null;
+    out.forEach={
         in:doc=>{
             switch(doc.type){
                 case'head':
@@ -1243,7 +1234,7 @@ ChatPage.prototype._setMainOut=function(out){
                 break
             }
         },
-    });
+    };
     this._mainOut=out;
 };
 ChatPage.prototype._go=async function(status,internal=1){

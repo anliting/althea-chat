@@ -1,5 +1,5 @@
 import{dom,order}from '/lib/core.static.js'
-import DecalarativeSet from       './DecalarativeSet.js'
+import{DecalarativeSet}from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js'
 function createConversation(chatPage,site,id){
     let
         user=site.getUser(id),
