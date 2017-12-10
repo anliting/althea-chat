@@ -1,6 +1,6 @@
 import {browser}from '/lib/core.static.js'
 import{EventEmmiter}from 'https://gitcdn.link/cdn/anliting/simple.js/821a5b576b20ce78e464e85aec512b30b7d1f3fa/src/simple.static.js'
-import ui from './Room/prototype.ui.js'
+import createUi from './Room/createUi.js'
 import style from './Room/style.js'
 import mobileStyle from './Room/style.mobile.js'
 import desktopStyle from './Room/style.desktop.js'
@@ -88,8 +88,10 @@ Object.defineProperty(Room.prototype,'connectionStatus',{set(val){
     if(this._ui)
         this._ui.connectionStatus=val
 }})
+Object.defineProperty(Room.prototype,'ui',{get(){
+    return this._ui||(this._ui=createUi.call(this))
+}})
 Room.prototype.style=style+deviceSpecificStyle
-Object.defineProperty(Room.prototype,'ui',ui)
 async function roomAddMessagesToUi(mode,messages){
     await Promise.all(messages.map(async row=>{
         this._ui.users[row.fromUser]=await this._getUser(row.fromUser)

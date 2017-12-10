@@ -4,7 +4,6 @@ import createMessage from   './Ui/createMessage.js'
 import createBottom from    './Ui/createBottom.js'
 import StyleManager from    './Ui/StyleManager.js'
 import colorScheme from     './Ui/colorScheme.js'
-import loadSettings from    './Ui/loadSettings.js'
 import uiAddMessages from   './Ui/uiAddMessages.js'
 function Ui(){
     this._styleManager=new StyleManager
@@ -15,7 +14,15 @@ function Ui(){
         this.messageDiv=createMessage(this),
         this.bottomDiv=createBottom(this)
     )
-    loadSettings.call(this)
+    this._changeButtonDisplay(
+        '_bottomTexButton',
+        this._mode=='html'&&this._showTexButton
+    )
+    this._changeButtonDisplay(
+        '_bottomSendButton',
+        this._showSendButton
+    )
+    this._changeStyle(this._colorScheme)
 }
 Ui.prototype._push=function(){
     this._settingsButton.disabled=true

@@ -291,8 +291,8 @@ function setupSettingsButton(ui){
     ui._settingsButton=dom.button('Settings',{onclick(e){
         ui._push();
         let bF=dom.createBF();
-        dom(ui.node,bF.node);
         bF.appendChild(createSettingsDiv(ui));
+        dom(ui.node,bF.node);
         bF.on('backClick',e=>{
             ui.node.removeChild(bF.node);
             ui._pop();
@@ -355,7 +355,7 @@ function pressEnterToSendP(ui){
                 type:'checkbox',
                 checked:ui.pressEnterToSend,
                 onchange(e){
-                    ui.pressEnterToSend=this.value;
+                    ui.pressEnterToSend=this.checked;
                     ui.set('pressEnterToSend');
                 },
             }),' Press Enter to send.')
@@ -607,17 +607,6 @@ Object.defineProperty(StyleManager.prototype,'forEach',{set(forEach){
     return this._forEach
 }});
 
-function loadSettings(){
-    this._changeButtonDisplay(
-        '_bottomTexButton',
-        this._mode=='html'&&this._showTexButton
-    );
-    this._changeButtonDisplay(
-        '_bottomSendButton',
-        this._showSendButton
-    );
-}
-
 function createSingleMessageNode(ui,message){
     let
         n=dom.p(),
@@ -673,7 +662,15 @@ function Ui(){
         this.messageDiv=createMessageDiv(this),
         this.bottomDiv=createBottom(this)
     );
-    loadSettings.call(this);
+    this._changeButtonDisplay(
+        '_bottomTexButton',
+        this._mode=='html'&&this._showTexButton
+    );
+    this._changeButtonDisplay(
+        '_bottomSendButton',
+        this._showSendButton
+    );
+    this._changeStyle(this._colorScheme);
 }
 Ui.prototype._push=function(){
     this._settingsButton.disabled=true;
@@ -793,19 +790,22 @@ Object.defineProperty(Ui.prototype,'showTexButton',{set(val){
     return this._showTexButton
 }});
 
-let bind=[
+let pull=[
     'colorScheme',
     'notificationSound',
     'pressEnterToSend',
     'showSendButton',
     'showTexButton',
 ];
-var ui = {get(){
-    if(this._ui)
-        return this._ui
-    if(this.getSetting('colorScheme')==undefined)
-        this.setSetting('colorScheme','default');
+var createUi = function(){
     let ui=new Ui;
+    Object.assign(ui,this.settings);
+    ui.set=k=>{
+        if(pull.includes(k)){
+            this.settings[k]=ui[k];
+            this.set('settings');
+        }
+    };
     ui.queryOlder=()=>this._getMessages('before');
     ui.sendMessage=m=>this._sendMessage(m);
     ui.playNotificationSound=this.playNotificationSound;
@@ -813,20 +813,14 @@ var ui = {get(){
     ui.connectionStatus=this._connectionStatus;
     ui.goConversations=()=>{
         this.emit('goConversations');
-    };
-    bind.forEach(k=>{
-        let v=this.getSetting(k);
-        if(v!==undefined)
-            ui[k]=v;
-    });
-    ui.set=k=>bind.includes(k)&&this.setSetting(k,ui[k])
+    }
     ;(async()=>{
         let user=await this._currentUser;
         await user.load('nickname');
         ui.currentUserNickname=user.nickname;
     })();
-    return this._ui=ui
-}};
+    return ui
+};
 
 var style = `
 .chat{
@@ -969,8 +963,10 @@ Object.defineProperty(Room.prototype,'connectionStatus',{set(val){
     if(this._ui)
         this._ui.connectionStatus=val;
 }});
+Object.defineProperty(Room.prototype,'ui',{get(){
+    return this._ui||(this._ui=createUi.call(this))
+}});
 Room.prototype.style=style+deviceSpecificStyle;
-Object.defineProperty(Room.prototype,'ui',ui);
 async function roomAddMessagesToUi(mode,messages){
     await Promise.all(messages.map(async row=>{
         this._ui.users[row.fromUser]=await this._getUser(row.fromUser);
@@ -983,28 +979,31 @@ var Chat = {
 };
 
 async function getTwoMenConversation(site,target){
-    let id=await site.send({
+    return site.send({
         function:'getTwoMenConversation',
         target:(await target).id,
-    });
-    return id
+    })
 }
-var createChatRoom = async function(out,target){
-    let site=this._site;
+var createChatRoom = function(out,target){
     let chatRoom=new Chat.Room(
-        async d=>site.send(d),
-        ()=>site.createSession(),
-        async i=>site.getUser(i),
+        async d=>this._site.send(d),
+        ()=>this._site.createSession(),
+        async i=>this._site.getUser(i),
         new ImageUploader({
-            post:a=>site.post(a),
-            send:a=>site.send(a),
+            post:a=>this._site.post(a),
+            send:a=>this._site.send(a),
         }),
-        getTwoMenConversation(site,target),
-        site.currentUser,
+        getTwoMenConversation(this._site,target),
+        this._site.currentUser,
         target
     );
-    chatRoom.getSetting=k=>this._settings[k];
-    chatRoom.setSetting=(k,v)=>this._setSetting(k,v);
+    chatRoom.settings=JSON.parse(JSON.stringify(this._settings));
+    chatRoom.set=k=>{
+        if(k=='settings'){
+            for(let k in chatRoom.settings)
+                this._setSetting(k,chatRoom.settings[k]);
+        }
+    };
     chatRoom.playNotificationSound=()=>out.in({'type':'playSound'});
     chatRoom.on('goConversations',e=>{
         this.goConversationList();
@@ -1080,7 +1079,6 @@ async function notification(out,chat,target){
     }
 }
 async function content(out,chat,target){
-    chat=await chat;
     let ui=chat.ui;
     ui.out=out;
     this._setMainOut(out);
@@ -1088,7 +1086,7 @@ async function content(out,chat,target){
     out.in({type:'style',node:dom.tn(await chat.style)});
     ui.style=s=>{
         let color={
-            default:'',
+            default:'initial',
             gnulinux:'black',
         }[s.id];
         let

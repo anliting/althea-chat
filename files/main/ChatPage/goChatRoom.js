@@ -42,7 +42,6 @@ async function notification(out,chat,target){
     }
 }
 async function content(out,chat,target){
-    chat=await chat
     let ui=chat.ui
     ui.out=out
     this._setMainOut(out)
@@ -50,7 +49,7 @@ async function content(out,chat,target){
     out.in({type:'style',node:dom.tn(await chat.style)})
     ui.style=s=>{
         let color={
-            default:'',
+            default:'initial',
             gnulinux:'black',
         }[s.id]
         let

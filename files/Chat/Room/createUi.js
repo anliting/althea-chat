@@ -1,17 +1,20 @@
 import Ui from './Ui.js'
-let bind=[
+let pull=[
     'colorScheme',
     'notificationSound',
     'pressEnterToSend',
     'showSendButton',
     'showTexButton',
 ]
-export default{get(){
-    if(this._ui)
-        return this._ui
-    if(this.getSetting('colorScheme')==undefined)
-        this.setSetting('colorScheme','default')
+export default function(){
     let ui=new Ui
+    Object.assign(ui,this.settings)
+    ui.set=k=>{
+        if(pull.includes(k)){
+            this.settings[k]=ui[k]
+            this.set('settings')
+        }
+    }
     ui.queryOlder=()=>this._getMessages('before')
     ui.sendMessage=m=>this._sendMessage(m)
     ui.playNotificationSound=this.playNotificationSound
@@ -20,16 +23,10 @@ export default{get(){
     ui.goConversations=()=>{
         this.emit('goConversations')
     }
-    bind.forEach(k=>{
-        let v=this.getSetting(k)
-        if(v!==undefined)
-            ui[k]=v
-    })
-    ui.set=k=>bind.includes(k)&&this.setSetting(k,ui[k])
     ;(async()=>{
         let user=await this._currentUser
         await user.load('nickname')
         ui.currentUserNickname=user.nickname
     })()
-    return this._ui=ui
-}}
+    return ui
+}

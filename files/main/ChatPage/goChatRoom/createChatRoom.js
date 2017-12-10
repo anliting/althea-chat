@@ -1,28 +1,31 @@
 import{ImageUploader}from '/lib/core.static.js'
 import Chat from '../../../Chat.js'
 async function getTwoMenConversation(site,target){
-    let id=await site.send({
+    return site.send({
         function:'getTwoMenConversation',
         target:(await target).id,
     })
-    return id
 }
-export default async function(out,target){
-    let site=this._site
+export default function(out,target){
     let chatRoom=new Chat.Room(
-        async d=>site.send(d),
-        ()=>site.createSession(),
-        async i=>site.getUser(i),
+        async d=>this._site.send(d),
+        ()=>this._site.createSession(),
+        async i=>this._site.getUser(i),
         new ImageUploader({
-            post:a=>site.post(a),
-            send:a=>site.send(a),
+            post:a=>this._site.post(a),
+            send:a=>this._site.send(a),
         }),
-        getTwoMenConversation(site,target),
-        site.currentUser,
+        getTwoMenConversation(this._site,target),
+        this._site.currentUser,
         target
     )
-    chatRoom.getSetting=k=>this._settings[k]
-    chatRoom.setSetting=(k,v)=>this._setSetting(k,v)
+    chatRoom.settings=JSON.parse(JSON.stringify(this._settings))
+    chatRoom.set=k=>{
+        if(k=='settings'){
+            for(let k in chatRoom.settings)
+                this._setSetting(k,chatRoom.settings[k])
+        }
+    }
     chatRoom.playNotificationSound=()=>out.in({'type':'playSound'})
     chatRoom.on('goConversations',e=>{
         this.goConversationList()

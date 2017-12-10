@@ -4,8 +4,8 @@ function setupSettingsButton(ui){
     ui._settingsButton=dom.button('Settings',{onclick(e){
         ui._push()
         let bF=dom.createBF()
-        dom(ui.node,bF.node)
         bF.appendChild(createSettingsDiv(ui))
+        dom(ui.node,bF.node)
         bF.on('backClick',e=>{
             ui.node.removeChild(bF.node)
             ui._pop()
@@ -68,7 +68,7 @@ function pressEnterToSendP(ui){
                 type:'checkbox',
                 checked:ui.pressEnterToSend,
                 onchange(e){
-                    ui.pressEnterToSend=this.value
+                    ui.pressEnterToSend=this.checked
                     ui.set('pressEnterToSend')
                 },
             }),' Press Enter to send.')
