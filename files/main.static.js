@@ -1190,7 +1190,7 @@ ChatPage.prototype._setSetting=function(settings){
 };
 ChatPage.prototype._setMainOut=function(out){
     if(this._mainOut)
-        this._mainOut.forEach=null;
+        this._mainOut.forEach=0;
     out.forEach={
         in:doc=>{
             switch(doc.type){
