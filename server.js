@@ -32,7 +32,9 @@ async function pagemodule(env){
 }
 function get(env){
     /*
-        global pollution: altheaDontGarbageCollect katex
+        global pollution:
+            altheaDontGarbageCollect
+            katex
     */
     env.headers['content-type']='text/html;charset=utf-8'
     return{
@@ -52,15 +54,12 @@ ${env.althea.loadModule(
     },
     {
         sharedWorker:1,
+        preloadModule:[
+            '/lib/core.static.js',
+            'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js',
+        ],
     },
 )}
-<script type=module>
-let a=[
-    '/lib/core.static.js',
-    'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js',
-]
-window.altheaDontGarbageCollect=Promise.all(a.map(v=>import(v)))
-</script>
 `
     }
 }

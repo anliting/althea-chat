@@ -1,8 +1,8 @@
 module.exports=o=>{
-    o.getTwoMenConversation=
-        require('./loadChatProperties/getTwoMenConversation')
     o.getConversations=
         require('./loadChatProperties/getConversations')
+    o.getTwoMenConversation=
+        require('./loadChatProperties/getTwoMenConversation')
     o.getMessages=
         require('./loadChatProperties/getMessages')
     o.newMessage=
