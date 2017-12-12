@@ -29,7 +29,7 @@ function Room(
         await this._getMessages('before')
         let session=this._createSession()
         session.send({
-            function:       'listenMessages',
+            function:       'chat_listenMessages',
             conversation:   (await this._conversationId),
             after:          roomCalcAfter.call(this),
         })
@@ -45,7 +45,7 @@ function Room(
 Object.setPrototypeOf(Room.prototype,EventEmmiter.prototype)
 Room.prototype._getMessagesData=async function(){
     return this._send({
-        function:       'getMessages',
+        function:       'chat_getMessages',
         conversation:   (await this._conversationId),
         after:0,
         before:this._messages.length==0?0:this._messages[0].id,
@@ -74,7 +74,7 @@ Room.prototype._getMessages=async function(){
 }
 Room.prototype._sendMessage=async function(message){
     return this._send({
-        function:       'sendMessage',
+        function:       'chat_sendMessage',
         conversation:   (await this._conversationId),
         message,
     })

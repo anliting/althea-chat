@@ -3,19 +3,17 @@ async function getTwoMenConversation(a,b){
         [a,b]=[b,a]
     if(this._cache[a]&&this._cache[a][b])
         return this._cache[a][b]
-    let rows=await selectTwoMenConversation(this._db,a,b)
-    if(rows.length==0){
+    let rows
+    while(
+        rows=await selectTwoMenConversation(this._db,a,b),
+        rows.length==0
+    )
         await insertTwoMenConversation(this._db,a,b)
-        rows=await selectTwoMenConversation(this._db,a,b)
-    }
     let id=rows[0].conversation
-    setCache.call(this,a,b,id)
-    return id
-}
-function setCache(a,b,id){
     if(!(a in this._cache))
         this._cache[a]={}
     this._cache[a][b]=id
+    return id
 }
 function selectTwoMenConversation(db,a,b){
     return db.query0(`

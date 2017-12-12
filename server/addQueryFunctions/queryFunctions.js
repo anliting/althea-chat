@@ -1,8 +1,8 @@
 module.exports={
-    getMessages:            require('./queryFunctions/getMessages'),
-    sendMessage:            require('./queryFunctions/sendMessage'),
-    getTwoMenConversation:
+    chat_getConversations:  require('./queryFunctions/getConversations'),
+    chat_getMessages:       require('./queryFunctions/getMessages'),
+    chat_getTwoMenConversation:
         require('./queryFunctions/getTwoMenConversation'),
-    getConversations:       require('./queryFunctions/getConversations'),
-    listenMessages:         require('./queryFunctions/listenMessages'),
+    chat_listenMessages:    require('./queryFunctions/listenMessages'),
+    chat_sendMessage:       require('./queryFunctions/sendMessage'),
 }

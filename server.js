@@ -32,7 +32,7 @@ async function pagemodule(env){
 }
 function get(env){
     /*
-        global pollution: katex anlitingModule
+        global pollution: altheaDontGarbageCollect katex
     */
     env.headers['content-type']='text/html;charset=utf-8'
     return{
@@ -45,6 +45,7 @@ function get(env){
 <meta name=viewport content='width=device-width,initial-scale=1'>
 <body>
 ${env.althea.loadModule(
+    //'plugins/chat/main.js',
     'plugins/chat/main.static.js',
     {
         userId:env.userId

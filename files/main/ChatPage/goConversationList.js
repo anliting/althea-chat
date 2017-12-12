@@ -44,7 +44,7 @@ export default function(){
         'Conversations:',
         async n=>{
             order.post(
-                (await this._site.send('getConversations')).map(async id=>{
+                (await this._site.send('chat_getConversations')).map(async id=>{
                     let c=createConversation(this,this._site,id)
                     return{
                         n:c.n,

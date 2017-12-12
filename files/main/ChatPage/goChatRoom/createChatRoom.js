@@ -2,7 +2,7 @@ import{ImageUploader}from '/lib/core.static.js'
 import Chat from '../../../Chat.js'
 async function getTwoMenConversation(site,target){
     return site.send({
-        function:'getTwoMenConversation',
+        function:'chat_getTwoMenConversation',
         target:(await target).id,
     })
 }
