@@ -16,10 +16,10 @@ export default function(){
             this.set('settings')
         }
     }
-    ui.queryOlder=()=>this._getMessages('before')
-    ui.sendMessage=m=>this._sendMessage(m)
-    ui.imageUploader=this._imageUploader
-    ui.connectionStatus=this._connectionStatus
+    ui.queryOlder=          ()=>this._getMessages('before')
+    ui.sendMessage=         m=>this._sendMessage(m)
+    ui.imageUploader=       this._imageUploader
+    ui.connectionStatus=    this._connectionStatus
     ui.goConversations=()=>{
         this.emit('goConversations')
     }

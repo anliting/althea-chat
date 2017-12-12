@@ -1,6 +1,8 @@
 import{dom}from                     '/lib/core.static.js'
 import createChatRoom from          './goChatRoom/createChatRoom.js'
-async function notification(out,chat,target){
+import{DecalarativeSet}from         'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js'
+async function notification(chat,target){
+    let out=chat.ui.out
     await Promise.all([
         (async()=>{
             target=await target
@@ -37,33 +39,42 @@ async function notification(out,chat,target){
         document.title==s||(document.title=s)
     }
 }
-function content(chat,target){
-    let ui=chat.ui
-    let out=ui.out
-    this._setMainOut(out)
-    ui.style=s=>{
-        let color={
-            default:'initial',
-            gnulinux:'black',
-        }[s.id]
-        let
-            n=dom.tn(s.content+`body{background-color:${color}}`),
-            style={type:'style',node:n},
-            themeColor={type:'themeColor',color}
-        out.in(style)
-        out.in(themeColor)
-        return()=>{
-            out.out(style)
-            out.out(themeColor)
-        }
-    }
-    notification.call(this,out,chat,target)
-    ui.focus()
-}
 function showChatRoom(id){
     let
         target=this._site.getUser(id),
-        chatRoom=createChatRoom.call(this,target)
-    content.call(this,chatRoom,target)
+        chatRoom=createChatRoom.call(this,target),
+        out=new DecalarativeSet
+    chatRoom.ui.out.forEach={
+        in(e){
+            if(
+                e.type=='styleIdContent'
+            ){
+                let color={
+                    default:'initial',
+                    gnulinux:'black',
+                }[e.id]
+                out.in(e.style={
+                    type:'style',
+                    node:dom.tn(
+                        `${e.content}body{background-color:${color}}`
+                    ),
+                })
+                out.in(e.themeColor={type:'themeColor',color})
+            }else
+                out.in(e)
+        },
+        out(e){
+            if(
+                e.type=='styleIdContent'
+            ){
+                out.out(e.style)
+                out.out(e.themeColor)
+            }else
+                out.out(e)
+        },
+    }
+    notification.call(this,chatRoom,target)
+    this._setMainOut(out)
+    chatRoom.ui.focus()
 }
 export default showChatRoom

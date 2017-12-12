@@ -1,4 +1,10 @@
 function loadInterface(o){
+    Object.defineProperty(o,'colorScheme',{set(val){
+        this._changeStyle(val)
+        this._colorScheme=val
+    },get(){
+        return this._colorScheme
+    }})
     Object.defineProperty(o,'connectionStatus',{set(val){
         this._connectionStatus=val
         this._statusNode.textContent=val=='online'?'':'offline'
@@ -6,6 +12,9 @@ function loadInterface(o){
     Object.defineProperty(o,'currentUserNickname',{set(val){
         this.textarea.placeholder=`${val}: `
     }})
+    o.focus=function(){
+        this.textarea.focus()
+    }
     Object.defineProperty(o,'showSendButton',{set(val){
         this._changeButtonDisplay(
             '_bottomSendButton',

@@ -38,7 +38,7 @@ function notificationSound(ui){
             onchange(e){
                 ui.notificationSound=this.value
                 ui.set('notificationSound')
-                ui.playNotificationSound()
+                ui._playNotificationSound()
             }
         })
     )

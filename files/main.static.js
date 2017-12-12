@@ -325,7 +325,7 @@ function notificationSound(ui){
             onchange(e){
                 ui.notificationSound=this.value;
                 ui.set('notificationSound');
-                ui.playNotificationSound();
+                ui._playNotificationSound();
             }
         })
     )
@@ -652,6 +652,12 @@ async function uiAddMessages(messages,mode){
 }
 
 function loadInterface(o){
+    Object.defineProperty(o,'colorScheme',{set(val){
+        this._changeStyle(val);
+        this._colorScheme=val;
+    },get(){
+        return this._colorScheme
+    }});
     Object.defineProperty(o,'connectionStatus',{set(val){
         this._connectionStatus=val;
         this._statusNode.textContent=val=='online'?'':'offline';
@@ -659,6 +665,9 @@ function loadInterface(o){
     Object.defineProperty(o,'currentUserNickname',{set(val){
         this.textarea.placeholder=`${val}: `;
     }});
+    o.focus=function(){
+        this.textarea.focus();
+    };
     Object.defineProperty(o,'showSendButton',{set(val){
         this._changeButtonDisplay(
             '_bottomSendButton',
@@ -683,6 +692,7 @@ function Ui(){
     this._styleManager=new StyleManager;
     this._mode='plainText';
     this.users={};
+    this.out=new DecalarativeSet;
     this._changeStyle(this._colorScheme);
     this.node=dom.div(
         {className:'chat'},
@@ -699,7 +709,17 @@ function Ui(){
             );
         },
     );
-    this.out=new DecalarativeSet;
+    this._styleManager.forEach=s=>{
+        let doc={
+            type:'styleIdContent',
+            id:s.id,
+            content:s.content,
+        };
+        this.out.in(doc);
+        return()=>{
+            this.out.out(doc);
+        }
+    };
     this.out.in({
         type:'body',
         node:this.node,
@@ -768,11 +788,11 @@ Ui.prototype._changeStyle=function(id){
 };
 Ui.prototype._showSendButton=true;
 Ui.prototype._showTexButton=false;
+Ui.prototype._playNotificationSound=function(){
+    this.out.in({'type':'playSound'});
+};
 Ui.prototype.notificationSound=0;
 Ui.prototype.pressEnterToSend=false;
-Ui.prototype.focus=function(){
-    this.textarea.focus();
-};
 Ui.prototype.updateTextareaHeight=function(){
     let rows=Math.max(2,Math.min(4,
         this.textarea.value.split('\n').length
@@ -785,20 +805,6 @@ Ui.prototype.prepend=async function(messages){
 };
 Ui.prototype.append=async function(messages){
     return uiAddMessages.call(this,messages,'append')
-};
-Object.defineProperty(Ui.prototype,'colorScheme',{set(val){
-    this._changeStyle(val);
-    this._colorScheme=val;
-},get(){
-    return this._colorScheme
-}});
-Object.defineProperty(Ui.prototype,'style',{set(val){
-    this._styleManager.forEach=val;
-},get(){
-    return this._styleManager.forEach
-}});
-Ui.prototype.playNotificationSound=function(){
-    this.out.in({'type':'playSound'});
 };
 loadInterface(Ui.prototype);
 
@@ -818,10 +824,10 @@ var createUi = function(){
             this.set('settings');
         }
     };
-    ui.queryOlder=()=>this._getMessages('before');
-    ui.sendMessage=m=>this._sendMessage(m);
-    ui.imageUploader=this._imageUploader;
-    ui.connectionStatus=this._connectionStatus;
+    ui.queryOlder=          ()=>this._getMessages('before');
+    ui.sendMessage=         m=>this._sendMessage(m);
+    ui.imageUploader=       this._imageUploader;
+    ui.connectionStatus=    this._connectionStatus;
     ui.goConversations=()=>{
         this.emit('goConversations');
     }
@@ -1029,7 +1035,8 @@ var createChatRoom = function(target){
     }
 };
 
-async function notification(out,chat,target){
+async function notification(chat,target){
+    let out=chat.ui.out;
     await Promise.all([
         (async()=>{
             target=await target;
@@ -1066,34 +1073,43 @@ async function notification(out,chat,target){
         document.title==s||(document.title=s);
     }
 }
-function content(chat,target){
-    let ui=chat.ui;
-    let out=ui.out;
-    this._setMainOut(out);
-    ui.style=s=>{
-        let color={
-            default:'initial',
-            gnulinux:'black',
-        }[s.id];
-        let
-            n=dom.tn(s.content+`body{background-color:${color}}`),
-            style={type:'style',node:n},
-            themeColor={type:'themeColor',color};
-        out.in(style);
-        out.in(themeColor);
-        return()=>{
-            out.out(style);
-            out.out(themeColor);
-        }
-    };
-    notification.call(this,out,chat,target);
-    ui.focus();
-}
 function showChatRoom(id){
     let
         target=this._site.getUser(id),
-        chatRoom=createChatRoom.call(this,target);
-    content.call(this,chatRoom,target);
+        chatRoom=createChatRoom.call(this,target),
+        out=new DecalarativeSet;
+    chatRoom.ui.out.forEach={
+        in(e){
+            if(
+                e.type=='styleIdContent'
+            ){
+                let color={
+                    default:'initial',
+                    gnulinux:'black',
+                }[e.id];
+                out.in(e.style={
+                    type:'style',
+                    node:dom.tn(
+                        `${e.content}body{background-color:${color}}`
+                    ),
+                });
+                out.in(e.themeColor={type:'themeColor',color});
+            }else
+                out.in(e);
+        },
+        out(e){
+            if(
+                e.type=='styleIdContent'
+            ){
+                out.out(e.style);
+                out.out(e.themeColor);
+            }else
+                out.out(e);
+        },
+    };
+    notification.call(this,chatRoom,target);
+    this._setMainOut(out);
+    chatRoom.ui.focus();
 }
 
 function createConversation(chatPage,site,id){

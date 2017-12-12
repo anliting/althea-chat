@@ -1,4 +1,4 @@
-import {dom,html}from       '/lib/core.static.js'
+import{dom,html}from        '/lib/core.static.js'
 import compile from         './Ui/compile.js'
 import createMessage from   './Ui/createMessage.js'
 import createBottom from    './Ui/createBottom.js'
@@ -11,6 +11,7 @@ function Ui(){
     this._styleManager=new StyleManager
     this._mode='plainText'
     this.users={}
+    this.out=new DecalarativeSet
     this._changeStyle(this._colorScheme)
     this.node=dom.div(
         {className:'chat'},
@@ -27,7 +28,17 @@ function Ui(){
             )
         },
     )
-    this.out=new DecalarativeSet
+    this._styleManager.forEach=s=>{
+        let doc={
+            type:'styleIdContent',
+            id:s.id,
+            content:s.content,
+        }
+        this.out.in(doc)
+        return()=>{
+            this.out.out(doc)
+        }
+    }
     this.out.in({
         type:'body',
         node:this.node,
@@ -96,11 +107,11 @@ Ui.prototype._changeStyle=function(id){
 }
 Ui.prototype._showSendButton=true
 Ui.prototype._showTexButton=false
+Ui.prototype._playNotificationSound=function(){
+    this.out.in({'type':'playSound'})
+}
 Ui.prototype.notificationSound=0
 Ui.prototype.pressEnterToSend=false
-Ui.prototype.focus=function(){
-    this.textarea.focus()
-}
 Ui.prototype.updateTextareaHeight=function(){
     let rows=Math.max(2,Math.min(4,
         this.textarea.value.split('\n').length
@@ -113,20 +124,6 @@ Ui.prototype.prepend=async function(messages){
 }
 Ui.prototype.append=async function(messages){
     return uiAddMessages.call(this,messages,'append')
-}
-Object.defineProperty(Ui.prototype,'colorScheme',{set(val){
-    this._changeStyle(val)
-    this._colorScheme=val
-},get(){
-    return this._colorScheme
-}})
-Object.defineProperty(Ui.prototype,'style',{set(val){
-    this._styleManager.forEach=val
-},get(){
-    return this._styleManager.forEach
-}})
-Ui.prototype.playNotificationSound=function(){
-    this.out.in({'type':'playSound'})
 }
 loadInterface(Ui.prototype)
 export default Ui
