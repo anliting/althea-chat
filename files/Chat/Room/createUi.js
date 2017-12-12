@@ -8,21 +8,21 @@ let pull=[
     'showTexButton',
 ]
 export default function(){
-    let ui=new Ui
-    Object.assign(ui,this.settings)
-    ui.set=k=>{
-        if(pull.includes(k)){
-            this.settings[k]=ui[k]
-            this.set('settings')
-        }
-    }
-    ui.queryOlder=          ()=>this._getMessages('before')
-    ui.sendMessage=         m=>this._sendMessage(m)
-    ui.imageUploader=       this._imageUploader
-    ui.connectionStatus=    this._connectionStatus
-    ui.goConversations=()=>{
-        this.emit('goConversations')
-    }
+    let ui=Object.assign(new Ui,this.settings,{
+        set:k=>{
+            if(pull.includes(k)){
+                this.settings[k]=ui[k]
+                this.set('settings')
+            }
+        },
+        queryOlder:          ()=>this._getMessages('before'),
+        sendMessage:         m=>this._sendMessage(m),
+        imageUploader:       this._imageUploader,
+        connectionStatus:    this._connectionStatus,
+        goConversations:()=>{
+            this.emit('goConversations')
+        },
+    })
     ;(async()=>{
         let user=await this._currentUser
         await user.load('nickname')

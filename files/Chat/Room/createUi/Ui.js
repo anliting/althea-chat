@@ -2,17 +2,14 @@ import{dom,html}from        '/lib/core.static.js'
 import compile from         './Ui/compile.js'
 import createMessage from   './Ui/createMessage.js'
 import createBottom from    './Ui/createBottom.js'
-import StyleManager from    './Ui/StyleManager.js'
 import colorScheme from     './Ui/colorScheme.js'
 import uiAddMessages from   './Ui/uiAddMessages.js'
 import loadInterface from   './Ui/loadInterface.js'
 import{DecalarativeSet}from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js'
 function Ui(){
-    this._styleManager=new StyleManager
     this._mode='plainText'
     this.users={}
     this.out=new DecalarativeSet
-    this._changeStyle(this._colorScheme)
     this.node=dom.div(
         {className:'chat'},
         this.messageDiv=createMessage(this),
@@ -28,21 +25,11 @@ function Ui(){
             )
         },
     )
-    this._styleManager.forEach=s=>{
-        let doc={
-            type:'styleIdContent',
-            id:s.id,
-            content:s.content,
-        }
-        this.out.in(doc)
-        return()=>{
-            this.out.out(doc)
-        }
-    }
     this.out.in({
         type:'body',
         node:this.node,
     })
+    this.colorScheme='default'
 }
 Ui.prototype._push=function(){
     this._settingsButton.disabled=true
@@ -96,14 +83,7 @@ Ui.prototype._goConversations=function(){
     if(this.goConversations)
         this.goConversations()
 }
-Ui.prototype._colorScheme='default'
 Ui.prototype._changeStyle=function(id){
-    if(this._style!=undefined)
-        this._styleManager.remove(this._style)
-    this._style=this._styleManager.insert({
-        id,
-        content:colorScheme[id].style,
-    })
 }
 Ui.prototype._showSendButton=true
 Ui.prototype._showTexButton=false
@@ -125,5 +105,16 @@ Ui.prototype.prepend=async function(messages){
 Ui.prototype.append=async function(messages){
     return uiAddMessages.call(this,messages,'append')
 }
+Object.defineProperty(Ui.prototype,'colorScheme',{set(id){
+    this._style&&this.out.out(this._style)
+    this.out.in(this._style={
+        type:'styleIdContent',
+        id,
+        content:colorScheme[id].style,
+    })
+    this._colorScheme=id
+},get(){
+    return this._colorScheme
+}})
 loadInterface(Ui.prototype)
 export default Ui

@@ -21,9 +21,8 @@ export default function(target){
     )
     chatRoom.settings=JSON.parse(JSON.stringify(this._settings))
     chatRoom.set=k=>{
-        if(k=='settings'){
+        if(k=='settings')
             this._setSetting(chatRoom.settings)
-        }
     }
     chatRoom.on('goConversations',e=>{
         this.goConversationList()

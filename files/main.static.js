@@ -578,33 +578,6 @@ function setupFindButton(ui){
     ui._findButton=dom.button('Find');
 }
 
-function StyleManager(){
-    this._style=[];
-}
-StyleManager.prototype.insert=function(content){
-    let s={content};
-    if(this._forEach)
-        s.rollback=this._forEach(s.content);
-    this._style.push(s);
-    return this._style.length-1
-};
-StyleManager.prototype.remove=function(id){
-    let s=this._style[id];
-    if(this._forEach)
-        s.rollback();
-    this._style.splice(id,1);
-};
-Object.defineProperty(StyleManager.prototype,'forEach',{set(forEach){
-    this._forEach=forEach;
-    this._style.map(forEach?
-        s=>s.rollback=forEach(s.content)
-    :
-        s=>s.rollback()
-    );
-},get(){
-    return this._forEach
-}});
-
 function createSingleMessageNode(ui,message){
     let
         n=dom.p(),
@@ -652,12 +625,6 @@ async function uiAddMessages(messages,mode){
 }
 
 function loadInterface(o){
-    Object.defineProperty(o,'colorScheme',{set(val){
-        this._changeStyle(val);
-        this._colorScheme=val;
-    },get(){
-        return this._colorScheme
-    }});
     Object.defineProperty(o,'connectionStatus',{set(val){
         this._connectionStatus=val;
         this._statusNode.textContent=val=='online'?'':'offline';
@@ -689,11 +656,9 @@ function loadInterface(o){
 }
 
 function Ui(){
-    this._styleManager=new StyleManager;
     this._mode='plainText';
     this.users={};
     this.out=new DecalarativeSet;
-    this._changeStyle(this._colorScheme);
     this.node=dom.div(
         {className:'chat'},
         this.messageDiv=createMessageDiv(this),
@@ -709,21 +674,11 @@ function Ui(){
             );
         },
     );
-    this._styleManager.forEach=s=>{
-        let doc={
-            type:'styleIdContent',
-            id:s.id,
-            content:s.content,
-        };
-        this.out.in(doc);
-        return()=>{
-            this.out.out(doc);
-        }
-    };
     this.out.in({
         type:'body',
         node:this.node,
     });
+    this.colorScheme='default';
 }
 Ui.prototype._push=function(){
     this._settingsButton.disabled=true;
@@ -777,14 +732,7 @@ Ui.prototype._goConversations=function(){
     if(this.goConversations)
         this.goConversations();
 };
-Ui.prototype._colorScheme='default';
 Ui.prototype._changeStyle=function(id){
-    if(this._style!=undefined)
-        this._styleManager.remove(this._style);
-    this._style=this._styleManager.insert({
-        id,
-        content:colorScheme[id].style,
-    });
 };
 Ui.prototype._showSendButton=true;
 Ui.prototype._showTexButton=false;
@@ -806,6 +754,17 @@ Ui.prototype.prepend=async function(messages){
 Ui.prototype.append=async function(messages){
     return uiAddMessages.call(this,messages,'append')
 };
+Object.defineProperty(Ui.prototype,'colorScheme',{set(id){
+    this._style&&this.out.out(this._style);
+    this.out.in(this._style={
+        type:'styleIdContent',
+        id,
+        content:colorScheme[id].style,
+    });
+    this._colorScheme=id;
+},get(){
+    return this._colorScheme
+}});
 loadInterface(Ui.prototype);
 
 let pull=[
@@ -816,22 +775,21 @@ let pull=[
     'showTexButton',
 ];
 var createUi = function(){
-    let ui=new Ui;
-    Object.assign(ui,this.settings);
-    ui.set=k=>{
-        if(pull.includes(k)){
-            this.settings[k]=ui[k];
-            this.set('settings');
-        }
-    };
-    ui.queryOlder=          ()=>this._getMessages('before');
-    ui.sendMessage=         m=>this._sendMessage(m);
-    ui.imageUploader=       this._imageUploader;
-    ui.connectionStatus=    this._connectionStatus;
-    ui.goConversations=()=>{
-        this.emit('goConversations');
-    }
-    ;(async()=>{
+    let ui=Object.assign(new Ui,this.settings,{
+        set:k=>{
+            if(pull.includes(k)){
+                this.settings[k]=ui[k];
+                this.set('settings');
+            }
+        },
+        queryOlder:          ()=>this._getMessages('before'),
+        sendMessage:         m=>this._sendMessage(m),
+        imageUploader:       this._imageUploader,
+        connectionStatus:    this._connectionStatus,
+        goConversations:()=>{
+            this.emit('goConversations');
+        },
+    });(async()=>{
         let user=await this._currentUser;
         await user.load('nickname');
         ui.currentUserNickname=user.nickname;
@@ -1019,9 +977,8 @@ var createChatRoom = function(target){
     );
     chatRoom.settings=JSON.parse(JSON.stringify(this._settings));
     chatRoom.set=k=>{
-        if(k=='settings'){
+        if(k=='settings')
             this._setSetting(chatRoom.settings);
-        }
     };
     chatRoom.on('goConversations',e=>{
         this.goConversationList();
