@@ -1,4 +1,4 @@
-module.exports=async(sv,opt,env)=>{
+module.exports=(sv,opt,env)=>{
     if(!(
         typeof opt.conversation=='number'&&
         typeof opt.after=='number'
@@ -9,22 +9,13 @@ module.exports=async(sv,opt,env)=>{
         opt.conversation
     )))
         return
-    let getting=false
-    let interval=setInterval(async()=>{
-        if(getting)
-            return
-        getting=true
-        let res=await sv.getMessages(
-            opt.conversation,
-            opt.after,
-            Infinity
-        )
-        getting=false
-        if(1<env.wsConnection.readyState)
-            return clearInterval(interval,1)
-        if(res.length){
-            opt.after=Math.max(...res.map(row=>row.id))+1
+    let a=sv.listenMessages(
+        opt.conversation,
+        opt.after,
+        res=>{
+            if(1<env.wsConnection.readyState)
+                return sv.clearListenMessages(a)
             env.sendValue(res)
-        }
-    },200)
+        },
+    )
 }
