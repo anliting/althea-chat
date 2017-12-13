@@ -4,7 +4,7 @@ let
 function addQueryFunctions(althea){
     let sv=new ChatServer(althea.database)
     Object.entries(queryFunctions).map(([k,v])=>
-        althea.addQueryFunction(k,(opt,env)=>
+        althea.addQueryFunction(`chat_${k}`,(opt,env)=>
             v(sv,opt,env)
         )
     )
