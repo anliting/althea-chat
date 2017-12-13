@@ -1,4 +1,4 @@
-module.exports=(sv,opt,env)=>{
+module.exports=async(sv,opt,env)=>{
     if(!(
         typeof opt.conversation=='number'&&
         typeof opt.after=='number'
