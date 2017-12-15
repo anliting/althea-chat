@@ -13,8 +13,7 @@ function Room(
     getUser,
     imageUploader,
     conversationId,
-    currentUser,
-    target
+    currentUser
 ){
     EventEmmiter.call(this)
     this._sendFunction=send

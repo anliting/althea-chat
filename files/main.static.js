@@ -864,8 +864,7 @@ function Room(
     getUser,
     imageUploader,
     conversationId,
-    currentUser,
-    target
+    currentUser
 ){
     EventEmmiter.call(this);
     this._sendFunction=send;
@@ -964,16 +963,15 @@ async function getTwoMenConversation(site,target){
 }
 var createChatRoom = function(target){
     let chatRoom=new Chat.Room(
-        async d=>this._site.send(d),
+        d=>this._site.send(d),
         ()=>this._site.createSession(),
-        async i=>this._site.getUser(i),
+        i=>this._site.getUser(i),
         new ImageUploader({
             post:a=>this._site.post(a),
             send:a=>this._site.send(a),
         }),
         getTwoMenConversation(this._site,target),
-        this._site.currentUser,
-        target
+        this._site.currentUser
     );
     chatRoom.settings=JSON.parse(JSON.stringify(this._settings));
     chatRoom.set=k=>{
