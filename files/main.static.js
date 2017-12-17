@@ -1,5 +1,5 @@
 import { ImageUploader, Site, arg as arg$1, browser, dom, general, html, order, uri } from '/lib/core.static.js';
-import { DecalarativeSet, EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js';
+import { DecalarativeSet, EventEmmiter, dom as dom$1 } from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js';
 
 var mainStyle = `
 html{
@@ -36,15 +36,15 @@ async function load(){
         root='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3',
         styleSheetUrl=`${root}/katex.min.css`,
         scriptUrl=`${root}/katex.min.js`;
-    dom.head(
-        dom.link({
+    dom$1.head(
+        dom$1.link({
             rel:'stylesheet',
             href:styleSheetUrl,
         })
     );
     await new Promise(rs=>
-        dom.body(
-            dom.script({
+        dom$1.body(
+            dom$1.script({
                 src:scriptUrl,
                 onload(){
                     document.body.removeChild(this);
