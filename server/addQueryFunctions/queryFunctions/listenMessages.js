@@ -9,6 +9,7 @@ module.exports=async(sv,opt,env)=>{
     ))
         return
     let a=sv.listenMessages(
+        env,
         opt.conversation,
         opt.after,
         res=>{

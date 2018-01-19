@@ -26,8 +26,14 @@ function ChatServer(db){
 ChatServer.prototype.clearListenMessages=function(a){
     this._listen.delete(a)
 }
-ChatServer.prototype.listenMessages=function(conversation,after,send){
+ChatServer.prototype.listenMessages=function(
+    session,
+    conversation,
+    after,
+    send,
+){
     let a={
+        session,
         conversation,
         after,
         send,
