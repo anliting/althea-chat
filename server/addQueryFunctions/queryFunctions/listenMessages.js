@@ -1,13 +1,12 @@
 module.exports=async(sv,opt,env)=>{
     if(!(
         typeof opt.conversation=='number'&&
-        typeof opt.after=='number'
+        typeof opt.after=='number'&&
+        await sv.userOwnConversation(
+            env.currentUser,
+            opt.conversation
+        )
     ))
-        return
-    if(!(await sv.userOwnConversation(
-        env.currentUser,
-        opt.conversation
-    )))
         return
     let a=sv.listenMessages(
         opt.conversation,
