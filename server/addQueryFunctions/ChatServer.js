@@ -3,15 +3,26 @@ function pushMessages(){
         if(a.getting)
             return
         a.getting=1
-        await Promise.all(a.range.map(async(_,i)=>{
+        await Promise.all(a.range.map(async r=>{
+            if('first' in r){
+                // to be completed
+                return
+            }
+            if('last' in r)
+                return a.send(await this.getMessages(
+                    a.conversation,
+                    r.start,
+                    r.end,
+                    r.last
+                ))
             let res=await this.getMessages(
                 a.conversation,
-                a.range[i],
-                Infinity
+                r.start,
+                r.end
             )
             if(!res.length)
                 return
-            a.range[i]=Math.max(...res.map(row=>row.id))+1
+            r.start=Math.max(...res.map(row=>row.id))+1
             a.send(res)
         }))
         a.getting=0
@@ -26,8 +37,8 @@ function ChatServer(db){
     this._listenBySession=new Map
     this._intervalId=setInterval(pushMessages.bind(this),200)
 }
-ChatServer.prototype.addListenRange=function(session,after){
-    this._listenBySession.get(session).range.push(after)
+ChatServer.prototype.addListenRange=function(session,range){
+    this._listenBySession.get(session).range.push(range)
 }
 ChatServer.prototype.clearListenMessages=function(a){
     this._listen.delete(a)

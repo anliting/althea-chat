@@ -17,5 +17,8 @@ module.exports=async(sv,opt,env)=>{
             env.sendValue(res)
         },
     )
-    sv.addListenRange(env,opt.after)
+    sv.addListenRange(env,{
+        start:opt.after,
+        end:Infinity,
+    })
 }
