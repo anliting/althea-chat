@@ -11,11 +11,11 @@ module.exports=async(sv,opt,env)=>{
     let a=sv.listenMessages(
         env,
         opt.conversation,
-        opt.after,
         res=>{
             if(1<env.wsConnection.readyState)
                 return sv.clearListenMessages(a)
             env.sendValue(res)
         },
     )
+    sv.addListenRange(env,opt.after)
 }
