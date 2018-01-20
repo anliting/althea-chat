@@ -28,7 +28,7 @@ a:active,a:link,a:hover,a:visited{
 body{
     overflow-y:hidden;
 }
-`;
+`
 
 let loadPromise;
 async function load(){
@@ -58,7 +58,7 @@ var loadKatex = ()=>{
     if(!loadPromise)
         loadPromise=load();
     return loadPromise
-};
+}
 
 /*
     To support the math typesetting function, one may
@@ -774,7 +774,7 @@ let pull=[
     'showSendButton',
     'showTexButton',
 ];
-var createUi = function(){
+function createUi(){
     let ui=Object.assign(new Ui,this.settings,{
         set:k=>{
             if(pull.includes(k)){
@@ -796,7 +796,7 @@ var createUi = function(){
     })();
     ui.out.in({type:'style',node:dom.tn(this.style)});
     return ui
-};
+}
 
 var style = `
 .chat{
@@ -850,11 +850,11 @@ body:-webkit-full-screen>.chat{
     background-color:white;
 }*/
 /* end fullscreen */
-`;
+`
 
-var mobileStyle = ``;
+var mobileStyle = ``
 
-var desktopStyle = ``;
+var desktopStyle = ``
 
 let deviceSpecificStyle=browser.isMobile?mobileStyle:desktopStyle;
 let blockSize=16;
@@ -881,14 +881,24 @@ function Room(
         session.send({
             function:       'chat_listenMessages',
             conversation:   (await this._conversationId),
-            after:          roomCalcAfter.call(this),
         });
         session.onMessage=doc=>{
             let res=doc.value;
-            roomAddMessagesToUi.call(this,'append',res);
-            this._messages=this._messages.concat(res);
-            if(res.length)
-                this.emit('append');
+            switch(res.function){
+                case'pushMessages':
+                    roomAddMessagesToUi.call(this,'append',res.value);
+                    this._messages=this._messages.concat(res.value);
+                    if(res.length)
+                        this.emit('append');
+                break
+                case'listenStarted':
+                    session.send({
+                        function:       'chat_listenMessages_addRange',
+                        start:          ''+roomCalcAfter.call(this),
+                        end:            ''+Infinity,
+                    });
+                break
+            }
         };
     })();
 }
@@ -953,7 +963,7 @@ async function roomAddMessagesToUi(mode,messages){
 
 var Chat = {
     Room
-};
+}
 
 async function getTwoMenConversation(site,target){
     return site.send({
@@ -961,7 +971,7 @@ async function getTwoMenConversation(site,target){
         target:(await target).id,
     })
 }
-var createChatRoom = function(target){
+function createChatRoom(target){
     let chatRoom=new Chat.Room(
         d=>this._site.send(d),
         ()=>this._site.createSession(),
@@ -988,7 +998,7 @@ var createChatRoom = function(target){
     function update(){
         chatRoom.connectionStatus=navigator.onLine?'online':'offline';
     }
-};
+}
 
 async function notification(chat,target){
     let out=chat.ui.out;
@@ -1102,7 +1112,7 @@ function createConversation(chatPage,site,id){
         })
     }
 }
-var goConversationList = function(){
+function goConversationList(){
     document.title='Conversations - Chat';
     let out=new DecalarativeSet;
     this._setMainOut(out);
@@ -1124,7 +1134,7 @@ var goConversationList = function(){
             );
         }
     )});
-};
+}
 
 function ChatPage(site){
 /*

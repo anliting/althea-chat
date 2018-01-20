@@ -1,9 +1,9 @@
-import {browser}from '/lib/core.static.js'
-import{EventEmmiter}from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js'
-import createUi from './Room/createUi.js'
-import style from './Room/style.js'
-import mobileStyle from './Room/style.mobile.js'
-import desktopStyle from './Room/style.desktop.js'
+import{browser}from'/lib/core.static.js'
+import{EventEmmiter}from'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js'
+import createUi from'./Room/createUi.js'
+import style from'./Room/style.js'
+import mobileStyle from'./Room/style.mobile.js'
+import desktopStyle from'./Room/style.desktop.js'
 let
     deviceSpecificStyle=browser.isMobile?mobileStyle:desktopStyle,
     blockSize=16
@@ -30,14 +30,24 @@ function Room(
         session.send({
             function:       'chat_listenMessages',
             conversation:   (await this._conversationId),
-            after:          roomCalcAfter.call(this),
         })
         session.onMessage=doc=>{
             let res=doc.value
-            roomAddMessagesToUi.call(this,'append',res)
-            this._messages=this._messages.concat(res)
-            if(res.length)
-                this.emit('append')
+            switch(res.function){
+                case'pushMessages':
+                    roomAddMessagesToUi.call(this,'append',res.value)
+                    this._messages=this._messages.concat(res.value)
+                    if(res.length)
+                        this.emit('append')
+                break
+                case'listenStarted':
+                    session.send({
+                        function:       'chat_listenMessages_addRange',
+                        start:          ''+roomCalcAfter.call(this),
+                        end:            ''+Infinity,
+                    })
+                break
+            }
         }
     })()
 }

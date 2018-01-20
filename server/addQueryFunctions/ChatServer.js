@@ -44,6 +44,9 @@ ChatServer.prototype.clearListenMessages=function(a){
     this._listen.delete(a)
     this._listenBySession.delete(a.session)
 }
+ChatServer.prototype.hasListenOn=function(session){
+    return this._listenBySession.has(session)
+}
 ChatServer.prototype.listenMessages=function(session,conversation,send){
     let a={
         session,

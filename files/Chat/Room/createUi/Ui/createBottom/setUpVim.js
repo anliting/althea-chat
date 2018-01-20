@@ -1,4 +1,4 @@
-import{dom}from '/lib/core.static.js'
+import{dom}from'/lib/core.static.js'
 let Vim
 function evalImport(s){
     return eval(`import(${JSON.stringify(s)})`)

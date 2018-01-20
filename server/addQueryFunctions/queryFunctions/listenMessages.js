@@ -1,11 +1,11 @@
 module.exports=async(sv,opt,env)=>{
     if(!(
         typeof opt.conversation=='number'&&
-        typeof opt.after=='number'&&
         await sv.userOwnConversation(
             env.currentUser,
             opt.conversation
-        )
+        )&&
+        !sv.hasListenOn(env)
     ))
         return
     let a=sv.listenMessages(
@@ -14,11 +14,11 @@ module.exports=async(sv,opt,env)=>{
         res=>{
             if(1<env.wsConnection.readyState)
                 return sv.clearListenMessages(a)
-            env.sendValue(res)
+            env.sendValue({
+                function:'pushMessages',
+                value:res,
+            })
         },
     )
-    sv.addListenRange(env,{
-        start:opt.after,
-        end:Infinity,
-    })
+    env.sendValue({function:'listenStarted'})
 }
