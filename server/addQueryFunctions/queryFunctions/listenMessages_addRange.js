@@ -9,8 +9,13 @@ module.exports=async(sv,opt,session)=>{
         sv.hasListenOn(session)
     ))
         return
-    sv.addListenRange(session,{
+    let range={
         start:  opt.start,
         end:    opt.end,
-    })
+    }
+    if(typeof opt.first=='number')
+        range.first=opt.first
+    else if(typeof opt.last=='number')
+        range.last=opt.last
+    sv.addListenRange(session,range)
 }

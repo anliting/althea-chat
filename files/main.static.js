@@ -877,26 +877,45 @@ function Room(
     this.ui=createUi.call(this)
     ;(async()=>{
         await this._getMessages('before');
-        let session=this._createSession();
-        session.send({
+        let startListen;
+        this._listenStart=new Promise(rs=>startListen=rs);
+        this._session=this._createSession()
+        ;(async()=>{
+            await this._listenStart;
+            this._session.send({
+                function:       'chat_listenMessages_addRange',
+                start:          ''+roomCalcAfter.call(this),
+                end:            ''+Infinity,
+            });
+        })();
+        this._session.send({
             function:       'chat_listenMessages',
             conversation:   (await this._conversationId),
         });
-        session.onMessage=doc=>{
+        this._session.onMessage=doc=>{
+            if(doc.error)
+                return console.error(doc.error)
             let res=doc.value;
             switch(res.function){
                 case'pushMessages':
-                    roomAddMessagesToUi.call(this,'append',res.value);
-                    this._messages=this._messages.concat(res.value);
-                    if(res.length)
+                    if(!res.value.length)
+                        break
+                    res.value.sort((a,b)=>a.id-b.id);
+                    if(
+                        !this._messages.length||
+                        res.value[0].id<this._messages[0].id
+                    ){
+                        roomAddMessagesToUi.call(this,'prepend',res.value);
+                        this._messages=res.value.concat(this._messages);
+                        this._gettingMessages=0;
+                    }else{
+                        roomAddMessagesToUi.call(this,'append',res.value);
+                        this._messages=this._messages.concat(res.value);
                         this.emit('append');
+                    }
                 break
                 case'listenStarted':
-                    session.send({
-                        function:       'chat_listenMessages_addRange',
-                        start:          ''+roomCalcAfter.call(this),
-                        end:            ''+Infinity,
-                    });
+                    startListen();
                 break
             }
         };
@@ -919,18 +938,26 @@ function roomCalcAfter(){
         this._messages[this._messages.length-1].id+1
 }
 Room.prototype._getMessages=async function(){
-    if(this._getMessagesPromise)
+    if(this._gettingMessages)
         return
-    this._getMessagesPromise=this._getMessagesData();
-    try{
-        let res=await this._getMessagesPromise;
+    this._gettingMessages=1;
+    if(this._messages.length==0){
+        let res=await this._getMessagesData();
         if(res.length){
             res.sort((a,b)=>a.id-b.id);
             roomAddMessagesToUi.call(this,'prepend',res);
             this._messages=res.concat(this._messages);
         }
-    }catch(e){}
-    delete this._getMessagesPromise;
+        this._gettingMessages=0;
+    }else{
+        await this._listenStart;
+        this._session.send({
+            function:       'chat_listenMessages_addRange',
+            start:          '0',
+            end:            ''+this._messages[0].id,
+            last:           blockSize,
+        });
+    }
 };
 Room.prototype._sendMessage=async function(message){
     return this._send({

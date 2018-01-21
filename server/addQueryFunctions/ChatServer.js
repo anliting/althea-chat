@@ -3,28 +3,31 @@ function pushMessages(){
         if(a.getting)
             return
         a.getting=1
-        await Promise.all(a.range.map(async r=>{
+        a.range=(await Promise.all(a.range.map(async r=>{
             if('first' in r){
                 // to be completed
                 return
             }
-            if('last' in r)
-                return a.send(await this.getMessages(
+            if('last' in r){
+                a.send(await this.getMessages(
                     a.conversation,
                     r.start,
                     r.end,
                     r.last
                 ))
+                return
+            }
             let res=await this.getMessages(
                 a.conversation,
                 r.start,
                 r.end
             )
             if(!res.length)
-                return
+                return r
             r.start=Math.max(...res.map(row=>row.id))+1
             a.send(res)
-        }))
+            return r
+        }))).filter(a=>a)
         a.getting=0
     })
 }
