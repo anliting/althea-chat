@@ -3,7 +3,7 @@ function pushMessages(){
         if(a.getting)
             return
         a.getting=1
-        a.range=(await Promise.all(a.range.map(async r=>{
+        let newRanges=a.range.map(async r=>{
             if('first' in r){
                 // to be completed
                 return
@@ -27,7 +27,9 @@ function pushMessages(){
             r.start=Math.max(...res.map(row=>row.id))+1
             a.send(res)
             return r
-        }))).filter(a=>a)
+        })
+        a.range=[]
+        a.range.push(...(await Promise.all(newRanges)).filter(a=>a))
         a.getting=0
     })
 }
