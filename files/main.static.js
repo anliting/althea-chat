@@ -930,8 +930,7 @@ function Room(
         await this._listenStart;
         this._session.send({
             function:       'chat_listenMessages_addRange',
-            start:          ''+roomCalcAfter.call(this),
-            end:            ''+Infinity,
+            start:          roomCalcAfter.call(this),
         });
     })();
 }
@@ -967,8 +966,8 @@ Room.prototype._getMessages=async function(){
         await this._listenStart;
         this._session.send({
             function:       'chat_listenMessages_addRange',
-            start:          '0',
-            end:            ''+this._messages[0].id,
+            start:          0,
+            end:            this._messages[0].id,
             last:           blockSize,
         });
     }

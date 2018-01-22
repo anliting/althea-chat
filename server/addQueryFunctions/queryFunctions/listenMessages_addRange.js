@@ -1,21 +1,15 @@
 module.exports=async(sv,opt,session)=>{
     if(!(
-        typeof opt.start=='string'&&
-        typeof(opt.start=+opt.start)=='number'&&
-        opt.start==opt.start&&
-        typeof opt.end=='string'&&
-        typeof(opt.end=+opt.end)=='number'&&
-        opt.end==opt.end&&
         sv.hasListenOn(session)
     ))
         return
     let range={
-        start:  opt.start,
-        end:    opt.end,
+        start:  opt.start===~~opt.start?opt.start:0,
+        end:    opt.end===~~opt.end?opt.end:Infinity,
     }
-    if(typeof opt.first=='number')
+    if(opt.first===~~opt.first&&0<=opt.first)
         range.first=opt.first
-    else if(typeof opt.last=='number')
+    else if(opt.last===~~opt.last&&0<=opt.last)
         range.last=opt.last
     sv.addListenRange(session,range)
 }
