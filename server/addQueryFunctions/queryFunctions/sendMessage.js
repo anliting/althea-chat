@@ -1,17 +1,19 @@
-module.exports=async(sv,args,env)=>{
+module.exports=async(sv,opt,env)=>{
     if(!(
-        typeof args.conversation=='number'&&
-        typeof args.message=='string'
+        typeof opt=='object'&&
+        opt&&
+        typeof opt.conversation=='number'&&
+        typeof opt.message=='string'
     ))
         return
     if(!(await sv.userOwnConversation(
         env.currentUser,
-        args.conversation
+        opt.conversation
     )))
         return
     return sv.newMessage(
         env.currentUser.id,
-        args.conversation,
-        args.message
+        opt.conversation,
+        opt.message
     )
 }

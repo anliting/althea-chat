@@ -1,11 +1,12 @@
-module.exports=(sv,args,env)=>{
+module.exports=(sv,opt,env)=>{
     if(!(
-        typeof args=='object'&&
-        typeof args.target=='number'
+        typeof opt=='object'&&
+        opt&&
+        typeof opt.target=='number'
     ))
         return
     return sv.getTwoMenConversation(
         env.currentUser.id,
-        args.target
+        opt.target
     )
 }

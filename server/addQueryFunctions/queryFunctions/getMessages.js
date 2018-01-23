@@ -1,5 +1,7 @@
 module.exports=async(sv,opt,env)=>{
     if(!(
+        typeof opt=='object'&&
+        opt&&
         typeof opt.conversation=='number'&&
         typeof opt.after=='number'&&
         typeof opt.before=='number'&&(
