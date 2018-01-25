@@ -1,7 +1,6 @@
 module.exports=async(sv,opt,session)=>{
     if(!(
-        typeof opt=='object'&&
-        opt&&
+        opt instanceof Object&&
         sv.hasListenOn(session)
     ))
         return

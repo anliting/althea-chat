@@ -1,7 +1,6 @@
 module.exports=(sv,opt,env)=>{
     if(!(
-        typeof opt=='object'&&
-        opt&&
+        opt instanceof Object&&
         typeof opt.target=='number'
     ))
         return
