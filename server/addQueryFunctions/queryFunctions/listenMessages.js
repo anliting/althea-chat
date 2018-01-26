@@ -1,14 +1,11 @@
 module.exports=async(sv,opt,env)=>{
-    if(!(
-        opt instanceof Object&&
-        typeof opt.conversation=='number'&&
-        await sv.userOwnConversation(
-            env.currentUser,
-            opt.conversation
-        )&&
-        !sv.hasListenOn(env)
-    ))
-        return
+    opt instanceof Object&&
+    typeof opt.conversation=='number'&&
+    await sv.userOwnConversation(
+        env.currentUser,
+        opt.conversation
+    )&&
+    !sv.hasListenOn(env)||0()
     let a=sv.listenMessages(
         env,
         opt.conversation,

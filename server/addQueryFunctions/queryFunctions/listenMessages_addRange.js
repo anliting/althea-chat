@@ -1,9 +1,6 @@
 module.exports=async(sv,opt,session)=>{
-    if(!(
-        opt instanceof Object&&
-        sv.hasListenOn(session)
-    ))
-        return
+    opt instanceof Object&&
+    sv.hasListenOn(session)||0()
     let range={
         start:  opt.start===~~opt.start?opt.start:0,
         end:    opt.end===~~opt.end?opt.end:Infinity,

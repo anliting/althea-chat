@@ -1,20 +1,16 @@
 module.exports=async(sv,opt,env)=>{
-    if(!(
-        opt instanceof Object&&
-        typeof opt.conversation=='number'&&
-        typeof opt.after=='number'&&
-        typeof opt.before=='number'&&(
-            !('last' in opt)||
-            typeof opt.last=='number'
-        )
-    ))
-        return
+    opt instanceof Object&&
+    typeof opt.conversation=='number'&&
+    typeof opt.after=='number'&&
+    typeof opt.before=='number'&&(
+        !('last' in opt)||
+        typeof opt.last=='number'
+    )||0()
     opt.before||(opt.before=Infinity)
-    if(!(await sv.userOwnConversation(
+    await sv.userOwnConversation(
         env.currentUser,
         opt.conversation
-    )))
-        return
+    )||0()
     return sv.getMessages(
         opt.conversation,
         opt.after,

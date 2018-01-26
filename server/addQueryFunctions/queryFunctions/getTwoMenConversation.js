@@ -1,9 +1,6 @@
 module.exports=(sv,opt,env)=>{
-    if(!(
-        opt instanceof Object&&
-        typeof opt.target=='number'
-    ))
-        return
+    opt instanceof Object&&
+    typeof opt.target=='number'||0()
     return sv.getTwoMenConversation(
         env.currentUser.id,
         opt.target
