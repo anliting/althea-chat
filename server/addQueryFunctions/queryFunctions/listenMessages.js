@@ -11,12 +11,15 @@ module.exports=async(sv,opt,env)=>{
         opt.conversation,
         res=>{
             if(1<env.wsConnection.readyState)
-                return sv.clearListenMessages(a)
+                return
             env.sendValue({
                 function:'pushMessages',
                 value:res,
             })
         },
     )
+    env.wsConnection.on('close',()=>{
+        sv.clearListenMessages(a)
+    })
     env.sendValue({function:'listenStarted'})
 }

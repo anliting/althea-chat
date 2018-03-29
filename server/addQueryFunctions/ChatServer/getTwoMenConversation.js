@@ -25,9 +25,9 @@ function selectTwoMenConversation(db,a,b){
 }
 async function insertTwoMenConversation(db,a,b){
     await db.transactionDo(async cn=>{
-        let conversationId=(await db.cnQuery0(cn,`
+        let conversationId=(await cn.query(`
             insert into chat_conversation set type=0
-        `)).insertId
+        `))[0].insertId
         if(a!=b)
             await Promise.all([
                 insertUserRoom(db,cn,a,conversationId),
@@ -35,7 +35,7 @@ async function insertTwoMenConversation(db,a,b){
             ])
         else
             await insertUserRoom(db,cn,a,conversationId)
-        await db.cnQuery(cn,`
+        await cn.query(`
             insert into chat_twoMen set ?
         `,{
             userA:a,
@@ -45,7 +45,7 @@ async function insertTwoMenConversation(db,a,b){
     })
 }
 async function insertUserRoom(db,cn,user,room){
-    await db.cnQuery(cn,`
+    await cn.query(`
         insert into chat_userRoom set ?
     `,{user,room})
 }
