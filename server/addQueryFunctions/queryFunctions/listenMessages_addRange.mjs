@@ -1,4 +1,4 @@
-module.exports=async(sv,opt,session)=>{
+export default async(sv,opt,session)=>{
     opt instanceof Object&&
     sv.hasListenOn(session)||0()
     let range={

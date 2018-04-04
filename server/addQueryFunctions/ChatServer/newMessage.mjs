@@ -1,4 +1,3 @@
-module.exports=newMessage
 async function newMessage(fromUser,conversation,message){
     return(await this._db.query0(`
         insert into chat_message set ?
@@ -8,3 +7,4 @@ async function newMessage(fromUser,conversation,message){
         message
     })).insertId
 }
+export default newMessage

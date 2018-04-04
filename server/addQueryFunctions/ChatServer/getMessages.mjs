@@ -1,4 +1,3 @@
-module.exports=getMessages
 async function getMessages(conversation,after,before,last){
     let rows=await this._db.query0(`
         select
@@ -30,3 +29,4 @@ async function getMessages(conversation,after,before,last){
         message:row.message,
     }))
 }
+export default getMessages

@@ -1,6 +1,5 @@
-let
-    ChatServer=         require('./addQueryFunctions/ChatServer'),
-    queryFunctions=     require('./addQueryFunctions/queryFunctions')
+import ChatServer from './addQueryFunctions/ChatServer'
+import queryFunctions from './addQueryFunctions/queryFunctions'
 function addQueryFunctions(althea){
     let sv=new ChatServer(althea.database)
     Object.entries(queryFunctions).map(([k,v])=>
@@ -9,4 +8,4 @@ function addQueryFunctions(althea){
         )
     )
 }
-module.exports=addQueryFunctions
+export default addQueryFunctions

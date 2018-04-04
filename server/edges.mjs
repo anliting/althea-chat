@@ -1,4 +1,4 @@
-module.exports={
+export default{
     0:async db=>{
         await Promise.all([
             db.query(`

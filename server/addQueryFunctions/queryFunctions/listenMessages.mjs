@@ -1,4 +1,4 @@
-module.exports=async(sv,opt,env)=>{
+export default async(sv,opt,env)=>{
     opt instanceof Object&&
     typeof opt.conversation=='number'&&
     await sv.userOwnConversation(

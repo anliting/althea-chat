@@ -1,4 +1,3 @@
-module.exports=userOwnConversation
 async function userOwnConversation(user,conversation){
     let rows=await this._db.query0(`
         select count(*)
@@ -10,3 +9,4 @@ async function userOwnConversation(user,conversation){
     ])
     return rows[0]['count(*)']
 }
+export default userOwnConversation

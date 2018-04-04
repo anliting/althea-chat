@@ -49,4 +49,4 @@ async function insertUserRoom(db,cn,user,room){
         insert into chat_userRoom set ?
     `,{user,room})
 }
-module.exports=getTwoMenConversation
+export default getTwoMenConversation

@@ -1,4 +1,3 @@
-module.exports=getConversations
 async function getConversations(uid){
     let rows=await this._db.query0(`
         (
@@ -16,3 +15,4 @@ async function getConversations(uid){
     ])
     return rows.map(e=>e.userA)
 }
+export default getConversations

@@ -1,3 +1,8 @@
+import getConversations from'./ChatServer/getConversations'
+import getTwoMenConversation from'./ChatServer/getTwoMenConversation'
+import getMessages from'./ChatServer/getMessages'
+import newMessage from'./ChatServer/newMessage'
+import userOwnConversation from'./ChatServer/userOwnConversation'
 async function checkRange(a,r){
     if('first' in r){
         // to be completed
@@ -70,10 +75,10 @@ ChatServer.prototype.listenMessages=function(session,conversation,send){
     return a
 }
 Object.assign(ChatServer.prototype,{
-    getConversations:require('./ChatServer/getConversations'),
-    getTwoMenConversation:require('./ChatServer/getTwoMenConversation'),
-    getMessages:require('./ChatServer/getMessages'),
-    newMessage:require('./ChatServer/newMessage'),
-    userOwnConversation:require('./ChatServer/userOwnConversation'),
+    getConversations,
+    getTwoMenConversation,
+    getMessages,
+    newMessage,
+    userOwnConversation,
 })
-module.exports=ChatServer
+export default ChatServer

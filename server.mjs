@@ -1,14 +1,5 @@
-let
-    edges=              require('./server/edges'),
-    addQueryFunctions=  require('./server/addQueryFunctions')
-module.exports=async function(althea){
-    addQueryFunctions(althea)
-    await althea.updateDatabase(edges)
-    althea.addPagemodule(env=>{
-        let path=env.analyze.request.parsedUrl.pathname.split('/')
-        return path[1]=='chat'
-    },pagemodule)
-}
+import edges from './server/edges'
+import addQueryFunctions from './server/addQueryFunctions'
 async function pagemodule(env){
     let path=env.analyze.request.parsedUrl.pathname.split('/')
     if(3<path.length)
@@ -62,4 +53,12 @@ ${env.althea.loadModule(
 )}
 `
     }
+}
+export default async function(althea){
+    addQueryFunctions(althea)
+    await althea.updateDatabase(edges)
+    althea.addPagemodule(env=>{
+        let path=env.analyze.request.parsedUrl.pathname.split('/')
+        return path[1]=='chat'
+    },pagemodule)
 }
