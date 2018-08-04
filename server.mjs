@@ -36,8 +36,9 @@ function get(env){
 <title>Loading ...</title>
 <base href=${env.config.root}>
 <meta name=viewport content='width=device-width,initial-scale=1'>
-<link rel=modulepreload href="/lib/core.static.js">
 <link rel=modulepreload href="https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js">
+<link rel=modulepreload href='plugins/chat/main.static.js'>
+<link rel=modulepreload href="/lib/core.static.js">
 <body>
 ${env.althea.loadModule(
     //'plugins/chat/main.js',
