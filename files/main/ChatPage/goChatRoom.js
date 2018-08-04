@@ -1,6 +1,5 @@
-import{dom}from                     '/lib/core.static.js'
 import createChatRoom from          './goChatRoom/createChatRoom.js'
-import{DecalarativeSet}from         'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js'
+import{DecalarativeSet}from         'https://gitcdn.link/cdn/anliting/simple.js/d76165db0cfc5b4c71786bf5a5f2e51503943294/src/simple.static.js'
 async function notification(chat,target){
     let out=chat.ui.out
     await Promise.all([
@@ -55,7 +54,7 @@ function showChatRoom(id){
                 }[e.id]
                 out.in(e.style={
                     type:'style',
-                    node:dom.tn(
+                    node:document.createTextNode(
                         `${e.content}body{background-color:${color}}`
                     ),
                 })

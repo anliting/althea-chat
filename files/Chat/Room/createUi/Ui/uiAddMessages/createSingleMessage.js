@@ -1,12 +1,12 @@
 import compile from '../compile.js'
-import{dom}from '/lib/core.static.js'
+import{doe}from '/lib/core.static.js'
 function createSingleMessageNode(ui,message){
     let
-        n=dom.p(),
+        n=doe.p(),
         p=(async()=>{
             let a=await(ui.users[message.fromUser]).finalA
             let span=await createSpan(message)
-            dom(n,a,': ',span.span)
+            doe(n,a,': ',span.span)
             ui.syncInnerMessageDivScroll()
             await span.promise
             ui.syncInnerMessageDivScroll()
@@ -14,7 +14,7 @@ function createSingleMessageNode(ui,message){
     return{n,p}
 }
 async function createSpan(message){
-    let span=dom.span(
+    let span=doe.span(
         {title:(new Date(message.timestamp)).toLocaleString()},
         await compile(message.message)
     )

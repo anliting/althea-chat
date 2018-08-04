@@ -2,7 +2,7 @@ import rollup from 'rollup'
 let
     skip=[
         '/lib/core.static.js',
-        'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js',
+        'https://gitcdn.link/cdn/anliting/simple.js/d76165db0cfc5b4c71786bf5a5f2e51503943294/src/simple.static.js',
     ]
 ;(async()=>{
     await link('files/main.js','files/main.static.js',skip)

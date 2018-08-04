@@ -1,4 +1,4 @@
-import{dom}from'/lib/core.static.js'
+import{doe}from'/lib/core.static.js'
 let Vim
 function evalImport(s){
     return eval(`import(${JSON.stringify(s)})`)
@@ -41,12 +41,12 @@ async function setUpVim(ui,textarea){
 function createViewDiv(vim){
     vim.width=80
     vim.height=24
-    return dom.div(
+    return doe.div(
         vim.node,
         {onclick(){
             vim.focus()
         }},
-        n=>{dom(n.style,{
+        n=>{doe(n.style,{
             position:'fixed',
             left:'50%',
             top:'50%',

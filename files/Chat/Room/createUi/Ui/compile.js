@@ -8,7 +8,7 @@
         myself, and with KaTeX, I know how to solve the problem in a much
         proper way by the comparison of MathJax.
 */
-import{dom,uri}from '/lib/core.static.js'
+import{doe,uri}from '/lib/core.static.js'
 import loadKatex from './compile/loadKatex.js'
 let whitelist={
     a:[
@@ -109,13 +109,13 @@ function test(n){
 }
 function*renderUrl(s){
     for(let m;m=uri.matchAbsoluteUri(s);){
-        yield dom.tn(s.substring(0,m.index))
+        yield document.createTextNode(s.substring(0,m.index))
         yield /^https?/.test(m[0])?
-            dom.a(decodeURI(m[0]),{href:m[0]})
+            doe.a(decodeURI(m[0]),{href:m[0]})
         :
-            dom.tn(m[0])
+            document.createTextNode(m[0])
         s=s.substring(m.index+m[0].length)
     }
-    yield dom.tn(s)
+    yield document.createTextNode(s)
 }
 export default compile

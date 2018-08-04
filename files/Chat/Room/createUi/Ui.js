@@ -1,16 +1,16 @@
-import{dom,html}from        '/lib/core.static.js'
+import{doe,html}from        '/lib/core.static.js'
 import compile from         './Ui/compile.js'
 import createMessage from   './Ui/createMessage.js'
 import createBottom from    './Ui/createBottom.js'
 import colorScheme from     './Ui/colorScheme.js'
 import uiAddMessages from   './Ui/uiAddMessages.js'
 import loadInterface from   './Ui/loadInterface.js'
-import{DecalarativeSet}from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js'
+import{DecalarativeSet}from 'https://gitcdn.link/cdn/anliting/simple.js/d76165db0cfc5b4c71786bf5a5f2e51503943294/src/simple.static.js'
 function Ui(){
     this._mode='plainText'
     this.users={}
     this.out=new DecalarativeSet
-    this.node=dom.div(
+    this.node=doe.div(
         {className:'chat'},
         this.messageDiv=createMessage(this),
         this.bottomDiv=createBottom(this),
@@ -55,7 +55,7 @@ Ui.prototype._changeTextareaValue=function(v){
     this.updateTextareaHeight()
 }
 Ui.prototype._updatePreview=async function(){
-    dom(this._previewNode,
+    doe(this._previewNode,
         {innerHTML:''},
         await compile(this._mode=='html'?
             this.textarea.value

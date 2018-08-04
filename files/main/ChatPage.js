@@ -1,4 +1,4 @@
-import{dom}from                     '/lib/core.static.js'
+import{doe}from                     '/lib/core.static.js'
 import mainStyle from               './style.js'
 import goChatRoom from              './ChatPage/goChatRoom.js'
 import goConversationList from      './ChatPage/goConversationList.js'
@@ -16,13 +16,13 @@ function ChatPage(site){
     onpopstate=e=>{
         this._go(e.state)
     }
-    dom.head(
-        this._style=         dom.style(mainStyle),
-        this._themeColor=    dom.meta({name:'theme-color'}),
+    doe.head(
+        this._style=         doe.style(mainStyle),
+        this._themeColor=    doe.meta({name:'theme-color'}),
     )
 }
 ChatPage.prototype._playSound=function(){
-    dom.body(dom.audio({
+    doe.body(doe.audio({
         autoplay:true,
         src:'plugins/chat/main/ChatPage/notification-a.mp3',
         onended(e){document.body.removeChild(this)},

@@ -1,11 +1,11 @@
-import{dom,order}from '/lib/core.static.js'
-import{DecalarativeSet}from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js'
+import{doe,order}from '/lib/core.static.js'
+import{DecalarativeSet}from 'https://gitcdn.link/cdn/anliting/simple.js/d76165db0cfc5b4c71786bf5a5f2e51503943294/src/simple.static.js'
 function createConversation(chatPage,site,id){
     let
         user=site.getUser(id),
         tc=textContent()
     return{
-        n:dom.div(createLink()),
+        n:doe.div(createLink()),
         order:tc,
     }
     async function textContent(){
@@ -14,7 +14,7 @@ function createConversation(chatPage,site,id){
         return u.nickname||u.username
     }
     async function createLink(){
-        return dom.a(async n=>{
+        return doe.a(async n=>{
             let u=await user
             await u.load('username')
             n.href=`chat/${u.username}`
@@ -31,15 +31,14 @@ function createConversation(chatPage,site,id){
                 e.stopPropagation()
                 chatPage.goChatRoom(id)
             }
-            return tc
-        })
+        },await tc)
     }
 }
 export default function(){
     document.title='Conversations - Chat'
     let out=new DecalarativeSet
     this._setMainOut(out)
-    out.in({type:'body',node:dom.div(
+    out.in({type:'body',node:doe.div(
         {className:'conversationList'},
         'Conversations:',
         async n=>{
@@ -52,7 +51,7 @@ export default function(){
                     }
                 }),
                 (a,b)=>n.insertBefore(a.n,b.n),
-                e=>dom(n,e.n),
+                e=>doe(n,e.n),
                 (a,b)=>a.o.localeCompare(b.o)<0
             )
         }

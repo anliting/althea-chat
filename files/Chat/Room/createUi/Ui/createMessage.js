@@ -1,4 +1,4 @@
-import {dom}from '/lib/core.static.js'
+import{doe}from '/lib/core.static.js'
 function createMessageDiv(ui){
     function syncDivScroll(){
         if(ui.atBottom)
@@ -9,7 +9,7 @@ function createMessageDiv(ui){
             div.scrollTop+div.clientHeight-div.scrollHeight
         )<=1
     }
-    let div=dom.div(
+    let div=doe.div(
         {
             className:'message',
             onscroll:updateAtBottom,
@@ -18,20 +18,20 @@ function createMessageDiv(ui){
             },
         },
         ui._topDiv=createTopDiv(ui),
-        ui._previewNode=dom.div({className:'preview'})
+        ui._previewNode=doe.div({className:'preview'})
     )
     updateAtBottom()
     ui.syncInnerMessageDivScroll=syncDivScroll
     return ui._innerMessageDiv=div
 }
 function createTopDiv(ui){
-    return dom.div(
+    return doe.div(
         {className:'top'},
         createShowOlderMessagesButton(ui)
     )
 }
 function createShowOlderMessagesButton(ui){
-    return dom.button({onclick(e){
+    return doe.button({onclick(e){
         e.stopPropagation()
         ui._queryOlder()
     }},'Show Older Messages')

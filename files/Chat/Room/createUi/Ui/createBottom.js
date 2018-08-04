@@ -1,8 +1,8 @@
-import {arg,dom}from '/lib/core.static.js'
+import{arg,doe,dom}from'/lib/core.static.js'
 import setupSettingsButton from './setupSettingsButton.js'
 import setUpVim from './createBottom/setUpVim.js'
 function createTextarea(ui){
-    return dom.textarea({
+    return doe.textarea({
         rows:2,
         title:'Alt+V: Open the Web Vim editor.',
         oninput(e){
@@ -40,10 +40,10 @@ function setupFileButton(ui){
     ui._fileButton.n.style.display='none'
 }
 function setupStatusNode(ui){
-    ui._statusNode=dom.span()
+    ui._statusNode=doe.span()
 }
 function createSendButton(ui){
-    return dom.button('Send',{onclick(){
+    return doe.button('Send',{onclick(){
         ui._send()
     }})
 }
@@ -52,10 +52,10 @@ function createBottom(ui){
     setupSettingsButton(ui)
     setupFindButton(ui)
     setupStatusNode(ui)
-    return dom.div(
+    return doe.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
-        dom.a({
+        doe.a({
             href:'/chat',
             onclick(e){
                 if(!(
@@ -71,7 +71,7 @@ function createBottom(ui){
                 ui._goConversations()
             },
         },'Conversations'),' ',
-        arg.h&&[ui._findButton,' '],
+        ...(arg.h?[ui._findButton,' ']:[]),
         ui._modeSelect=createModeSelect(ui),' ',
         ui._bottomTexButton=createTexButton(ui),' ',
         ui._fileButton.n,' ',
@@ -81,18 +81,18 @@ function createBottom(ui){
     )
 }
 function createModeSelect(ui){
-    return dom.select(
+    return doe.select(
         {
             onchange(){
                 ui._setMode(this.value)
             },
         },
-        dom.option({value:'plainText'},'Plain Text'),
-        dom.option({value:'html'},'HTML'),
+        doe.option({value:'plainText'},'Plain Text'),
+        doe.option({value:'html'},'HTML'),
     )
 }
 function createTexButton(ui){
-    return dom.button(
+    return doe.button(
         {
             title:`
     When you click this button, it places \`<script type=tex>' and \`</script>' around your selection in the input.
@@ -112,15 +112,15 @@ function createTexButton(ui){
                 ui._updatePreview()
             }
         },
-        dom.span(
+        doe.span(
             n=>{n.style.fontFamily='serif'},
             'T',
-            dom.span(n=>{n.style.verticalAlign='sub'},'E'),
+            doe.span(n=>{n.style.verticalAlign='sub'},'E'),
             'X'
         )
     )
 }
 function setupFindButton(ui){
-    ui._findButton=dom.button('Find')
+    ui._findButton=doe.button('Find')
 }
 export default createBottom

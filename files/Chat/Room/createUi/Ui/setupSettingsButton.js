@@ -1,11 +1,11 @@
-import{dom}from '/lib/core.static.js'
+import{doe,dom}from '/lib/core.static.js'
 import colorScheme from './colorScheme.js'
 function setupSettingsButton(ui){
-    ui._settingsButton=dom.button('Settings',{onclick(e){
+    ui._settingsButton=doe.button('Settings',{onclick(e){
         ui._push()
         let bF=dom.createBF()
         bF.appendChild(createSettingsDiv(ui))
-        dom(ui.node,bF.node)
+        doe(ui.node,bF.node)
         bF.on('backClick',e=>{
             ui.node.removeChild(bF.node)
             ui._pop()
@@ -13,9 +13,9 @@ function setupSettingsButton(ui){
     }})
 }
 function createSettingsDiv(ui){
-    return dom.div(
+    return doe.div(
         n=>{
-            dom(n.style,{
+            doe(n.style,{
                 margin:'16px 24px',
                 width:'280px',
             })
@@ -28,9 +28,9 @@ function createSettingsDiv(ui){
     )
 }
 function notificationSound(ui){
-    return dom.p(
+    return doe.p(
         'Notification Sound: ',
-        dom.input({
+        doe.input({
             type:'range',
             max:1,
             step:0.01,
@@ -45,11 +45,11 @@ function notificationSound(ui){
 }
 function colorSchemeP(ui){
     let s=ui._colorScheme
-    return dom.p(
+    return doe.p(
         'Color Scheme: ',
-        dom.select(
+        doe.select(
             ...Object.keys(colorScheme).map(i=>
-                dom.option({value:i},colorScheme[i].name,n=>{
+                doe.option({value:i},colorScheme[i].name,n=>{
                     if(s==i)
                         n.selected=true
                 })
@@ -62,9 +62,9 @@ function colorSchemeP(ui){
     )
 }
 function pressEnterToSendP(ui){
-    return dom.p(
-        dom.label(
-            dom.input({
+    return doe.p(
+        doe.label(
+            doe.input({
                 type:'checkbox',
                 checked:ui.pressEnterToSend,
                 onchange(e){
@@ -75,9 +75,9 @@ function pressEnterToSendP(ui){
     )
 }
 function showTexButton(ui){
-    return dom.p(
-        dom.label(
-            dom.input(
+    return doe.p(
+        doe.label(
+            doe.input(
                 {
                     type:'checkbox',
                     checked:ui._showTexButton,
@@ -87,10 +87,10 @@ function showTexButton(ui){
                     }
                 }),
                 ' Show `',
-                dom.span(
+                doe.span(
                     n=>{n.style.fontFamily='serif'},
                     'T',
-                    dom.span(n=>{n.style.verticalAlign='sub'},'E'),
+                    doe.span(n=>{n.style.verticalAlign='sub'},'E'),
                     'X'
                 ),
                 '\' button in HTML mode.',
@@ -98,9 +98,9 @@ function showTexButton(ui){
     )
 }
 function showSendButton(ui){
-    return dom.p(
-        dom.label(
-            dom.input({
+    return doe.p(
+        doe.label(
+            doe.input({
                 type:'checkbox',
                 checked:ui._showSendButton,
                 onchange(e){

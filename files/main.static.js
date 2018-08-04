@@ -1,5 +1,5 @@
-import { dom, DecalarativeSet, EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/55124630741399dd0fcbee2f0396642a428cdd24/src/simple.static.js';
-import { dom as dom$1, uri, browser, arg as arg$1, html, ImageUploader, order, Site, general } from '/lib/core.static.js';
+import { doe, DecalarativeSet, EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/d76165db0cfc5b4c71786bf5a5f2e51503943294/src/simple.static.js';
+import { doe as doe$1, uri, browser, dom, arg as arg$1, html, ImageUploader, order, Site, general } from '/lib/core.static.js';
 
 var mainStyle = `
 html{
@@ -36,15 +36,15 @@ async function load(){
         root='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3',
         styleSheetUrl=`${root}/katex.min.css`,
         scriptUrl=`${root}/katex.min.js`;
-    dom.head(
-        dom.link({
+    doe.head(
+        doe.link({
             rel:'stylesheet',
             href:styleSheetUrl,
         })
     );
     await new Promise(rs=>
-        dom.body(
-            dom.script({
+        doe.body(
+            doe.script({
                 src:scriptUrl,
                 onload(){
                     document.body.removeChild(this);
@@ -169,14 +169,14 @@ function test(n){
 }
 function*renderUrl(s){
     for(let m;m=uri.matchAbsoluteUri(s);){
-        yield dom$1.tn(s.substring(0,m.index));
+        yield document.createTextNode(s.substring(0,m.index));
         yield /^https?/.test(m[0])?
-            dom$1.a(decodeURI(m[0]),{href:m[0]})
+            doe$1.a(decodeURI(m[0]),{href:m[0]})
         :
-            dom$1.tn(m[0]);
+            document.createTextNode(m[0]);
         s=s.substring(m.index+m[0].length);
     }
-    yield dom$1.tn(s);
+    yield document.createTextNode(s);
 }
 
 function createMessageDiv(ui){
@@ -189,7 +189,7 @@ function createMessageDiv(ui){
             div.scrollTop+div.clientHeight-div.scrollHeight
         )<=1;
     }
-    let div=dom$1.div(
+    let div=doe$1.div(
         {
             className:'message',
             onscroll:updateAtBottom,
@@ -198,20 +198,20 @@ function createMessageDiv(ui){
             },
         },
         ui._topDiv=createTopDiv(ui),
-        ui._previewNode=dom$1.div({className:'preview'})
+        ui._previewNode=doe$1.div({className:'preview'})
     );
     updateAtBottom();
     ui.syncInnerMessageDivScroll=syncDivScroll;
     return ui._innerMessageDiv=div
 }
 function createTopDiv(ui){
-    return dom$1.div(
+    return doe$1.div(
         {className:'top'},
         createShowOlderMessagesButton(ui)
     )
 }
 function createShowOlderMessagesButton(ui){
-    return dom$1.button({onclick(e){
+    return doe$1.button({onclick(e){
         e.stopPropagation();
         ui._queryOlder();
     }},'Show Older Messages')
@@ -288,11 +288,11 @@ let colorScheme={
 };
 
 function setupSettingsButton(ui){
-    ui._settingsButton=dom$1.button('Settings',{onclick(e){
+    ui._settingsButton=doe$1.button('Settings',{onclick(e){
         ui._push();
-        let bF=dom$1.createBF();
+        let bF=dom.createBF();
         bF.appendChild(createSettingsDiv(ui));
-        dom$1(ui.node,bF.node);
+        doe$1(ui.node,bF.node);
         bF.on('backClick',e=>{
             ui.node.removeChild(bF.node);
             ui._pop();
@@ -300,9 +300,9 @@ function setupSettingsButton(ui){
     }});
 }
 function createSettingsDiv(ui){
-    return dom$1.div(
+    return doe$1.div(
         n=>{
-            dom$1(n.style,{
+            doe$1(n.style,{
                 margin:'16px 24px',
                 width:'280px',
             });
@@ -315,9 +315,9 @@ function createSettingsDiv(ui){
     )
 }
 function notificationSound(ui){
-    return dom$1.p(
+    return doe$1.p(
         'Notification Sound: ',
-        dom$1.input({
+        doe$1.input({
             type:'range',
             max:1,
             step:0.01,
@@ -332,11 +332,11 @@ function notificationSound(ui){
 }
 function colorSchemeP(ui){
     let s=ui._colorScheme;
-    return dom$1.p(
+    return doe$1.p(
         'Color Scheme: ',
-        dom$1.select(
+        doe$1.select(
             ...Object.keys(colorScheme).map(i=>
-                dom$1.option({value:i},colorScheme[i].name,n=>{
+                doe$1.option({value:i},colorScheme[i].name,n=>{
                     if(s==i)
                         n.selected=true;
                 })
@@ -349,9 +349,9 @@ function colorSchemeP(ui){
     )
 }
 function pressEnterToSendP(ui){
-    return dom$1.p(
-        dom$1.label(
-            dom$1.input({
+    return doe$1.p(
+        doe$1.label(
+            doe$1.input({
                 type:'checkbox',
                 checked:ui.pressEnterToSend,
                 onchange(e){
@@ -362,9 +362,9 @@ function pressEnterToSendP(ui){
     )
 }
 function showTexButton(ui){
-    return dom$1.p(
-        dom$1.label(
-            dom$1.input(
+    return doe$1.p(
+        doe$1.label(
+            doe$1.input(
                 {
                     type:'checkbox',
                     checked:ui._showTexButton,
@@ -374,10 +374,10 @@ function showTexButton(ui){
                     }
                 }),
                 ' Show `',
-                dom$1.span(
+                doe$1.span(
                     n=>{n.style.fontFamily='serif';},
                     'T',
-                    dom$1.span(n=>{n.style.verticalAlign='sub';},'E'),
+                    doe$1.span(n=>{n.style.verticalAlign='sub';},'E'),
                     'X'
                 ),
                 '\' button in HTML mode.',
@@ -385,9 +385,9 @@ function showTexButton(ui){
     )
 }
 function showSendButton(ui){
-    return dom$1.p(
-        dom$1.label(
-            dom$1.input({
+    return doe$1.p(
+        doe$1.label(
+            doe$1.input({
                 type:'checkbox',
                 checked:ui._showSendButton,
                 onchange(e){
@@ -439,12 +439,12 @@ async function setUpVim(ui,textarea){
 function createViewDiv(vim){
     vim.width=80;
     vim.height=24;
-    return dom$1.div(
+    return doe$1.div(
         vim.node,
         {onclick(){
             vim.focus();
         }},
-        n=>{dom$1(n.style,{
+        n=>{doe$1(n.style,{
             position:'fixed',
             left:'50%',
             top:'50%',
@@ -456,7 +456,7 @@ function createViewDiv(vim){
 }
 
 function createTextarea(ui){
-    return dom$1.textarea({
+    return doe$1.textarea({
         rows:2,
         title:'Alt+V: Open the Web Vim editor.',
         oninput(e){
@@ -464,7 +464,7 @@ function createTextarea(ui){
             ui._updatePreview();
         },
         onkeydown(e){
-            let pdsp=_=>{e.stopPropagation(), e.preventDefault();};
+            let pdsp=_=>{e.stopPropagation(),e.preventDefault();};
             if(
                 ui.pressEnterToSend&&
                 !e.ctrlKey&&!e.shiftKey&&e.key=='Enter'
@@ -480,7 +480,7 @@ function createTextarea(ui){
     })
 }
 function setupFileButton(ui){
-    ui._fileButton=dom$1.createFileButton('Image');
+    ui._fileButton=dom.createFileButton('Image');
     ui._fileButton.on('file',async a=>{
         ui._fileButton.n.disabled=true;
         let imageIds=await ui.imageUploader.uploadImages(a);
@@ -494,10 +494,10 @@ function setupFileButton(ui){
     ui._fileButton.n.style.display='none';
 }
 function setupStatusNode(ui){
-    ui._statusNode=dom$1.span();
+    ui._statusNode=doe$1.span();
 }
 function createSendButton(ui){
-    return dom$1.button('Send',{onclick(){
+    return doe$1.button('Send',{onclick(){
         ui._send();
     }})
 }
@@ -506,10 +506,10 @@ function createBottom(ui){
     setupSettingsButton(ui);
     setupFindButton(ui);
     setupStatusNode(ui);
-    return dom$1.div(
+    return doe$1.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
-        dom$1.a({
+        doe$1.a({
             href:'/chat',
             onclick(e){
                 if(!(
@@ -525,7 +525,7 @@ function createBottom(ui){
                 ui._goConversations();
             },
         },'Conversations'),' ',
-        arg$1.h&&[ui._findButton,' '],
+        ...(arg$1.h?[ui._findButton,' ']:[]),
         ui._modeSelect=createModeSelect(ui),' ',
         ui._bottomTexButton=createTexButton(ui),' ',
         ui._fileButton.n,' ',
@@ -535,18 +535,18 @@ function createBottom(ui){
     )
 }
 function createModeSelect(ui){
-    return dom$1.select(
+    return doe$1.select(
         {
             onchange(){
                 ui._setMode(this.value);
             },
         },
-        dom$1.option({value:'plainText'},'Plain Text'),
-        dom$1.option({value:'html'},'HTML'),
+        doe$1.option({value:'plainText'},'Plain Text'),
+        doe$1.option({value:'html'},'HTML'),
     )
 }
 function createTexButton(ui){
-    return dom$1.button(
+    return doe$1.button(
         {
             title:`
     When you click this button, it places \`<script type=tex>' and \`</script>' around your selection in the input.
@@ -566,25 +566,25 @@ function createTexButton(ui){
                 ui._updatePreview();
             }
         },
-        dom$1.span(
+        doe$1.span(
             n=>{n.style.fontFamily='serif';},
             'T',
-            dom$1.span(n=>{n.style.verticalAlign='sub';},'E'),
+            doe$1.span(n=>{n.style.verticalAlign='sub';},'E'),
             'X'
         )
     )
 }
 function setupFindButton(ui){
-    ui._findButton=dom$1.button('Find');
+    ui._findButton=doe$1.button('Find');
 }
 
 function createSingleMessageNode(ui,message){
     let
-        n=dom$1.p(),
+        n=doe$1.p(),
         p=(async()=>{
             let a=await(ui.users[message.fromUser]).finalA;
             let span=await createSpan(message);
-            dom$1(n,a,': ',span.span);
+            doe$1(n,a,': ',span.span);
             ui.syncInnerMessageDivScroll();
             await span.promise;
             ui.syncInnerMessageDivScroll();
@@ -592,7 +592,7 @@ function createSingleMessageNode(ui,message){
     return{n,p}
 }
 async function createSpan(message){
-    let span=dom$1.span(
+    let span=doe$1.span(
         {title:(new Date(message.timestamp)).toLocaleString()},
         await compile(message.message)
     );
@@ -659,7 +659,7 @@ function Ui(){
     this._mode='plainText';
     this.users={};
     this.out=new DecalarativeSet;
-    this.node=dom$1.div(
+    this.node=doe$1.div(
         {className:'chat'},
         this.messageDiv=createMessageDiv(this),
         this.bottomDiv=createBottom(this),
@@ -704,7 +704,7 @@ Ui.prototype._changeTextareaValue=function(v){
     this.updateTextareaHeight();
 };
 Ui.prototype._updatePreview=async function(){
-    dom$1(this._previewNode,
+    doe$1(this._previewNode,
         {innerHTML:''},
         await compile(this._mode=='html'?
             this.textarea.value
@@ -795,7 +795,7 @@ function createUi(){
         await user.load('nickname');
         ui.currentUserNickname=user.nickname;
     })();
-    ui.out.in({type:'style',node:dom$1.tn(this.style)});
+    ui.out.in({type:'style',node:document.createTextNode(this.style)});
     return ui
 }
 
@@ -1090,7 +1090,7 @@ function showChatRoom(id){
                 }[e.id];
                 out.in(e.style={
                     type:'style',
-                    node:dom$1.tn(
+                    node:document.createTextNode(
                         `${e.content}body{background-color:${color}}`
                     ),
                 });
@@ -1118,7 +1118,7 @@ function createConversation(chatPage,site,id){
         user=site.getUser(id),
         tc=textContent();
     return{
-        n:dom$1.div(createLink()),
+        n:doe$1.div(createLink()),
         order:tc,
     }
     async function textContent(){
@@ -1127,7 +1127,7 @@ function createConversation(chatPage,site,id){
         return u.nickname||u.username
     }
     async function createLink(){
-        return dom$1.a(async n=>{
+        return doe$1.a(async n=>{
             let u=await user;
             await u.load('username');
             n.href=`chat/${u.username}`;
@@ -1144,15 +1144,14 @@ function createConversation(chatPage,site,id){
                 e.stopPropagation();
                 chatPage.goChatRoom(id);
             };
-            return tc
-        })
+        },await tc)
     }
 }
 function goConversationList(){
     document.title='Conversations - Chat';
     let out=new DecalarativeSet;
     this._setMainOut(out);
-    out.in({type:'body',node:dom$1.div(
+    out.in({type:'body',node:doe$1.div(
         {className:'conversationList'},
         'Conversations:',
         async n=>{
@@ -1165,7 +1164,7 @@ function goConversationList(){
                     }
                 }),
                 (a,b)=>n.insertBefore(a.n,b.n),
-                e=>dom$1(n,e.n),
+                e=>doe$1(n,e.n),
                 (a,b)=>a.o.localeCompare(b.o)<0
             );
         }
@@ -1186,13 +1185,13 @@ function ChatPage(site){
     onpopstate=e=>{
         this._go(e.state);
     };
-    dom$1.head(
-        this._style=         dom$1.style(mainStyle),
-        this._themeColor=    dom$1.meta({name:'theme-color'}),
+    doe$1.head(
+        this._style=         doe$1.style(mainStyle),
+        this._themeColor=    doe$1.meta({name:'theme-color'}),
     );
 }
 ChatPage.prototype._playSound=function(){
-    dom$1.body(dom$1.audio({
+    doe$1.body(doe$1.audio({
         autoplay:true,
         src:'plugins/chat/main/ChatPage/notification-a.mp3',
         onended(e){document.body.removeChild(this);},
@@ -1290,8 +1289,8 @@ ChatPage.prototype.goConversationList=function(){
 
 general();
 let chatPage=new ChatPage(new Site);
-dom$1.head(
-    dom$1.link({rel:'icon',href:'plugins/chat/icon.png'})
+doe$1.head(
+    doe$1.link({rel:'icon',href:'plugins/chat/icon.png'})
 );
 arg.userId==undefined?
     chatPage.goConversationList()

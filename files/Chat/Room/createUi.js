@@ -1,4 +1,3 @@
-import{dom}from'/lib/core.static.js'
 import Ui from './createUi/Ui.js'
 let pull=[
     'colorScheme',
@@ -28,6 +27,6 @@ export default function(){
         await user.load('nickname')
         ui.currentUserNickname=user.nickname
     })()
-    ui.out.in({type:'style',node:dom.tn(this.style)})
+    ui.out.in({type:'style',node:document.createTextNode(this.style)})
     return ui
 }
