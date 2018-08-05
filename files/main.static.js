@@ -594,7 +594,7 @@ function createSingleMessageNode(ui,message){
 async function createSpan(message){
     let span=doe$1.span(
         {title:(new Date(message.timestamp)).toLocaleString()},
-        await compile(message.message)
+        ...await compile(message.message)
     );
     return{
         span,
