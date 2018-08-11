@@ -1,11 +1,11 @@
 import{doe,order}from '/lib/core.static.js'
 import{DecalarativeSet}from 'https://gitcdn.link/cdn/anliting/simple.js/09b9cd311f438c07fd1ac0ead044aed97158faf3/src/simple.static.js'
-function createConversation(chatPage,site,id){
+async function createConversation(chatPage,site,id){
     let
         user=site.getUser(id),
         tc=textContent()
     return{
-        n:doe.div(createLink()),
+        n:doe.div(await createLink()),
         order:tc,
     }
     async function textContent(){
@@ -44,7 +44,7 @@ export default function(){
         async n=>{
             order.post(
                 (await this._site.send('chat_getConversations')).map(async id=>{
-                    let c=createConversation(this,this._site,id)
+                    let c=await createConversation(this,this._site,id)
                     return{
                         n:c.n,
                         o:await c.order

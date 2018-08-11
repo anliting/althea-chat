@@ -1113,12 +1113,12 @@ function showChatRoom(id){
     chatRoom.ui.focus();
 }
 
-function createConversation(chatPage,site,id){
+async function createConversation(chatPage,site,id){
     let
         user=site.getUser(id),
         tc=textContent();
     return {
-        n:doe$1.div(createLink()),
+        n:doe$1.div(await createLink()),
         order:tc,
     }
     async function textContent(){
@@ -1157,7 +1157,7 @@ function goConversationList(){
         async n=>{
             order.post(
                 (await this._site.send('chat_getConversations')).map(async id=>{
-                    let c=createConversation(this,this._site,id);
+                    let c=await createConversation(this,this._site,id);
                     return {
                         n:c.n,
                         o:await c.order
