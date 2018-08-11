@@ -5,7 +5,7 @@ import createBottom from    './Ui/createBottom.js'
 import colorScheme from     './Ui/colorScheme.js'
 import uiAddMessages from   './Ui/uiAddMessages.js'
 import loadInterface from   './Ui/loadInterface.js'
-import{DecalarativeSet}from 'https://gitcdn.link/cdn/anliting/simple.js/d76165db0cfc5b4c71786bf5a5f2e51503943294/src/simple.static.js'
+import{DecalarativeSet}from 'https://gitcdn.link/cdn/anliting/simple.js/09b9cd311f438c07fd1ac0ead044aed97158faf3/src/simple.static.js'
 function Ui(){
     this._mode='plainText'
     this.users={}

@@ -36,7 +36,7 @@ function get(env){
 <title>Loading ...</title>
 <base href=${env.config.root}>
 <meta name=viewport content='width=device-width,initial-scale=1'>
-<link rel=modulepreload href="https://gitcdn.link/cdn/anliting/simple.js/d76165db0cfc5b4c71786bf5a5f2e51503943294/src/simple.static.js">
+<link rel=modulepreload href="https://gitcdn.link/cdn/anliting/simple.js/09b9cd311f438c07fd1ac0ead044aed97158faf3/src/simple.static.js">
 <link rel=modulepreload href='plugins/chat/main.static.js'>
 <link rel=modulepreload href="/lib/core.static.js">
 <body>

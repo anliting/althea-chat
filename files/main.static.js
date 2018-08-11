@@ -1,4 +1,4 @@
-import { doe, DecalarativeSet, EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/d76165db0cfc5b4c71786bf5a5f2e51503943294/src/simple.static.js';
+import { doe, DecalarativeSet, EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/09b9cd311f438c07fd1ac0ead044aed97158faf3/src/simple.static.js';
 import { doe as doe$1, uri, browser, dom, arg as arg$1, html, ImageUploader, order, Site, general } from '/lib/core.static.js';
 
 var mainStyle = `
@@ -28,7 +28,7 @@ a:active,a:link,a:hover,a:visited{
 body{
     overflow-y:hidden;
 }
-`
+`;
 
 let loadPromise;
 async function load(){
@@ -58,7 +58,7 @@ var loadKatex = ()=>{
     if(!loadPromise)
         loadPromise=load();
     return loadPromise
-}
+};
 
 /*
     To support the math typesetting function, one may
@@ -122,7 +122,7 @@ async function compile(s){
         `<!docytpe html><title>0</title><body>${s}`,'text/html'
     ).body;
     await traverse(body);
-    return[...body.childNodes]
+    return [...body.childNodes]
 }
 async function traverse(m){
     await Promise.all([...m.childNodes].map(async n=>{
@@ -157,7 +157,7 @@ function test(n){
         let nodeTest=whitelist[name];
         return nodeTest instanceof Array?nodeTest.some(test):test(nodeTest)
         function test(nodeTest){
-            return[...n.attributes].every(a=>{
+            return [...n.attributes].every(a=>{
                 if(!(a.name in nodeTest))
                     return 
                 let attrTest=nodeTest[a.name];
@@ -403,7 +403,7 @@ function evalImport(s){
     return eval(`import(${JSON.stringify(s)})`)
 }
 async function loadVim(){
-    return(await evalImport('https://gitcdn.link/cdn/anliting/webvim/b3e769a34f699755b7f7585231e11778390e5034/src/Vim.static.js')).default
+    return (await evalImport('https://gitcdn.link/cdn/anliting/webvim/b3e769a34f699755b7f7585231e11778390e5034/src/Vim.static.js')).default
 }
 async function setUpVim(ui,textarea){
     textarea.disabled=true;
@@ -589,14 +589,14 @@ function createSingleMessageNode(ui,message){
             await span.promise;
             ui.syncInnerMessageDivScroll();
         })();
-    return{n,p}
+    return {n,p}
 }
 async function createSpan(message){
     let span=doe$1.span(
         {title:(new Date(message.timestamp)).toLocaleString()},
         ...await compile(message.message)
     );
-    return{
+    return {
         span,
         promise:Promise.all(
             [...span.getElementsByTagName('img')].map(img=>
@@ -851,11 +851,11 @@ body:-webkit-full-screen>.chat{
     background-color:white;
 }*/
 /* end fullscreen */
-`
+`;
 
-var mobileStyle = ``
+var mobileStyle = ``;
 
-var desktopStyle = ``
+var desktopStyle = ``;
 
 async function roomAddMessagesToUi(mode,messages){
     await Promise.all(messages.map(async row=>{
@@ -999,7 +999,7 @@ Room.prototype.style=style+deviceSpecificStyle;
 
 var Chat = {
     Room
-}
+};
 
 async function getTwoMenConversation(site,target){
     return site.send({
@@ -1117,7 +1117,7 @@ function createConversation(chatPage,site,id){
     let
         user=site.getUser(id),
         tc=textContent();
-    return{
+    return {
         n:doe$1.div(createLink()),
         order:tc,
     }
@@ -1158,7 +1158,7 @@ function goConversationList(){
             order.post(
                 (await this._site.send('chat_getConversations')).map(async id=>{
                     let c=createConversation(this,this._site,id);
-                    return{
+                    return {
                         n:c.n,
                         o:await c.order
                     }
