@@ -1,8 +1,8 @@
-import getConversations from'./ChatServer/getConversations'
-import getTwoMenConversation from'./ChatServer/getTwoMenConversation'
-import getMessages from'./ChatServer/getMessages'
-import newMessage from'./ChatServer/newMessage'
-import userOwnConversation from'./ChatServer/userOwnConversation'
+import getConversations from'./ChatServer/getConversations.mjs'
+import getTwoMenConversation from'./ChatServer/getTwoMenConversation.mjs'
+import getMessages from'./ChatServer/getMessages.mjs'
+import newMessage from'./ChatServer/newMessage.mjs'
+import userOwnConversation from'./ChatServer/userOwnConversation.mjs'
 async function checkRange(a,r){
     if('first' in r){
         // to be completed

@@ -1,5 +1,5 @@
-import ChatServer from './addQueryFunctions/ChatServer'
-import queryFunctions from './addQueryFunctions/queryFunctions'
+import ChatServer from './addQueryFunctions/ChatServer.mjs'
+import queryFunctions from './addQueryFunctions/queryFunctions.mjs'
 function addQueryFunctions(althea){
     let sv=new ChatServer(althea.database)
     Object.entries(queryFunctions).map(([k,v])=>

@@ -1,5 +1,5 @@
-import edges from './server/edges'
-import addQueryFunctions from './server/addQueryFunctions'
+import edges from './server/edges.mjs'
+import addQueryFunctions from './server/addQueryFunctions.mjs'
 async function pagemodule(env){
     let path=env.analyze.request.parsedUrl.pathname.split('/')
     if(3<path.length)

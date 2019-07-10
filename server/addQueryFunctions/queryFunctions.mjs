@@ -1,10 +1,11 @@
-import getConversations from './queryFunctions/getConversations'
-import getMessages from './queryFunctions/getMessages'
-import getTwoMenConversation from './queryFunctions/getTwoMenConversation'
-import listenMessages from './queryFunctions/listenMessages'
+import getConversations from './queryFunctions/getConversations.mjs'
+import getMessages from './queryFunctions/getMessages.mjs'
+import getTwoMenConversation from
+    './queryFunctions/getTwoMenConversation.mjs'
+import listenMessages from './queryFunctions/listenMessages.mjs'
 import listenMessages_addRange from
-    './queryFunctions/listenMessages_addRange'
-import sendMessage from './queryFunctions/sendMessage'
+    './queryFunctions/listenMessages_addRange.mjs'
+import sendMessage from './queryFunctions/sendMessage.mjs'
 export default{
     getConversations,
     getMessages,
