@@ -1,5 +1,4 @@
-import { doe, DecalarativeSet, EventEmmiter } from 'https://gitcdn.link/cdn/anliting/simple.js/09b9cd311f438c07fd1ac0ead044aed97158faf3/src/simple.static.js';
-import { doe as doe$1, uri, browser, dom, arg as arg$1, html, ImageUploader, order, Site, general } from '/lib/core.static.js';
+import { doe, uri, browser, dom, arg as arg$1, html, EventEmmiter, ImageUploader, order, general, Site } from '/lib/core.static.js';
 
 var mainStyle = `
 html{
@@ -171,7 +170,7 @@ function*renderUrl(s){
     for(let m;m=uri.matchAbsoluteUri(s);){
         yield document.createTextNode(s.substring(0,m.index));
         yield /^https?/.test(m[0])?
-            doe$1.a(decodeURI(m[0]),{href:m[0]})
+            doe.a(decodeURI(m[0]),{href:m[0]})
         :
             document.createTextNode(m[0]);
         s=s.substring(m.index+m[0].length);
@@ -189,7 +188,7 @@ function createMessageDiv(ui){
             div.scrollTop+div.clientHeight-div.scrollHeight
         )<=1;
     }
-    let div=doe$1.div(
+    let div=doe.div(
         {
             className:'message',
             onscroll:updateAtBottom,
@@ -198,20 +197,20 @@ function createMessageDiv(ui){
             },
         },
         ui._topDiv=createTopDiv(ui),
-        ui._previewNode=doe$1.div({className:'preview'})
+        ui._previewNode=doe.div({className:'preview'})
     );
     updateAtBottom();
     ui.syncInnerMessageDivScroll=syncDivScroll;
     return ui._innerMessageDiv=div
 }
 function createTopDiv(ui){
-    return doe$1.div(
+    return doe.div(
         {className:'top'},
         createShowOlderMessagesButton(ui)
     )
 }
 function createShowOlderMessagesButton(ui){
-    return doe$1.button({onclick(e){
+    return doe.button({onclick(e){
         e.stopPropagation();
         ui._queryOlder();
     }},'Show Older Messages')
@@ -288,11 +287,11 @@ let colorScheme={
 };
 
 function setupSettingsButton(ui){
-    ui._settingsButton=doe$1.button('Settings',{onclick(e){
+    ui._settingsButton=doe.button('Settings',{onclick(e){
         ui._push();
         let bF=dom.createBF();
         bF.appendChild(createSettingsDiv(ui));
-        doe$1(ui.node,bF.node);
+        doe(ui.node,bF.node);
         bF.on('backClick',e=>{
             ui.node.removeChild(bF.node);
             ui._pop();
@@ -300,9 +299,9 @@ function setupSettingsButton(ui){
     }});
 }
 function createSettingsDiv(ui){
-    return doe$1.div(
+    return doe.div(
         n=>{
-            doe$1(n.style,{
+            doe(n.style,{
                 margin:'16px 24px',
                 width:'280px',
             });
@@ -315,9 +314,9 @@ function createSettingsDiv(ui){
     )
 }
 function notificationSound(ui){
-    return doe$1.p(
+    return doe.p(
         'Notification Sound: ',
-        doe$1.input({
+        doe.input({
             type:'range',
             max:1,
             step:0.01,
@@ -332,11 +331,11 @@ function notificationSound(ui){
 }
 function colorSchemeP(ui){
     let s=ui._colorScheme;
-    return doe$1.p(
+    return doe.p(
         'Color Scheme: ',
-        doe$1.select(
+        doe.select(
             ...Object.keys(colorScheme).map(i=>
-                doe$1.option({value:i},colorScheme[i].name,n=>{
+                doe.option({value:i},colorScheme[i].name,n=>{
                     if(s==i)
                         n.selected=true;
                 })
@@ -349,9 +348,9 @@ function colorSchemeP(ui){
     )
 }
 function pressEnterToSendP(ui){
-    return doe$1.p(
-        doe$1.label(
-            doe$1.input({
+    return doe.p(
+        doe.label(
+            doe.input({
                 type:'checkbox',
                 checked:ui.pressEnterToSend,
                 onchange(e){
@@ -362,9 +361,9 @@ function pressEnterToSendP(ui){
     )
 }
 function showTexButton(ui){
-    return doe$1.p(
-        doe$1.label(
-            doe$1.input(
+    return doe.p(
+        doe.label(
+            doe.input(
                 {
                     type:'checkbox',
                     checked:ui._showTexButton,
@@ -374,10 +373,10 @@ function showTexButton(ui){
                     }
                 }),
                 ' Show `',
-                doe$1.span(
+                doe.span(
                     n=>{n.style.fontFamily='serif';},
                     'T',
-                    doe$1.span(n=>{n.style.verticalAlign='sub';},'E'),
+                    doe.span(n=>{n.style.verticalAlign='sub';},'E'),
                     'X'
                 ),
                 '\' button in HTML mode.',
@@ -385,9 +384,9 @@ function showTexButton(ui){
     )
 }
 function showSendButton(ui){
-    return doe$1.p(
-        doe$1.label(
-            doe$1.input({
+    return doe.p(
+        doe.label(
+            doe.input({
                 type:'checkbox',
                 checked:ui._showSendButton,
                 onchange(e){
@@ -439,12 +438,12 @@ async function setUpVim(ui,textarea){
 function createViewDiv(vim){
     vim.width=80;
     vim.height=24;
-    return doe$1.div(
+    return doe.div(
         vim.node,
         {onclick(){
             vim.focus();
         }},
-        n=>{doe$1(n.style,{
+        n=>{doe(n.style,{
             position:'fixed',
             left:'50%',
             top:'50%',
@@ -456,7 +455,7 @@ function createViewDiv(vim){
 }
 
 function createTextarea(ui){
-    return doe$1.textarea({
+    return doe.textarea({
         rows:2,
         title:'Alt+V: Open the Web Vim editor.',
         oninput(e){
@@ -494,10 +493,10 @@ function setupFileButton(ui){
     ui._fileButton.n.style.display='none';
 }
 function setupStatusNode(ui){
-    ui._statusNode=doe$1.span();
+    ui._statusNode=doe.span();
 }
 function createSendButton(ui){
-    return doe$1.button('Send',{onclick(){
+    return doe.button('Send',{onclick(){
         ui._send();
     }})
 }
@@ -506,10 +505,10 @@ function createBottom(ui){
     setupSettingsButton(ui);
     setupFindButton(ui);
     setupStatusNode(ui);
-    return doe$1.div(
+    return doe.div(
         {className:'bottom'},
         ui.textarea=createTextarea(ui),
-        doe$1.a({
+        doe.a({
             href:'/chat',
             onclick(e){
                 if(!(
@@ -535,18 +534,18 @@ function createBottom(ui){
     )
 }
 function createModeSelect(ui){
-    return doe$1.select(
+    return doe.select(
         {
             onchange(){
                 ui._setMode(this.value);
             },
         },
-        doe$1.option({value:'plainText'},'Plain Text'),
-        doe$1.option({value:'html'},'HTML'),
+        doe.option({value:'plainText'},'Plain Text'),
+        doe.option({value:'html'},'HTML'),
     )
 }
 function createTexButton(ui){
-    return doe$1.button(
+    return doe.button(
         {
             title:`
     When you click this button, it places \`<script type=tex>' and \`</script>' around your selection in the input.
@@ -566,25 +565,25 @@ function createTexButton(ui){
                 ui._updatePreview();
             }
         },
-        doe$1.span(
+        doe.span(
             n=>{n.style.fontFamily='serif';},
             'T',
-            doe$1.span(n=>{n.style.verticalAlign='sub';},'E'),
+            doe.span(n=>{n.style.verticalAlign='sub';},'E'),
             'X'
         )
     )
 }
 function setupFindButton(ui){
-    ui._findButton=doe$1.button('Find');
+    ui._findButton=doe.button('Find');
 }
 
 function createSingleMessageNode(ui,message){
     let
-        n=doe$1.p(),
+        n=doe.p(),
         p=(async()=>{
             let a=await(ui.users[message.fromUser]).finalA;
             let span=await createSpan(message);
-            doe$1(n,a,': ',span.span);
+            doe(n,a,': ',span.span);
             ui.syncInnerMessageDivScroll();
             await span.promise;
             ui.syncInnerMessageDivScroll();
@@ -592,7 +591,7 @@ function createSingleMessageNode(ui,message){
     return {n,p}
 }
 async function createSpan(message){
-    let span=doe$1.span(
+    let span=doe.span(
         {title:(new Date(message.timestamp)).toLocaleString()},
         ...await compile(message.message)
     );
@@ -655,11 +654,377 @@ function loadInterface(o){
     }});
 }
 
+/*© An-Li Ting (anliting.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/function Container(){
+}
+Container.prototype[Symbol.iterator]=function*(){
+    while(this.size)
+        yield this.out();
+};
+Container.iterator=c=>Container.prototype[Symbol.iterator].call(c);
+
+function DecalarativeSet(){
+    this._set=new Set;
+}
+DecalarativeSet.prototype.in=function(doc){
+    this._set.add(doc);
+    if(this._forEach)
+        this._forEach.in(doc);
+};
+DecalarativeSet.prototype.out=function(doc){
+    this._set.delete(doc);
+    if(this._forEach)
+        this._forEach.out(doc);
+};
+Object.defineProperty(DecalarativeSet.prototype,'forEach',{set(doc){
+    if(this._forEach)
+        this._set.forEach(this._forEach.out);
+    this._forEach=doc;
+    if(this._forEach)
+        this._set.forEach(this._forEach.in);
+}});
+
+function VertexEdgeArray(){
+    this._vertices=[];
+    this._edges=[];
+}
+Object.defineProperty(VertexEdgeArray.prototype,'vertices',{get(){
+    return this._vertices.slice()
+}});
+Object.defineProperty(VertexEdgeArray.prototype,'edges',{get(){
+    return this._edges.slice()
+}});
+VertexEdgeArray.prototype.addVertex=function(v=Symbol()){
+    this._vertices.push(v);
+    return v
+};
+VertexEdgeArray.prototype.addEdge=function(v,w){
+    let e=[v,w];
+    this._edges.push(e);
+};
+
+function CompoundArrayContainer(){
+    Container.call(this);
+    this._a=[];
+}
+Object.setPrototypeOf(
+    CompoundArrayContainer.prototype,
+    Container.prototype
+);
+CompoundArrayContainer.prototype.in=function(){
+    this._a.push(...arguments);
+};
+CompoundArrayContainer.prototype.out=function(){
+    return this._a.pop()
+};
+Object.defineProperty(CompoundArrayContainer.prototype,'size',{get(){
+    return this._a.length
+}});
+
+function Stack(){
+    CompoundArrayContainer.call(this);
+}
+Object.setPrototypeOf(
+    Stack.prototype,
+    CompoundArrayContainer.prototype
+);
+
+function DirectedGraph(DataStructure=VertexEdgeArray){
+    this._DataStructure=VertexEdgeArray;
+    this._data=new this._DataStructure;
+}
+Object.defineProperty(DirectedGraph.prototype,'vertices',{get(){
+    return this._data.vertices.slice()
+}});
+Object.defineProperty(DirectedGraph.prototype,'edges',{get(){
+    return this._data.edges.slice()
+}});
+DirectedGraph.prototype.addVertex=function(v){
+    return this._data.addVertex(v)
+};
+DirectedGraph.prototype.addEdge=function(v,w){
+    this._data.addEdge(v,w);
+};
+DirectedGraph.prototype.longestTopologicalSort=function(c=new Stack){
+    let id={},arc={};
+    for(let v of this._data.vertices){
+        id[v]=0;
+        arc[v]=[];
+    }
+    for(let[v,w]of this._data.edges){
+        id[w]++;
+        arc[v].push(w);
+    }
+    let res=[];
+    for(let v of this._data.vertices.filter(v=>id[v]==0))
+        c.in(v);
+    for(let v of Container.iterator(c)){
+        res.push(v);
+        arc[v].map(w=>--id[w]||c.in(w));
+    }
+    return res
+};
+Object.defineProperty(DirectedGraph.prototype,'topologicalSort',{get(){
+    let a=this.longestTopologicalSort();
+    if(a.length<this._data.vertices.length)
+        throw Error('Cycle detected.')
+    return a
+}});
+
+function List(){
+    this.length=0;
+    this._head={};
+    this._tail={};
+    this._head.next=this._tail;
+    this._tail.previous=this._head;
+}
+List.prototype.append=function(key){
+    return this.insert(this.tail,key)
+};
+Object.defineProperty(List.prototype,'head',{get(){
+    return this._head.next
+}});
+List.prototype.insert=function(n,key){
+    this.length++;
+    return n.previous=n.previous.next={
+        previous:n.previous,
+        next:n,
+        key,
+    }
+};
+List.prototype.out=function(n){
+    this.length--;
+    n.previous.next=n.next;
+    n.next.previous=n.previous;
+    return n.next
+};
+Object.defineProperty(List.prototype,'tail',{get(){
+    return this._tail
+}});
+List.prototype[Symbol.iterator]=function*(){
+    for(let n=this.head;n.next;n=n.next)
+        yield n.key;
+};
+
+/*
+我在這裡設計過多型，但是比沒多型的版本慢四倍；這樣的效率在現在（2017-06-06）的處境下這是沒辦法接受的，只好寫成 add-addN 這個模樣。
+These names (add, sub, mul, div) come from x86 instructions.
+*/
+function Pair(x=0,y=x){
+    this.x=x;
+    this.y=y;
+}
+Pair.prototype[Symbol.iterator]=function*(){
+    yield*[this.x,this.y];
+};
+function NumberPair(){
+    Pair.apply(this,arguments);
+}
+Object.setPrototypeOf(NumberPair,Pair);
+Object.setPrototypeOf(NumberPair.prototype,Pair.prototype);
+// a+b
+NumberPair.prototype.add=function(v){
+    this.x+=v.x;
+    this.y+=v.y;
+    return this
+};
+NumberPair.prototype.addN=function(x,y=x){
+    this.x+=x;
+    this.y+=y;
+    return this
+};
+// a-b
+NumberPair.prototype.sub=function(v){
+    this.x-=v.x;
+    this.y-=v.y;
+    return this
+};
+NumberPair.prototype.subN=function(x,y=x){
+    this.x-=x;
+    this.y-=y;
+    return this
+};
+// a*b
+NumberPair.prototype.mul=function(v){
+    this.x*=v.x;
+    this.y*=v.y;
+    return this
+};
+NumberPair.prototype.mulN=function(x,y=x){
+    this.x*=x;
+    this.y*=y;
+    return this
+};
+// a/b
+NumberPair.prototype.div=function(v){
+    this.x/=v.x;
+    this.y/=v.y;
+    return this
+};
+NumberPair.prototype.divN=function(x,y=x){
+    this.x/=x;
+    this.y/=y;
+    return this
+};
+// a<b
+NumberPair.prototype.lt=function(v){
+    return this.x<v.x&&this.y<v.y
+};
+NumberPair.prototype.ltN=function(x,y){
+    return this.x<x&&this.y<y
+};
+// a==b
+NumberPair.prototype.eq=function(v){
+    return this.x==v.x&&this.y==v.y
+};
+NumberPair.prototype.eqN=function(x,y){
+    return this.x==x&&this.y==y
+};
+// a>b
+NumberPair.prototype.gt=function(v){
+    return this.x>v.x&&this.y>v.y
+};
+NumberPair.prototype.gtN=function(v){
+    return this.x>v.x&&this.y>v.y
+};
+Object.defineProperty(NumberPair.prototype,'new',{get(){
+    return new NumberPair(this.x,this.y)
+}});
+// -a: negetive
+Object.defineProperty(NumberPair.prototype,'newNeg',{get(){
+    return this.newMulN(-1)
+}});
+NumberPair.prototype.newAdd=function(v){
+    return new NumberPair(this.x+v.x,this.y+v.y)
+};
+NumberPair.prototype.newAddN=function(x,y=x){
+    return new NumberPair(this.x+x,this.y+y)
+};
+NumberPair.prototype.newSub=function(v){
+    return new NumberPair(this.x-v.x,this.y-v.y)
+};
+NumberPair.prototype.newSubN=function(x,y=x){
+    return new NumberPair(this.x-x,this.y-y)
+};
+NumberPair.prototype.newMul=function(v){
+    return new NumberPair(this.x*v.x,this.y*v.y)
+};
+NumberPair.prototype.newMulN=function(x,y=x){
+    return new NumberPair(this.x*x,this.y*y)
+};
+NumberPair.prototype.newDiv=function(v){
+    return new NumberPair(this.x/v.x,this.y/v.y)
+};
+NumberPair.prototype.newDivN=function(x,y=x){
+    return new NumberPair(this.x/x,this.y/y)
+};
+
+function PriorityQueue(cmp){
+    CompoundArrayContainer.call(this);
+    this._cmp=cmp||((a,b)=>a-b);
+}
+Object.setPrototypeOf(
+    PriorityQueue.prototype,
+    CompoundArrayContainer.prototype
+);
+PriorityQueue.prototype.in=function(){
+    for(let i=0;i<arguments.length;i++){let e=arguments[i];
+        this._a.push(e);
+        for(let i=this._a.length-1,p;i;i=p){
+            p=~~((i-1)/2);
+            if(this._cmp(this._a[i],this._a[p])<0)
+                [this._a[i],this._a[p]]=[this._a[p],this._a[i]];
+        }
+    }
+};
+PriorityQueue.prototype.out=function(){
+    let e=this._a[0];
+    this._a[0]=this._a[this._a.length-1];
+    this._a.pop();
+    for(let i=0;2*i+1<this._a.length;){
+        let min=
+            this._a.length<=2*i+2||
+            this._cmp(this._a[2*i+1],this._a[2*i+2])<0
+        ?
+            2*i+1
+        :
+            2*i+2;
+        if(this._cmp(this._a[i],this._a[min])<0)
+            break
+        ;[this._a[i],this._a[min]]=[this._a[min],this._a[i]];
+        i=min;
+    }
+    return e
+};
+Object.defineProperty(PriorityQueue.prototype,'top',{get(){
+    return this._a[0]
+}});
+
+function Queue(){
+    CompoundArrayContainer.call(this);
+}
+Object.setPrototypeOf(
+    Queue.prototype,
+    CompoundArrayContainer.prototype
+);
+Queue.prototype.out=function(){
+    return this._a.shift()
+};
+
+function Range(){
+    NumberPair.apply(this,arguments);
+}
+Object.setPrototypeOf(Range,NumberPair);
+Object.setPrototypeOf(Range.prototype,NumberPair.prototype);
+// length
+Object.defineProperty(Range.prototype,'len',{get(v){
+    return Math.max(0,this.y-this.x)
+}});
+Range.prototype.valueOf=function(){
+    return Math.max(0,this.y-this.x)
+};
+Range.prototype.intersect=function(){
+    let a=[...arguments];
+    this.x=Math.max(this.x,...a.map(r=>r.x));
+    this.y=Math.min(this.y,...a.map(r=>r.y));
+    return this
+};
+Range.prototype.newIntersect=function(){
+    let a=[...arguments];
+    return new Range(
+        Math.max(this.x,...a.map(r=>r.x)),
+        Math.min(this.y,...a.map(r=>r.y))
+    )
+};
+
+function Vector2(){
+    NumberPair.apply(this,arguments);
+}
+Object.setPrototypeOf(Vector2,NumberPair);
+Object.setPrototypeOf(Vector2.prototype,NumberPair.prototype);
+// inner product
+Vector2.prototype.ip=function(v){
+    return this.x*v.x+this.y*v.y
+};
+// length
+Object.defineProperty(Vector2.prototype,'len',{get(v){
+    return this.ip(this)**.5
+}});
+Vector2.prototype.valueOf=function(){
+    return this.ip(this)**.5
+};
+
 function Ui(){
     this._mode='plainText';
     this.users={};
     this.out=new DecalarativeSet;
-    this.node=doe$1.div(
+    this.node=doe.div(
         {className:'chat'},
         this.messageDiv=createMessageDiv(this),
         this.bottomDiv=createBottom(this),
@@ -704,7 +1069,7 @@ Ui.prototype._changeTextareaValue=function(v){
     this.updateTextareaHeight();
 };
 Ui.prototype._updatePreview=async function(){
-    doe$1(this._previewNode,
+    doe(this._previewNode,
         {innerHTML:''},
         await compile(this._mode=='html'?
             this.textarea.value
@@ -1118,7 +1483,7 @@ async function createConversation(chatPage,site,id){
         user=site.getUser(id),
         tc=textContent();
     return {
-        n:doe$1.div(await createLink()),
+        n:doe.div(await createLink()),
         order:tc,
     }
     async function textContent(){
@@ -1127,7 +1492,7 @@ async function createConversation(chatPage,site,id){
         return u.nickname||u.username
     }
     async function createLink(){
-        return doe$1.a(async n=>{
+        return doe.a(async n=>{
             let u=await user;
             await u.load('username');
             n.href=`chat/${u.username}`;
@@ -1151,7 +1516,7 @@ function goConversationList(){
     document.title='Conversations - Chat';
     let out=new DecalarativeSet;
     this._setMainOut(out);
-    out.in({type:'body',node:doe$1.div(
+    out.in({type:'body',node:doe.div(
         {className:'conversationList'},
         'Conversations:',
         async n=>{
@@ -1164,7 +1529,7 @@ function goConversationList(){
                     }
                 }),
                 (a,b)=>n.insertBefore(a.n,b.n),
-                e=>doe$1(n,e.n),
+                e=>doe(n,e.n),
                 (a,b)=>a.o.localeCompare(b.o)<0
             );
         }
@@ -1185,13 +1550,13 @@ function ChatPage(site){
     onpopstate=e=>{
         this._go(e.state);
     };
-    doe$1.head(
-        this._style=         doe$1.style(mainStyle),
-        this._themeColor=    doe$1.meta({name:'theme-color'}),
+    doe.head(
+        this._style=         doe.style(mainStyle),
+        this._themeColor=    doe.meta({name:'theme-color'}),
     );
 }
 ChatPage.prototype._playSound=function(){
-    doe$1.body(doe$1.audio({
+    doe.body(doe.audio({
         autoplay:true,
         src:'plugins/chat/main/ChatPage/notification-a.mp3',
         onended(e){document.body.removeChild(this);},
@@ -1289,8 +1654,8 @@ ChatPage.prototype.goConversationList=function(){
 
 general();
 let chatPage=new ChatPage(new Site);
-doe$1.head(
-    doe$1.link({rel:'icon',href:'plugins/chat/icon.png'})
+doe.head(
+    doe.link({rel:'icon',href:'plugins/chat/icon.png'})
 );
 arg.userId==undefined?
     chatPage.goConversationList()
