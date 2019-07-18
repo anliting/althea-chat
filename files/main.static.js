@@ -398,11 +398,12 @@ function showSendButton(ui){
 }
 
 let Vim;
-function evalImport(s){
-    return eval(`import(${JSON.stringify(s)})`)
-}
 async function loadVim(){
-    return (await evalImport('https://gitcdn.link/cdn/anliting/webvim/b3e769a34f699755b7f7585231e11778390e5034/src/Vim.static.js')).default
+    /*
+        +'' to bypass rollup's bug.
+        rollup tries to resolve dynamic import and fails to.
+    */
+    return (await import('../../../../lib/Vim.js'+'')).default
 }
 async function setUpVim(ui,textarea){
     textarea.disabled=true;
