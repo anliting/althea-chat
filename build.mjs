@@ -2,6 +2,7 @@ import rollup from 'rollup'
 let
     skip=[
         '/lib/core.static.js',
+        '../../../../lib/Vim.js',
     ]
 ;(async()=>{
     await link('files/main.js','files/main.static.js',skip)

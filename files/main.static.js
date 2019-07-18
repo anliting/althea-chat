@@ -397,18 +397,10 @@ function showSendButton(ui){
     )
 }
 
-let Vim;
-async function loadVim(){
-    /*
-        +'' to bypass rollup's bug.
-        rollup tries to resolve dynamic import and fails to.
-    */
-    return (await import('../../../../lib/Vim.js'+'')).default
-}
 async function setUpVim(ui,textarea){
     textarea.disabled=true;
     if(!Vim)
-        Vim=await loadVim();
+        Vim=(await import('./Chat/lib/Vim.js')).default;
     let vim=new Vim(p=>{
         if(p=='~/.vimrc')
             return localStorage.webvimVimrc
