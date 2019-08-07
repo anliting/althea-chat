@@ -52,11 +52,18 @@ ${env.althea.loadModule(
 `
     }
 }
-export default async function(althea){
-    addQueryFunctions(althea)
-    await althea.updateDatabase(edges)
-    althea.addPagemodule(env=>{
-        let path=env.analyze.request.parsedUrl.pathname.split('/')
-        return path[1]=='chat'
-    },pagemodule)
+function Plugin(althea){
+    ;(async()=>{
+        addQueryFunctions(althea)
+        await althea.updateDatabase(edges)
+        althea.addPagemodule(env=>{
+            let path=env.analyze.request.parsedUrl.pathname.split('/')
+            return path[1]=='chat'
+        },pagemodule)
+    })()
 }
+Plugin.prototype.end=function(){
+}
+Plugin.prototype.shutdownEnd=function(){
+}
+export default Plugin
